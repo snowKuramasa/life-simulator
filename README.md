@@ -338,3 +338,8 @@ ReactとRails APIを分離した構成で開発を行うため、APIの設計や
 ### 11-1. 画面遷移図
 
 > [Figma URL](https://www.figma.com/design/XBz0X5VVKhR3G558yZKvfX/RUNTEQ%E5%8D%92%E6%A5%AD%E5%88%B6%E4%BD%9C_%E3%82%B5%E3%83%A1_76aw?node-id=0-1&t=CKG4rfK4hr273v4f-1)
+
+
+### 12-1. ER図
+
+> [ER図](./docs/ER図.md)
