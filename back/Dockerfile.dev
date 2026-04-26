@@ -1,0 +1,43 @@
+# この Dockerfile は Rails API を「開発用」に起動するためのものです。
+# 本番用の `Dockerfile` とは分けて、次のことを優先しています。
+# - bind mount 前提で動くこと
+# - gem のインストールや DB 接続に必要なツールが揃っていること
+# - `docker compose up` でそのまま開発を始めやすいこと
+
+ARG RUBY_VERSION=3.3.11
+FROM ruby:${RUBY_VERSION}-slim
+
+# Rails アプリの作業ディレクトリを `/rails` に統一します。
+WORKDIR /rails
+
+# pg gem や psych gem のビルド、PostgreSQL 接続に必要なパッケージを入れます。
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential libpq-dev libyaml-dev pkg-config postgresql-client && \
+    rm -rf /var/lib/apt/lists/*
+
+# 開発時に使う Bundler / Rails の標準設定です。
+ENV RAILS_ENV=development \
+    BUNDLE_PATH=/usr/local/bundle \
+    BUNDLE_JOBS=4 \
+    BUNDLE_RETRY=3
+
+# Gemfile を先にコピーして bundle install を走らせることで、
+# アプリコード変更時にも gem レイヤーのキャッシュを効かせやすくしています。
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+# entrypoint は開発起動向けの前処理を担当します。
+COPY bin/docker-dev-entrypoint /usr/bin/docker-dev-entrypoint
+RUN chmod +x /usr/bin/docker-dev-entrypoint
+
+# ソースは compose の bind mount で上書きされる前提ですが、
+# イメージ単体で起動した場合にも最低限動けるようコピーしておきます。
+COPY . .
+
+ENTRYPOINT ["docker-dev-entrypoint"]
+
+# Rails API の待受ポートです。
+EXPOSE 3000
+
+# compose 側で必要に応じて上書きできるよう、標準コマンドだけ定義します。
+CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
