@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+# 開発中は bind mount でソースを差し替えるため、
+# 依存 gem に差分があれば起動時に補完できるようにします。
+bundle check || bundle install
+
+# コンテナ再起動時に古い pid が残ると Rails が起動できないため掃除します。
+rm -f /rails/tmp/pids/server.pid
+
+# `rails server` 起動時だけ DB を自動準備して、初回セットアップを軽くします。
+if [ "$1" = "./bin/rails" ] && [ "$2" = "server" ]; then
+  ./bin/rails db:prepare
+fi
+
+exec "$@"

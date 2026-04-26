@@ -1,73 +1,65 @@
-# React + TypeScript + Vite
+# Frontend Overview
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+このディレクトリは、生活シミュレーターのフロントエンドです。
+React + TypeScript + Vite を使い、開発中は `docker compose` から
+Vite 開発サーバーとして起動する想定です。
 
-Currently, two official plugins are available:
+## 役割
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- ブラウザから表示される UI を担当する
+- 今後は Rails API からデータを取得し、画面へ反映する
+- 開発中は HMR により、保存した変更を素早くブラウザへ反映する
 
-## React Compiler
+## 主なファイル
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `src/main.tsx`
+  React アプリのエントリーポイントです。Router を有効にして描画を始めます。
 
-## Expanding the ESLint configuration
+- `src/App.tsx`
+  画面ルーティングの定義です。ページが増えたらここにルートを追加します。
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- `src/pages/TopPage.tsx`
+  現在のトップページです。今後の UI 実装の起点になります。
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+- `src/index.css`
+  Tailwind / shadcn のテーマや全体スタイルをまとめています。
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- `vite.config.ts`
+  Vite の開発設定です。Docker 上で保存検知しやすいように polling も有効化しています。
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+- `Dockerfile.dev`
+  `docker compose` からフロントを起動するための開発用 Dockerfile です。
+
+## 開発時の起動
+
+ルートディレクトリで次を実行します。
+
+```bash
+docker compose up --build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+起動後、フロントは次で確認できます。
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```text
+http://localhost:5173
 ```
+
+## 保存時反映について
+
+このフロントエンドでは、追加の「監視専用のビルドコマンド」を別で用意する必要はありません。
+
+理由は、`docker compose up --build` で起動される
+`npm run dev` が、Vite の開発サーバーとして次の役割をまとめて担当するためです。
+
+- ファイル変更の監視
+- 開発中の再ビルド
+- HMR によるブラウザへの即時反映
+
+つまり、普段の開発では `npm run dev` がそのまま「watch 相当」の役割も持っています。
+そのため、保存した内容を反映したいだけなら、追加の watch コマンドは不要です。修正して保存したものがそのまま反映されます。
+
+## 補足
+
+フロントからバックエンド API を呼ぶときは、Docker ネットワーク内では `http://back:3000`、
+ブラウザからは通常 `http://localhost:3000` を意識することになります。
+今後 API 呼び出しを実装するときは、この差を吸収する設定を追加していく予定です。

@@ -15,6 +15,12 @@
 default: &default
   adapter: postgresql
   encoding: unicode
+  # compose で起動した PostgreSQL へ接続できるよう、
+  # 開発環境では環境変数から接続情報を受け取れるようにします。
+  host: <%= ENV.fetch("DB_HOST", "127.0.0.1") %>
+  port: <%= ENV.fetch("DB_PORT", 5432) %>
+  username: <%= ENV.fetch("DB_USERNAME", "postgres") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "postgres") %>
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
@@ -22,7 +28,8 @@ default: &default
 
 development:
   <<: *default
-  database: back_development
+  # compose では `POSTGRES_DB` を、ローカル単体起動時は従来値を使えるようにします。
+  database: <%= ENV.fetch("DB_NAME", "back_development") %>
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
@@ -56,7 +63,8 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: back_test
+  # テストは開発 DB と分離した名前を維持します。
+  database: <%= ENV.fetch("TEST_DB_NAME", "back_test") %>
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
