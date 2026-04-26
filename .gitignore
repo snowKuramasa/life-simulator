@@ -1,0 +1,60 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules/
+front/node_modules/
+back/node_modules/
+
+# Build artifacts
+dist/
+front/dist/
+back/dist/
+dist-ssr/
+coverage/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+*.local
+
+# Rails / Ruby
+.bundle/
+back/.bundle/
+back/log/*
+!back/log/.keep
+back/tmp/*
+!back/tmp/
+!back/tmp/.keep
+back/tmp/pids/*
+!back/tmp/pids/
+!back/tmp/pids/.keep
+back/storage/*
+!back/storage/.keep
+back/tmp/storage/*
+!back/tmp/storage/
+!back/tmp/storage/.keep
+back/config/*.key
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+
+*storybook.log
+storybook-static
