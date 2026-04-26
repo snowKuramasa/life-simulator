@@ -25,6 +25,24 @@ coverage/
 !.env.example
 *.local
 
+# Rails / Ruby
+.bundle/
+back/.bundle/
+back/log/*
+!back/log/.keep
+back/tmp/*
+!back/tmp/
+!back/tmp/.keep
+back/tmp/pids/*
+!back/tmp/pids/
+!back/tmp/pids/.keep
+back/storage/*
+!back/storage/.keep
+back/tmp/storage/*
+!back/tmp/storage/
+!back/tmp/storage/.keep
+back/config/*.key
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
