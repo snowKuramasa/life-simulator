@@ -1,0 +1,31 @@
+# この Dockerfile は React + Vite フロントエンドを「開発用」に起動するためのものです。
+# 目的は次の 3 点です。
+# - `docker compose up` ですぐ Vite 開発サーバーを立ち上げること
+# - bind mount 前提でソース変更を即反映できること
+# - `node_modules` をコンテナ側で管理し、ホスト環境との差分で壊れにくくすること
+
+FROM node:22-bookworm-slim
+
+# フロントアプリの作業ディレクトリです。
+WORKDIR /app
+
+# package.json / lockfile を先にコピーして依存関係のキャッシュを効かせます。
+COPY package.json package-lock.json ./
+RUN npm install
+
+# 起動時に `node_modules` volume を初期化できるよう、開発用 entrypoint を配置します。
+COPY bin/docker-dev-entrypoint /usr/bin/front-docker-dev-entrypoint
+RUN chmod +x /usr/bin/front-docker-dev-entrypoint
+
+# 開発サーバーとして待ち受けるポートです。
+EXPOSE 5173
+
+# ソースは compose の bind mount で上書きされる前提ですが、
+# イメージ単体起動でも動けるようにアプリをコピーしておきます。
+COPY . .
+
+# entrypoint で依存関係の存在確認をした後に、Vite を起動します。
+ENTRYPOINT ["front-docker-dev-entrypoint"]
+
+# compose 側で必要に応じて上書きできるよう、標準コマンドを定義します。
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]

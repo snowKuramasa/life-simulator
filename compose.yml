@@ -1,12 +1,14 @@
 # この `compose.yml` は、開発用の実行環境をまとめて起動するための設定です。
-# いまはバックエンド確認を優先するため、Rails API と PostgreSQL だけを定義しています。
-# 将来的にフロントエンドを追加するときは、このファイルに `front` サービスを足していく想定です。
+# フロントエンド、バックエンド、DB を 1 コマンドで起動し、
+# ローカル保存内容が各コンテナへ反映される状態を作ることを目的にしています。
 #
 # このファイルでやっていること:
 # - `db` サービスで PostgreSQL を起動する
 # - `back` サービスで Rails API を起動する
-# - `./back` をコンテナへマウントして、保存したコード変更をすぐ反映できるようにする
+# - `front` サービスで Vite 開発サーバーを起動する
+# - `./back` と `./front` をコンテナへマウントして、保存したコード変更をすぐ反映できるようにする
 # - Postgres のデータと Bundler の gem を named volume に保持して、再起動時のコストを下げる
+# - Node.js の `node_modules` も named volume に分けて、ホストとの衝突を避ける
 
 services:
   db:
@@ -63,8 +65,39 @@ services:
     tty: true
     stdin_open: true
 
+  front:
+    # 開発用の React + Vite コンテナです。
+    # `front/Dockerfile.dev` を使い、保存時の HMR が動く形で起動します。
+    build:
+      context: ./front
+      dockerfile: Dockerfile.dev
+    container_name: life-simulator-front
+    depends_on:
+      # フロント単体でも起動できますが、API 連携確認しやすいよう back の後に上げます。
+      back:
+        condition: service_started
+    environment:
+      # Docker 上ではファイル変更イベントが拾いにくいことがあるため、
+      # polling を有効にして保存反映を安定させます。
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+      VITE_API_BASE_URL: http://back:3000
+    ports:
+      # Vite 開発サーバーはホストの 5173 番で確認できるようにします。
+      - "${FRONT_PORT:-5173}:5173"
+    volumes:
+      # フロントのソースコードを mount し、保存内容をすぐ反映させます。
+      - ./front:/app
+      # node_modules は named volume に切り出し、ホスト側の依存関係と混ざるのを防ぎます。
+      - front_node_modules:/app/node_modules
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
+    tty: true
+    stdin_open: true
+
 volumes:
   # PostgreSQL の実データを保持する領域です。
   postgres_data:
   # Bundler が入れた gem を保持する領域です。
   bundle_data:
+  # Vite / React 側の node_modules を保持する領域です。
+  front_node_modules:

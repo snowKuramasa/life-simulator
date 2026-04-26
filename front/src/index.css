@@ -1,3 +1,6 @@
+/* フロント全体で使うグローバルスタイルです。
+   Tailwind / shadcn のトークンを読み込みつつ、
+   アプリ全体の色・余白・タイポグラフィの基準をここで定義します。 */
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -6,6 +9,8 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* カラートークンと UI スケールです。
+     shadcn のコンポーネントもこの値を参照します。 */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -45,6 +50,7 @@
 }
 
 @theme inline {
+  /* Tailwind 側から参照できるように、CSS 変数をテーマ値へ橋渡ししています。 */
   --font-sans: "Geist Variable", sans-serif;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -94,6 +100,7 @@
 
   html,
   body {
+    /* 画面全体の標準背景・文字色・フォントをここでそろえます。 */
     @apply bg-background text-foreground font-sans;
     margin: 0;
     min-height: 100vh;
@@ -105,6 +112,7 @@
 }
 
 @layer components {
+  /* 仮のトップページ用レイアウトです。今後のデザイン土台として使います。 */
   .page {
     @apply flex min-h-screen items-center justify-center bg-white;
   }
