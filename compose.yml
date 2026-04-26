@@ -1,0 +1,70 @@
+# この `compose.yml` は、開発用の実行環境をまとめて起動するための設定です。
+# いまはバックエンド確認を優先するため、Rails API と PostgreSQL だけを定義しています。
+# 将来的にフロントエンドを追加するときは、このファイルに `front` サービスを足していく想定です。
+#
+# このファイルでやっていること:
+# - `db` サービスで PostgreSQL を起動する
+# - `back` サービスで Rails API を起動する
+# - `./back` をコンテナへマウントして、保存したコード変更をすぐ反映できるようにする
+# - Postgres のデータと Bundler の gem を named volume に保持して、再起動時のコストを下げる
+
+services:
+  db:
+    # 開発用の PostgreSQL コンテナです。
+    # 公式イメージを使い、Rails からはサービス名 `db` で接続します。
+    image: postgres:16
+    container_name: life-simulator-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-life_simulator_development}
+    ports:
+      # ホスト側から直接 DB に接続したいときのために 5432 を公開しています。
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # DB データを永続化し、`docker compose down` 後も内容が消えないようにします。
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      # Rails より先に DB が立ち上がる必要があるので、起動確認を入れています。
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-life_simulator_development}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  back:
+    # 開発用の Rails API コンテナです。
+    # `back/Dockerfile.dev` を使い、ソースコードは bind mount で同期します。
+    build:
+      context: ./back
+      dockerfile: Dockerfile.dev
+    container_name: life-simulator-back
+    depends_on:
+      # DB がヘルシーになってから Rails を起動します。
+      db:
+        condition: service_healthy
+    environment:
+      # Rails の開発起動に必要な値を compose 側からまとめて渡します。
+      RAILS_ENV: development
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-life_simulator_development}
+      DB_USERNAME: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      BUNDLE_PATH: /usr/local/bundle
+    ports:
+      # API はホストの 3000 番で確認できるようにします。
+      - "${BACK_PORT:-3000}:3000"
+    volumes:
+      # アプリ本体を mount し、保存したファイル変更をコンテナ内へ即時反映させます。
+      - ./back:/rails
+      # gem を named volume に保持し、コンテナ再作成のたびに入れ直さないようにします。
+      - bundle_data:/usr/local/bundle
+    command: ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+    tty: true
+    stdin_open: true
+
+volumes:
+  # PostgreSQL の実データを保持する領域です。
+  postgres_data:
+  # Bundler が入れた gem を保持する領域です。
+  bundle_data:
