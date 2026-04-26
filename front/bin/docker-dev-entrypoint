@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+
+# `node_modules` は named volume に分けているため、
+# 初回起動時や volume 作り直し後でもここで依存関係を補完できるようにします。
+npm install
+
+exec "$@"

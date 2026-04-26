@@ -1,0 +1,9 @@
+# フロントの Docker build に不要なファイルを除外し、
+# build context を軽くしてイメージ作成を速くします。
+
+node_modules
+dist
+coverage
+storybook-static
+*.log
+.DS_Store
