@@ -2,7 +2,7 @@ services:
   - type: web
     name: life-simulator-back-stg
     runtime: ruby
-    branch: develop
+    branch: development
     plan: free
     region: oregon
     rootDir: back
@@ -29,7 +29,7 @@ services:
   - type: web
     name: life-simulator-front-stg
     runtime: static
-    branch: develop
+    branch: development
     rootDir: front
     buildCommand: npm install && npm run build
     staticPublishPath: dist
