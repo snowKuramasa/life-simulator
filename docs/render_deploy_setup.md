@@ -10,7 +10,7 @@
 - `main` ブランチ
   本番環境
 
-- `develop` ブランチ
+- `development` ブランチ
   ステージング環境
 
 そのため、Render の設定ファイルも 2 つに分けています。
@@ -19,14 +19,14 @@
   `main` 用の本番 Blueprint
 
 - [render.staging.yaml](/Users/masafumi/study_runteq/卒業制作/life-simulator/render.staging.yaml)
-  `develop` 用のステージング Blueprint
+  `development` 用のステージング Blueprint
 
 ## まず何からやるか
 
 Render では次の順番で進めるのが分かりやすいです。
 
 1. `main` 用 Blueprint で本番環境を作る
-2. `develop` 用 Blueprint でステージング環境を作る
+2. `development` 用 Blueprint でステージング環境を作る
 3. それぞれの front が、同じ環境の back を見るように `VITE_API_BASE_URL` を設定する
 
 フロントは最終的にバックエンドの本番 URL を参照するため、
@@ -89,7 +89,7 @@ production は Render Postgres が提供する `DATABASE_URL` をそのまま使
 
 対象 branch:
 
-- `develop`
+- `development`
 
 定義しているリソース:
 
@@ -104,7 +104,7 @@ production は Render Postgres が提供する `DATABASE_URL` をそのまま使
 
 ### バックエンド設定の要点
 
-- `branch: main` / `branch: develop`
+- `branch: main` / `branch: development`
   それぞれのサービスを対象 branch へひも付ける
 
 - `rootDir: back`
@@ -121,7 +121,7 @@ production は Render Postgres が提供する `DATABASE_URL` をそのまま使
 
 ### フロント設定の要点
 
-- `branch: main` / `branch: develop`
+- `branch: main` / `branch: development`
   front も対象 branch に合わせて自動デプロイする
 
 - `rootDir: front`
@@ -200,7 +200,7 @@ Render に上げたフロントから本番 API を呼べません。
 - `front-prod` → `back-prod`
 - `front-stg` → `back-stg`
 
-`develop` のフロントが本番 API を見ないように注意します。
+`development` のフロントが本番 API を見ないように注意します。
 
 ## Render Dashboard での作成イメージ
 
@@ -211,7 +211,7 @@ Render に上げたフロントから本番 API を呼べません。
 
 ### 2. ステージング Blueprint
 
-- branch: `develop`
+- branch: `development`
 - Blueprint file path: `render.staging.yaml`
 
 Render では Blueprint のカスタムファイルパスも指定できるため、
