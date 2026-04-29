@@ -43,11 +43,14 @@ Render では次の順番で進めるのが分かりやすいです。
 ### 1. `back/config/database.yml`
 
 production は Render Postgres が提供する `DATABASE_URL` をそのまま使うようにしました。
+あわせて、`primary` / `cache` / `queue` / `cable` という接続名は
+いったん同じ DB を向く alias にしています。
 
 理由:
 
 - Render では DB 接続 URL を環境変数で渡すのが基本
 - 初回デプロイで複数 DB 接続を持ち込まないほうが安定する
+- Rails 8 の `solid_*` 系 gem は接続名そのものを参照することがある
 
 ### 2. `back/config/environments/production.rb`
 
