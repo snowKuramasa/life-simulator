@@ -93,7 +93,20 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  # Render では Render Postgres が発行する `DATABASE_URL` をそのまま使います。
-  # 初回デプロイをシンプルにするため、production は単一の Postgres 接続に寄せています。
-  <<: *default
-  url: <%= ENV["DATABASE_URL"] %>
+  primary: &primary_production
+    <<: *default
+    database: back_production
+    username: back
+    password: <%= ENV["BACK_DATABASE_PASSWORD"] %>
+  cache:
+    <<: *primary_production
+    database: back_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: back_production_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    database: back_production_cable
+    migrations_paths: db/cable_migrate
