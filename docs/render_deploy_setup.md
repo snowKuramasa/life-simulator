@@ -3,13 +3,31 @@
 このファイルは、life-simulator を Render にデプロイするために
 今回入れた設定と、Render 側で用意するものをまとめたメモです。
 
+## 環境の分け方
+
+このプロジェクトでは、Render 上で branch ごとに常設環境を分ける前提にしています。
+
+- `main` ブランチ
+  本番環境
+
+- `develop` ブランチ
+  ステージング環境
+
+そのため、Render の設定ファイルも 2 つに分けています。
+
+- [render.yaml](/Users/masafumi/study_runteq/卒業制作/life-simulator/render.yaml)
+  `main` 用の本番 Blueprint
+
+- [render.staging.yaml](/Users/masafumi/study_runteq/卒業制作/life-simulator/render.staging.yaml)
+  `develop` 用のステージング Blueprint
+
 ## まず何からやるか
 
 Render では次の順番で進めるのが分かりやすいです。
 
-1. Render Postgres を作る
-2. Rails バックエンドを Web Service としてデプロイする
-3. React フロントを Static Site としてデプロイする
+1. `main` 用 Blueprint で本番環境を作る
+2. `develop` 用 Blueprint でステージング環境を作る
+3. それぞれの front が、同じ環境の back を見るように `VITE_API_BASE_URL` を設定する
 
 フロントは最終的にバックエンドの本番 URL を参照するため、
 先にバックエンドの公開 URL を確定させるのが進めやすいです。
@@ -17,6 +35,7 @@ Render では次の順番で進めるのが分かりやすいです。
 ## 今回追加したファイル
 
 - [render.yaml](/Users/masafumi/study_runteq/卒業制作/life-simulator/render.yaml)
+- [render.staging.yaml](/Users/masafumi/study_runteq/卒業制作/life-simulator/render.staging.yaml)
 - [back/bin/render-build.sh](/Users/masafumi/study_runteq/卒業制作/life-simulator/back/bin/render-build.sh)
 
 ## 今回変更した本番設定
@@ -45,20 +64,48 @@ production は Render Postgres が提供する `DATABASE_URL` をそのまま使
 
 今後必要になったら、この部分は改めて Postgres ベースの構成へ戻せます。
 
-## `render.yaml` でやっていること
+## `render.yaml` / `render.staging.yaml` でやっていること
 
-`render.yaml` では、次の 3 つをまとめて定義しています。
+2 つの Blueprint で、branch ごとに別環境を定義しています。
 
-1. `life-simulator-db`
-   Render Postgres データベース
+### 本番用 `render.yaml`
 
-2. `life-simulator-back`
-   Rails API 用の Ruby Web Service
+対象 branch:
 
-3. `life-simulator-front`
-   React + Vite 用の Static Site
+- `main`
+
+定義しているリソース:
+
+1. `life-simulator-db-prod`
+   本番用 Render Postgres データベース
+
+2. `life-simulator-back-prod`
+   本番用 Rails API Web Service
+
+3. `life-simulator-front-prod`
+   本番用 React Static Site
+
+### ステージング用 `render.staging.yaml`
+
+対象 branch:
+
+- `develop`
+
+定義しているリソース:
+
+1. `life-simulator-db-stg`
+   ステージング用 Render Postgres データベース
+
+2. `life-simulator-back-stg`
+   ステージング用 Rails API Web Service
+
+3. `life-simulator-front-stg`
+   ステージング用 React Static Site
 
 ### バックエンド設定の要点
+
+- `branch: main` / `branch: develop`
+  それぞれのサービスを対象 branch へひも付ける
 
 - `rootDir: back`
   monorepo の `back` ディレクトリをサービスのルートとして使う
@@ -73,6 +120,9 @@ production は Render Postgres が提供する `DATABASE_URL` をそのまま使
   Render のヘルスチェック先を Rails の `/up` に合わせる
 
 ### フロント設定の要点
+
+- `branch: main` / `branch: develop`
+  front も対象 branch に合わせて自動デプロイする
 
 - `rootDir: front`
   monorepo の `front` ディレクトリをサービスのルートとして使う
@@ -109,12 +159,18 @@ production は Render Postgres が提供する `DATABASE_URL` をそのまま使
 ### フロント
 
 - `VITE_API_BASE_URL`
-  バックエンドの Render URL を設定する
+  同じ環境のバックエンド Render URL を設定する
 
-例:
+本番の例:
 
 ```text
-https://life-simulator-back.onrender.com
+https://life-simulator-back-prod.onrender.com
+```
+
+ステージングの例:
+
+```text
+https://life-simulator-back-stg.onrender.com
 ```
 
 ## デプロイ時の注意
@@ -139,11 +195,33 @@ Render に上げたフロントから本番 API を呼べません。
 そのため、フロント側で API 呼び出しを実装するときは
 `import.meta.env.VITE_API_BASE_URL` を参照する形に寄せるのが基本です。
 
+また、branch ごとに環境を分ける場合は、次のように対応関係を固定します。
+
+- `front-prod` → `back-prod`
+- `front-stg` → `back-stg`
+
+`develop` のフロントが本番 API を見ないように注意します。
+
+## Render Dashboard での作成イメージ
+
+### 1. 本番 Blueprint
+
+- branch: `main`
+- Blueprint file path: `render.yaml`
+
+### 2. ステージング Blueprint
+
+- branch: `develop`
+- Blueprint file path: `render.staging.yaml`
+
+Render では Blueprint のカスタムファイルパスも指定できるため、
+この構成で branch ごとに分けて管理できます。
+
 ## 次にやること
 
-1. Render に Blueprint として `render.yaml` を読み込ませる
-2. `RAILS_MASTER_KEY` を設定する
-3. バックエンドのデプロイ成功を確認する
-4. バックエンドの公開 URL を確認する
-5. フロントの `VITE_API_BASE_URL` にその URL を設定する
-6. フロントをデプロイする
+1. Render に本番用 Blueprint として `render.yaml` を読み込ませる
+2. `RAILS_MASTER_KEY` と本番用 `VITE_API_BASE_URL` を設定する
+3. 本番 back / front / db のデプロイ成功を確認する
+4. Render にステージング用 Blueprint として `render.staging.yaml` を読み込ませる
+5. `RAILS_MASTER_KEY` とステージング用 `VITE_API_BASE_URL` を設定する
+6. ステージング back / front / db のデプロイ成功を確認する
