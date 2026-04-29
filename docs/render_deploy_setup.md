@@ -64,6 +64,16 @@ production は Render Postgres が提供する `DATABASE_URL` をそのまま使
 
 今後必要になったら、この部分は改めて Postgres ベースの構成へ戻せます。
 
+### 3. `back/config/cable.yml`
+
+初回デプロイでは `Solid Cable` も本番で使わず、
+production の adapter を `async` にしています。
+
+理由:
+
+- `solid_cable` は `cable` 用の別 DB 設定を参照する
+- 今回は Render 上でまず単一 DB 構成で確実に起動することを優先したい
+
 ## `render.yaml` / `render.staging.yaml` でやっていること
 
 2 つの Blueprint で、branch ごとに別環境を定義しています。
