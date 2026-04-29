@@ -95,5 +95,14 @@ test:
 production:
   # Render では Render Postgres が発行する `DATABASE_URL` をそのまま使います。
   # 初回デプロイをシンプルにするため、production は単一の Postgres 接続に寄せています。
-  <<: *default
-  url: <%= ENV["DATABASE_URL"] %>
+  # Rails 8 の solid_* 系 gem は `cache` / `queue` / `cable` という接続名を参照するため、
+  # まずは同じ DB を向く alias を用意して起動を安定させます。
+  primary: &primary_production
+    <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
+  cache:
+    <<: *primary_production
+  queue:
+    <<: *primary_production
+  cable:
+    <<: *primary_production
