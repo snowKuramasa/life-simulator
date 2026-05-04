@@ -58,8 +58,24 @@ http://localhost:5173
 つまり、普段の開発では `npm run dev` がそのまま「watch 相当」の役割も持っています。
 そのため、保存した内容を反映したいだけなら、追加の watch コマンドは不要です。修正して保存したものがそのまま反映されます。
 
+## API 接続先について
+
+フロントは環境ごとに次の考え方でバックエンドへ接続します。
+
+- 開発環境
+  `VITE_API_BASE_URL` を使わず、相対パスの `/api/...` を Vite proxy が Rails へ中継します。
+
+- 本番環境
+  Render の `life-simulator-front-prod` に設定した `VITE_API_BASE_URL` を使います。
+
+- ステージング環境
+  Render の `life-simulator-front-stg` に設定した `VITE_API_BASE_URL` を使います。
+
+開発環境ではブラウザが `http://back:3000` を直接解決できないため、
+docker compose では front コンテナ側の Vite サーバーが `back` へ中継する形にしています。
+
 ## 補足
 
-フロントからバックエンド API を呼ぶときは、Docker ネットワーク内では `http://back:3000`、
-ブラウザからは通常 `http://localhost:3000` を意識することになります。
-今後 API 呼び出しを実装するときは、この差を吸収する設定を追加していく予定です。
+フロントからバックエンド API を呼ぶ実装は
+[src/lib/api.ts](/Users/masafumi/study_runteq/卒業制作/life-simulator/front/src/lib/api.ts:1)
+にまとめています。
