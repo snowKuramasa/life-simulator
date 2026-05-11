@@ -1,0 +1,15 @@
+@reference "../../../index.css";
+
+.header {
+  @apply flex h-9 shrink-0 items-center border-b border-stone-700 px-4 text-xs text-stone-700;
+}
+
+.appName {
+  @apply truncate;
+}
+
+@media (min-width: 768px) {
+  .header {
+    @apply h-8 justify-center px-6;
+  }
+}

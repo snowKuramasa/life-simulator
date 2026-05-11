@@ -1,0 +1,14 @@
+@reference "../../../index.css";
+
+.image {
+  @apply block max-w-full object-contain;
+  width: var(--image-width, auto);
+  height: var(--image-height, auto);
+}
+
+@media (min-width: 768px) {
+  .image {
+    width: var(--image-width-md, var(--image-width, auto));
+    height: var(--image-height-md, var(--image-height, auto));
+  }
+}
