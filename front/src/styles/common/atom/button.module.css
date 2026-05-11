@@ -1,0 +1,33 @@
+@reference "../../../index.css";
+
+.button {
+  @apply inline-flex w-full rounded-md text-xs font-semibold focus-visible:ring-stone-500;
+}
+
+.primary {
+  @apply bg-stone-800 text-white hover:bg-stone-700;
+}
+
+.outline {
+  @apply border border-stone-800 bg-transparent text-stone-800 hover:bg-stone-100;
+}
+
+.ghost {
+  @apply bg-transparent text-stone-800 hover:bg-stone-100;
+}
+
+.defaultSize {
+  @apply h-9 px-4;
+}
+
+.sm {
+  @apply h-8 px-3;
+}
+
+.lg {
+  @apply h-10 px-5;
+}
+
+.icon {
+  @apply size-9 px-0;
+}

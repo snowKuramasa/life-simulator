@@ -1,12 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { TopPage } from "@/pages/TopPage";
+import { StartUpPage } from "@/pages/StartUpPage";
 
 const meta = {
-  title: "Pages/TopPage",
-  component: TopPage,
+  title: "Pages/StartUpPage",
+  component: StartUpPage,
   tags: ["autodocs"],
-} satisfies Meta<typeof TopPage>;
+  parameters: {
+    layout: "fullscreen",
+  },
+} satisfies Meta<typeof StartUpPage>;
 
 export default meta;
 
