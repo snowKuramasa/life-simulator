@@ -44,6 +44,17 @@ docker compose up --build
 http://localhost:5173
 ```
 
+## モック API での起動
+
+バックエンドを使わずにフロントだけで API レスポンスを確認したい場合は、MSW を有効にして起動します。
+
+```bash
+npm run dev:mock
+```
+
+`VITE_ENABLE_MOCK=true` のときだけ `src/mocks` のハンドラーが有効になります。
+通常の `npm run dev` では、これまで通り Vite proxy 経由でバックエンドへ接続します。
+
 ## 保存時反映について
 
 このフロントエンドでは、追加の「監視専用のビルドコマンド」を別で用意する必要はありません。

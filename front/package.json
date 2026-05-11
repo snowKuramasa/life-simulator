@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:mock": "VITE_ENABLE_MOCK=true vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -45,6 +46,7 @@
     "eslint-plugin-storybook": "^10.3.5",
     "globals": "^17.5.0",
     "jsdom": "^27.0.1",
+    "msw": "^2.14.6",
     "prettier": "^3.6.2",
     "storybook": "^10.3.5",
     "tailwindcss": "^4.2.4",
@@ -52,5 +54,10 @@
     "typescript-eslint": "^8.58.2",
     "vite": "^8.0.10",
     "vitest": "^3.2.4"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
