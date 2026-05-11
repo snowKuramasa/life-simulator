@@ -1,0 +1,39 @@
+@reference "../index.css";
+
+.page {
+  @apply flex min-h-svh flex-col bg-[#fbfdf8] text-stone-800;
+}
+
+.hero {
+  @apply flex flex-1 flex-col items-center justify-center px-8 pb-28 pt-12 text-center;
+}
+
+.visuallyHidden {
+  @apply sr-only;
+}
+
+.description {
+  @apply mt-5 text-[10px] leading-4 text-stone-600;
+}
+
+.startButton {
+  @apply mt-5 max-w-44;
+}
+
+@media (min-width: 768px) {
+  .page {
+    @apply items-stretch;
+  }
+
+  .hero {
+    @apply pb-44 pt-24;
+  }
+
+  .description {
+    @apply mt-7 text-[11px] leading-5;
+  }
+
+  .startButton {
+    @apply mt-6 max-w-64;
+  }
+}

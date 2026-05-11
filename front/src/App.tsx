@@ -1,15 +1,9 @@
-import { Route, Routes } from "react-router";
+import { RouterProvider } from "react-router";
 
-import { TopPage } from "@/pages/TopPage";
+import { router } from "@/routes/router";
 
-// アプリ全体のルーティング定義です。
-// ページが増えたら、この `Routes` に画面ごとのルートを追加していきます。
 function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<TopPage />} />
-    </Routes>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
