@@ -13,9 +13,9 @@ module Api
           sample_calculation: {
             monthly_income: 280_000,
             fixed_costs: 120_000,
-            disposable_income: disposable_income,
+            disposable_income: disposable_income
           },
-          timestamp: Time.current.iso8601,
+          timestamp: Time.current.iso8601
         }
       end
     end
