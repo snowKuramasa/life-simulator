@@ -8,7 +8,7 @@ type LoginPageProviderProps = {
 };
 
 export function LoginPageProvider({ children }: LoginPageProviderProps) {
-  const { guestLogin, isLoggingIn } = useAuth();
+  const { user, isAuthenticated, isAuthLoading, guestLogin, isLoggingIn } = useAuth();
   const [name, setName] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -20,7 +20,7 @@ export function LoginPageProvider({ children }: LoginPageProviderProps) {
 
     try {
       const response = await guestLogin({ name });
-      setMessage(`${response.user?.name ?? "ゲスト"}としてログインしました`);
+      setMessage(`こんにちは${response.user?.name ?? "ゲスト"}さん`);
     } catch {
       setErrorMessage("ゲストログインに失敗しました。時間をおいてもう一度お試しください。");
     }
@@ -29,6 +29,9 @@ export function LoginPageProvider({ children }: LoginPageProviderProps) {
   return (
     <LoginPageContext.Provider
       value={{
+        user,
+        isAuthenticated,
+        isAuthLoading,
         name,
         setName,
         isSubmitting: isLoggingIn,
