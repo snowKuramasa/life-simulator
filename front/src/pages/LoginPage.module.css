@@ -48,6 +48,14 @@
   @apply mt-2 grid w-full grid-cols-[0.8fr_1.2fr] gap-2;
 }
 
+.loggedInActions {
+  @apply mt-3 flex w-full max-w-64 flex-col items-center gap-3;
+}
+
+.welcomeMessage {
+  @apply text-[11px] font-semibold text-stone-700;
+}
+
 .backButton,
 .guestButton {
   @apply min-w-0;
@@ -84,6 +92,14 @@
 
   .form {
     @apply mt-4 max-w-72;
+  }
+
+  .loggedInActions {
+    @apply mt-4 max-w-72;
+  }
+
+  .welcomeMessage {
+    @apply text-xs;
   }
 
   .guestTitle {
