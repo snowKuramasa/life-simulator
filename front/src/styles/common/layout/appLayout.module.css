@@ -1,0 +1,5 @@
+@reference "../../../index.css";
+
+.layout {
+  @apply flex min-h-svh flex-col bg-[#fbfdf8] text-stone-800;
+}

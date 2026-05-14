@@ -1,9 +1,5 @@
 @reference "../index.css";
 
-.page {
-  @apply flex min-h-svh flex-col bg-[#fbfdf8] text-stone-800;
-}
-
 .hero {
   @apply flex flex-1 flex-col items-center justify-center px-8 pb-28 pt-12 text-center;
 }
@@ -21,10 +17,6 @@
 }
 
 @media (min-width: 768px) {
-  .page {
-    @apply items-stretch;
-  }
-
   .hero {
     @apply pb-44 pt-24;
   }
