@@ -1,6 +1,6 @@
 import loginImage from "@/assets/4.png";
-import { Button } from "@/components/common/atom/Button";
-import { Image } from "@/components/common/atom/Image";
+import { Button } from "@/components/commons/uis/Button";
+import { Image } from "@/components/commons/uis/Image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLoginPage } from "@/hooks/useLoginPage";

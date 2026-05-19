@@ -2,14 +2,8 @@ name: Back CI
 
 on:
   pull_request:
-    paths:
-      - "back/**"
-      - ".github/workflows/back-ci.yml"
   push:
     branches: [main, development]
-    paths:
-      - "back/**"
-      - ".github/workflows/back-ci.yml"
 
 defaults:
   run:
