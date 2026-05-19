@@ -1,7 +1,5 @@
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
-
 import styles from "@/styles/common/atom/image.module.css";
 
 type ResponsiveSize = number | string | { base: number | string; md?: number | string };
@@ -38,6 +36,7 @@ export function Image({ className, style, width, height, ...props }: ImageProps)
     ...getSizeStyle(width, "--image-width"),
     ...getSizeStyle(height, "--image-height"),
   } as React.CSSProperties;
+  const imageClassName = `${styles.image} ${className ?? ""}`.trim();
 
-  return <img className={cn(styles.image, className)} style={{ ...sizeStyle, ...style }} {...props} />;
+  return <img className={imageClassName} style={{ ...sizeStyle, ...style }} {...props} />;
 }
