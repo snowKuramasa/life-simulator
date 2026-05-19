@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router";
 
-import { AppLayout } from "@/components/common/layout/AppLayout";
+import { AppLayout } from "@/components/commons/layouts/AppLayout";
 import { LoginPage } from "@/pages/LoginPage";
 import { StartUpPage } from "@/pages/StartUpPage";
 import { LoginPageProvider } from "@/providers/pages/LoginPageProvider";

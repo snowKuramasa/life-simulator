@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Button as ShadcnButton } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 import styles from "@/styles/common/atom/button.module.css";
 
@@ -27,11 +26,14 @@ const sizeClassNames: Record<ButtonSize, string> = {
 };
 
 export function Button({ className, variant = "primary", size = "default", ...props }: ButtonProps) {
+  const buttonClassName =
+    `${styles.button} ${variantClassNames[variant]} ${sizeClassNames[size]} ${className ?? ""}`.trim();
+
   return (
     <ShadcnButton
       variant="ghost"
       size="default"
-      className={cn(styles.button, variantClassNames[variant], sizeClassNames[size], className)}
+      className={buttonClassName}
       {...props}
     />
   );

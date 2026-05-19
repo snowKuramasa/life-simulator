@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 
-import { AppHeader } from "@/components/common/layout/AppHeader";
+import { AppHeader } from "@/components/commons/layouts/AppHeader";
 
 import styles from "@/styles/common/layout/appLayout.module.css";
 
