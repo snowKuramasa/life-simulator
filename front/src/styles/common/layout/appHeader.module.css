@@ -1,15 +1,25 @@
-@reference "../../../index.css";
-
 .header {
-  @apply flex h-9 shrink-0 items-center border-b border-stone-700 px-4 text-xs text-stone-700;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 2.25rem;
+  border-bottom: 1px solid #44403c;
+  padding-inline: 1rem;
+  color: #44403c;
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .appName {
-  @apply truncate;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media (min-width: 768px) {
   .header {
-    @apply h-8 justify-center px-6;
+    justify-content: center;
+    height: 2rem;
+    padding-inline: 1.5rem;
   }
 }
