@@ -1,31 +1,51 @@
-@reference "../index.css";
-
 .hero {
-  @apply flex flex-1 flex-col items-center justify-center px-8 pb-28 pt-12 text-center;
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem 7rem;
+  text-align: center;
 }
 
 .visuallyHidden {
-  @apply sr-only;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .description {
-  @apply mt-5 text-[10px] leading-4 text-stone-600;
+  margin-top: 1.25rem;
+  color: #57534e;
+  font-size: 10px;
+  line-height: 1rem;
 }
 
 .startButton {
-  @apply mt-5 max-w-44;
+  margin-top: 1.25rem;
+  max-width: 11rem;
 }
 
 @media (min-width: 768px) {
   .hero {
-    @apply pb-44 pt-24;
+    padding-top: 6rem;
+    padding-bottom: 11rem;
   }
 
   .description {
-    @apply mt-7 text-[11px] leading-5;
+    margin-top: 1.75rem;
+    font-size: 11px;
+    line-height: 1.25rem;
   }
 
   .startButton {
-    @apply mt-6 max-w-64;
+    margin-top: 1.5rem;
+    max-width: 16rem;
   }
 }

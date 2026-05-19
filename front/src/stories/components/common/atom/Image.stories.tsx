@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import startImage from "@/assets/90.png";
-import { Image } from "@/components/common/atom/Image";
+import { Image } from "@/components/commons/uis/Image";
 
 const meta = {
   title: "Components/Common/Atom/Image",
