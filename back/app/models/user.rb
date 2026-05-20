@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_many :workplaces, dependent: :destroy
+
   # ゲストユーザーを識別するためのランダムトークンを作成時に付与します。
   before_validation :set_guest_token, on: :create
 
