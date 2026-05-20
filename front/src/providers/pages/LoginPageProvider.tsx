@@ -1,4 +1,5 @@
 import { type FormEvent, type ReactNode, useState } from "react";
+import { useNavigate } from "react-router";
 
 import { useAuth } from "@/hooks/useAuth";
 import { LoginPageContext } from "@/providers/pages/LoginPageContext";
@@ -8,6 +9,7 @@ type LoginPageProviderProps = {
 };
 
 export function LoginPageProvider({ children }: LoginPageProviderProps) {
+  const navigate = useNavigate();
   const { user, isAuthenticated, isAuthLoading, guestLogin, isLoggingIn } = useAuth();
   const [name, setName] = useState("");
   const [message, setMessage] = useState<string | null>(null);
@@ -21,6 +23,7 @@ export function LoginPageProvider({ children }: LoginPageProviderProps) {
     try {
       const response = await guestLogin({ name });
       setMessage(`こんにちは${response.user?.name ?? "ゲスト"}さん`);
+      navigate("/workplaces/new?flow=initial");
     } catch {
       setErrorMessage("ゲストログインに失敗しました。時間をおいてもう一度お試しください。");
     }

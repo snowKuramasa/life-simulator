@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import startImage from "@/assets/90.png";
-import { Image } from "@/components/commons/uis/Image";
+import { Image } from "@/components/common/baseUi/Image";
 
 const meta = {
-  title: "Components/Common/Atom/Image",
+  title: "Components/Common/BaseUi/Image",
   component: Image,
   tags: ["autodocs"],
   args: {

@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Button as ShadcnButton } from "@/components/ui/button";
 
-import styles from "@/styles/common/atom/button.module.css";
+import styles from "@/styles/common/baseUi/button.module.css";
 
 type ButtonVariant = "primary" | "outline" | "ghost";
 type ButtonSize = "default" | "sm" | "lg" | "icon";

@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import startImage from "@/assets/90.png";
-import { Image } from "@/components/commons/uis/Image";
+import { Image } from "@/components/common/baseUi/Image";
 
 describe("Image", () => {
   it("renders an image with src and alt text", () => {
