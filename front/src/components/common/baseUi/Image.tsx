@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import styles from "@/styles/common/atom/image.module.css";
+import styles from "@/styles/common/baseUi/image.module.css";
 
 type ResponsiveSize = number | string | { base: number | string; md?: number | string };
 
