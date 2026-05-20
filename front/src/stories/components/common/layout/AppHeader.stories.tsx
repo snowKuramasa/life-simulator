@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { AppHeader } from "@/components/commons/layouts/AppHeader";
+import { AppHeader } from "@/components/common/layouts/AppHeader";
 
 const meta = {
   title: "Components/Common/Layout/AppHeader",

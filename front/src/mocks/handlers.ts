@@ -1,8 +1,10 @@
 import { http, HttpResponse } from "msw";
 
-import type { AuthUser, GuestLoginParams } from "@/types";
+import type { AuthUser, CreateWorkplaceParams, GuestLoginParams, Workplace } from "@/types";
 
 let currentUser: AuthUser | null = null;
+let workplaceId = 1;
+const workplaces: Workplace[] = [];
 
 export const handlers = [
   http.get("/api/v1/health", () => {
@@ -58,5 +60,20 @@ export const handlers = [
     currentUser = null;
 
     return new HttpResponse(null, { status: 204 });
+  }),
+  http.post("/api/v1/workplaces", async ({ request }) => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    const body = (await request.json()) as { workplace: CreateWorkplaceParams };
+    const workplace = {
+      id: workplaceId,
+      ...body.workplace,
+    };
+    workplaceId += 1;
+    workplaces.push(workplace);
+
+    return HttpResponse.json({ workplace }, { status: 201 });
   }),
 ];

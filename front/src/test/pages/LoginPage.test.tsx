@@ -107,7 +107,10 @@ describe("LoginPage", () => {
     expect(screen.queryByLabelText("名前")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Googleでログイン（準備中）" })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "戻る" })).toHaveAttribute("href", "/");
-    expect(screen.getByRole("link", { name: "ゲストで続ける" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: "ゲストで続ける" })).toHaveAttribute(
+      "href",
+      "/workplaces/new?flow=initial",
+    );
   });
 
   it("shows an error message when guest login fails", async () => {

@@ -1,6 +1,6 @@
 import startImage from "@/assets/90.png";
-import { Button } from "@/components/commons/uis/Button";
-import { Image } from "@/components/commons/uis/Image";
+import { Button } from "@/components/common/baseUi/Button";
+import { Image } from "@/components/common/baseUi/Image";
 import { Link } from "react-router";
 
 import styles from "./StartUpPage.module.css";

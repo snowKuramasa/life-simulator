@@ -1,6 +1,6 @@
 import loginImage from "@/assets/4.png";
-import { Button } from "@/components/commons/uis/Button";
-import { Image } from "@/components/commons/uis/Image";
+import { Button } from "@/components/common/baseUi/Button";
+import { Image } from "@/components/common/baseUi/Image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLoginPage } from "@/hooks/useLoginPage";
@@ -66,7 +66,7 @@ export function LoginPage() {
               />
             </div>
             <div className={styles.actions}>
-              <Button asChild variant="outline" className={styles.backButton}>
+              <Button asChild className={styles.backButton}>
                 <Link to="/">戻る</Link>
               </Button>
               <Button type="submit" className={styles.guestButton} disabled={isSubmitting}>
@@ -79,11 +79,11 @@ export function LoginPage() {
         <div className={styles.loggedInActions}>
           <p className={styles.welcomeMessage}>{isAuthLoading ? "確認中..." : welcomeMessage}</p>
           <div className={styles.actions}>
-            <Button asChild variant="outline" className={styles.backButton}>
+            <Button asChild className={styles.backButton}>
               <Link to="/">戻る</Link>
             </Button>
             <Button asChild className={styles.guestButton}>
-              <Link to="/">ゲストで続ける</Link>
+              <Link to="/workplaces/new?flow=initial">ゲストで続ける</Link>
             </Button>
           </div>
         </div>
