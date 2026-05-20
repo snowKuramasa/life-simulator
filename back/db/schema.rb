@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_13_130332) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_20_125702) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -24,4 +24,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_13_130332) do
     t.index ["guest_token"], name: "index_users_on_guest_token", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true, where: "(uid IS NOT NULL)"
   end
+
+  create_table "workplaces", force: :cascade do |t|
+    t.string "city", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "prefecture", null: false
+    t.integer "salary", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_workplaces_on_user_id"
+  end
+
+  add_foreign_key "workplaces", "users"
 end
