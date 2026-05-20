@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { AppHeader } from "@/components/commons/layouts/AppHeader";
+import { AppHeader } from "@/components/common/layouts/AppHeader";
 
 describe("AppHeader", () => {
   it("renders the default app name", () => {

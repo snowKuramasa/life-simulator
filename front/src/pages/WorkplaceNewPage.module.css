@@ -1,0 +1,150 @@
+.hero {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 0.75rem 2rem;
+  text-align: center;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.stepLabel {
+  width: 100%;
+  max-width: min(350px, calc(100vw - 24px));
+  margin: -0.5rem 0 0.25rem;
+  color: #57534e;
+  font-size: 12px;
+  text-align: left;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: min(350px, calc(100vw - 24px));
+  padding: 0.65rem 0.75rem 0.75rem;
+  border: 1px solid #44403c;
+  border-radius: 5px;
+  text-align: left;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field + .field {
+  margin-top: 16px;
+}
+
+.label {
+  color: #57534e;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.input,
+.select,
+.salaryInput {
+  box-sizing: border-box;
+  height: 2rem;
+  margin-top: 8px;
+  padding-inline: 0.5rem;
+  border: 1px solid #78716c;
+  border-color: #78716c;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #1c1917;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.select {
+  appearance: auto;
+}
+
+.salaryInputGroup {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.salaryInput {
+  width: 100%;
+}
+
+.salaryUnit {
+  margin-top: 8px;
+  color: #57534e;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.input:focus-visible,
+.select:focus-visible,
+.salaryInput:focus-visible {
+  outline: 2px solid #78716c;
+  outline-offset: 2px;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 24px;
+}
+
+.backButton,
+.saveButton {
+  min-width: 0;
+}
+
+.successMessage {
+  max-width: 16rem;
+  margin-top: 0.75rem;
+  color: #44403c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.errorMessage {
+  max-width: 16rem;
+  margin-top: 0.75rem;
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .hero {
+    padding-top: 1.5rem;
+    padding-bottom: 5.25rem;
+  }
+
+  .stepLabel {
+    max-width: 495px;
+    margin-top: -1rem;
+  }
+
+  .form {
+    width: 495px;
+    padding: 0.85rem 1rem 1rem;
+  }
+
+  .label {
+    font-size: 12px;
+  }
+}
