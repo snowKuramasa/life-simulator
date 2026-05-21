@@ -61,6 +61,27 @@ export const handlers = [
 
     return new HttpResponse(null, { status: 204 });
   }),
+  http.get("/api/v1/workplaces", () => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    return HttpResponse.json({ workplaces });
+  }),
+  http.get("/api/v1/workplaces/:id", ({ params }) => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    const id = Number(params.id);
+    const workplace = workplaces.find((workplaceItem) => workplaceItem.id === id);
+
+    if (!workplace) {
+      return HttpResponse.json({ error: "勤務先が見つかりません" }, { status: 404 });
+    }
+
+    return HttpResponse.json({ workplace });
+  }),
   http.post("/api/v1/workplaces", async ({ request }) => {
     if (!currentUser) {
       return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });

@@ -1,6 +1,96 @@
 require "test_helper"
 
 class Api::V1::WorkplacesControllerTest < ActionDispatch::IntegrationTest
+  test "lists workplaces for the current user" do
+    post "/api/v1/auth/guest", params: { name: "勤務先一覧テストユーザー" }, as: :json
+    user_id = JSON.parse(response.body).dig("user", "id")
+    first_workplace = Workplace.create!(
+      user_id:,
+      name: "候補A",
+      salary: 220_000,
+      prefecture: "東京都",
+      city: "品川区"
+    )
+    second_workplace = Workplace.create!(
+      user_id:,
+      name: "候補B",
+      salary: 250_000,
+      prefecture: "神奈川県",
+      city: "横浜市"
+    )
+
+    get "/api/v1/workplaces", as: :json
+
+    assert_response :ok
+
+    response_json = JSON.parse(response.body)
+    workplaces = response_json.fetch("workplaces")
+    assert_equal 2, workplaces.size
+    assert_equal [ first_workplace.id, second_workplace.id ], workplaces.pluck("id")
+    assert_equal [ "候補A", "候補B" ], workplaces.pluck("name")
+    assert_equal [ 220000, 250000 ], workplaces.pluck("salary")
+    assert_equal [ "東京都", "神奈川県" ], workplaces.pluck("prefecture")
+    assert_equal [ "品川区", "横浜市" ], workplaces.pluck("city")
+  end
+
+  test "does not include another user's workplaces in index" do
+    post "/api/v1/auth/guest", params: { name: "勤務先一覧テストユーザー" }, as: :json
+
+    get "/api/v1/workplaces", as: :json
+
+    assert_response :ok
+    assert_empty JSON.parse(response.body).fetch("workplaces")
+  end
+
+  test "returns unauthorized when listing without a signed in user" do
+    get "/api/v1/workplaces", as: :json
+
+    assert_response :unauthorized
+    assert_equal "ログインが必要です", JSON.parse(response.body)["error"]
+  end
+
+  test "shows a workplace for the current user" do
+    post "/api/v1/auth/guest", params: { name: "勤務先詳細テストユーザー" }, as: :json
+    user_id = JSON.parse(response.body).dig("user", "id")
+    workplace = Workplace.create!(
+      user_id:,
+      name: "候補A",
+      salary: 220_000,
+      prefecture: "東京都",
+      city: "品川区"
+    )
+
+    get "/api/v1/workplaces/#{workplace.id}", as: :json
+
+    assert_response :ok
+
+    response_json = JSON.parse(response.body)
+    assert_equal workplace.id, response_json.dig("workplace", "id")
+    assert_equal "候補A", response_json.dig("workplace", "name")
+    assert_equal 220000, response_json.dig("workplace", "salary")
+    assert_equal "東京都", response_json.dig("workplace", "prefecture")
+    assert_equal "品川区", response_json.dig("workplace", "city")
+  end
+
+  test "returns unauthorized when showing without a signed in user" do
+    workplace = workplaces(:one)
+
+    get "/api/v1/workplaces/#{workplace.id}", as: :json
+
+    assert_response :unauthorized
+    assert_equal "ログインが必要です", JSON.parse(response.body)["error"]
+  end
+
+  test "returns not found when showing another user's workplace" do
+    post "/api/v1/auth/guest", params: { name: "勤務先詳細テストユーザー" }, as: :json
+    workplace = workplaces(:two)
+
+    get "/api/v1/workplaces/#{workplace.id}", as: :json
+
+    assert_response :not_found
+    assert_equal "勤務先が見つかりません", JSON.parse(response.body)["error"]
+  end
+
   test "creates a workplace for the current user" do
     post "/api/v1/auth/guest", params: { name: "勤務先テストユーザー" }, as: :json
     user_id = JSON.parse(response.body).dig("user", "id")

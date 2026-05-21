@@ -1,7 +1,7 @@
 import { WorkplaceForm } from "@/components/workplaces/form";
-import { useWorkplaceNewPage } from "@/hooks/useWorkplaceNewPage";
+import { useWorkplaceEditPage } from "@/hooks/useWorkplaceEditPage";
 
-export function WorkplaceNewPage() {
+export function WorkplaceEditPage() {
   const {
     name,
     setName,
@@ -11,17 +11,16 @@ export function WorkplaceNewPage() {
     setPrefecture,
     city,
     setCity,
-    isInitialFlow,
     isSubmitting,
     message,
     errorMessage,
     handleSubmit,
-  } = useWorkplaceNewPage();
+  } = useWorkplaceEditPage();
 
   return (
     <WorkplaceForm
-      title="勤務先新規作成画面"
-      formId="workplace-form"
+      title="勤務先編集画面"
+      formId="workplace-edit-form"
       name={name}
       setName={setName}
       salary={salary}
@@ -30,8 +29,7 @@ export function WorkplaceNewPage() {
       setPrefecture={setPrefecture}
       city={city}
       setCity={setCity}
-      showStepLabel={isInitialFlow}
-      submitLabel={isInitialFlow ? "次へ" : "保存"}
+      submitLabel="保存"
       submittingLabel="保存中..."
       isSubmitting={isSubmitting}
       message={message}

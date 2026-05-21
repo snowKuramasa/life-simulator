@@ -4,6 +4,32 @@ module Api
     #
     # 勤務先はログイン中のユーザーに紐づけて保存します。
     class WorkplacesController < ApplicationController
+      # 勤務先候補の一覧を取得します。
+      #
+      # @route GET /api/v1/workplaces
+      # @return [JSON] ログイン中ユーザーの勤務先一覧
+      def index
+        return render_unauthorized unless current_user
+
+        workplaces = current_user.workplaces.order(:created_at, :id)
+
+        render json: { workplaces: workplaces.map { |workplace| workplace_json(workplace) } }, status: :ok
+      end
+
+      # 勤務先候補を取得します。
+      #
+      # @route GET /api/v1/workplaces/:id
+      # @param id [Integer] 取得対象の勤務先ID
+      # @return [JSON] 勤務先情報
+      def show
+        return render_unauthorized unless current_user
+
+        workplace = current_user.workplaces.find_by(id: params[:id])
+        return render_not_found unless workplace
+
+        render json: { workplace: workplace_json(workplace) }, status: :ok
+      end
+
       # 勤務先候補を作成します。
       #
       # @route POST /api/v1/workplaces
