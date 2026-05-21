@@ -1,5 +1,5 @@
+import { WorkplaceForm } from "@/components/workplaces/form";
 import { useWorkplaceEditPage } from "@/hooks/useWorkplaceEditPage";
-import { WorkplaceFormPage } from "@/pages/WorkplaceFormPage";
 
 export function WorkplaceEditPage() {
   const {
@@ -18,7 +18,7 @@ export function WorkplaceEditPage() {
   } = useWorkplaceEditPage();
 
   return (
-    <WorkplaceFormPage
+    <WorkplaceForm
       title="勤務先編集画面"
       formId="workplace-edit-form"
       name={name}

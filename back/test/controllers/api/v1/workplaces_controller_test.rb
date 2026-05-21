@@ -26,11 +26,11 @@ class Api::V1::WorkplacesControllerTest < ActionDispatch::IntegrationTest
     response_json = JSON.parse(response.body)
     workplaces = response_json.fetch("workplaces")
     assert_equal 2, workplaces.size
-    assert_equal [first_workplace.id, second_workplace.id], workplaces.pluck("id")
-    assert_equal ["候補A", "候補B"], workplaces.pluck("name")
-    assert_equal [220000, 250000], workplaces.pluck("salary")
-    assert_equal ["東京都", "神奈川県"], workplaces.pluck("prefecture")
-    assert_equal ["品川区", "横浜市"], workplaces.pluck("city")
+    assert_equal [ first_workplace.id, second_workplace.id ], workplaces.pluck("id")
+    assert_equal [ "候補A", "候補B" ], workplaces.pluck("name")
+    assert_equal [ 220000, 250000 ], workplaces.pluck("salary")
+    assert_equal [ "東京都", "神奈川県" ], workplaces.pluck("prefecture")
+    assert_equal [ "品川区", "横浜市" ], workplaces.pluck("city")
   end
 
   test "does not include another user's workplaces in index" do

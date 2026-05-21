@@ -1,5 +1,5 @@
+import { WorkplaceForm } from "@/components/workplaces/form";
 import { useWorkplaceNewPage } from "@/hooks/useWorkplaceNewPage";
-import { WorkplaceFormPage } from "@/pages/WorkplaceFormPage";
 
 export function WorkplaceNewPage() {
   const {
@@ -19,7 +19,7 @@ export function WorkplaceNewPage() {
   } = useWorkplaceNewPage();
 
   return (
-    <WorkplaceFormPage
+    <WorkplaceForm
       title="勤務先新規作成画面"
       formId="workplace-form"
       name={name}
