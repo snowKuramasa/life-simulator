@@ -14,9 +14,9 @@ import { PREFECTURES } from "@/constants/prefectures";
 import { type FormEvent } from "react";
 import { Link } from "react-router";
 
-import styles from "./WorkplaceNewPage.module.css";
+import styles from "./form.module.css";
 
-type WorkplaceFormPageProps = {
+type WorkplaceFormProps = {
   title: string;
   formId: string;
   name: string;
@@ -44,7 +44,7 @@ function normalizeSalary(value: string) {
   return value.replace(/[^\d]/g, "");
 }
 
-export function WorkplaceFormPage({
+export function WorkplaceForm({
   title,
   formId,
   name,
@@ -62,7 +62,7 @@ export function WorkplaceFormPage({
   message,
   errorMessage,
   handleSubmit,
-}: WorkplaceFormPageProps) {
+}: WorkplaceFormProps) {
   return (
     <section className={styles.hero} aria-labelledby={`${formId}-title`}>
       <h1 id={`${formId}-title`} className={styles.visuallyHidden}>
