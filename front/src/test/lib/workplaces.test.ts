@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { createWorkplace, deleteWorkplace, updateWorkplace } from "@/lib/workplaces";
+import { createWorkplace, deleteWorkplace, getWorkplace, getWorkplaces, updateWorkplace } from "@/lib/workplaces";
 
 describe("workplaces api", () => {
   afterEach(() => {
@@ -46,6 +46,65 @@ describe("workplaces api", () => {
         }),
       }),
     );
+  });
+
+  it("gets workplaces list request with credentials", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          workplaces: [
+            {
+              id: 1,
+              name: "候補A",
+              salary: 220_000,
+              prefecture: "東京都",
+              city: "品川区",
+            },
+          ],
+        }),
+      }),
+    );
+
+    const response = await getWorkplaces();
+
+    expect(fetch).toHaveBeenCalledWith(
+      "/api/v1/workplaces",
+      expect.objectContaining({
+        credentials: "include",
+      }),
+    );
+    expect(response.workplaces).toHaveLength(1);
+    expect(response.workplaces[0].name).toBe("候補A");
+  });
+
+  it("gets workplace request with credentials", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          workplace: {
+            id: 1,
+            name: "候補A",
+            salary: 220_000,
+            prefecture: "東京都",
+            city: "品川区",
+          },
+        }),
+      }),
+    );
+
+    const response = await getWorkplace(1);
+
+    expect(fetch).toHaveBeenCalledWith(
+      "/api/v1/workplaces/1",
+      expect.objectContaining({
+        credentials: "include",
+      }),
+    );
+    expect(response.workplace.name).toBe("候補A");
   });
 
   it("patches workplace update request with credentials", async () => {
