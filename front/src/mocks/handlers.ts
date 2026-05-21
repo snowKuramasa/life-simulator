@@ -97,4 +97,20 @@ export const handlers = [
 
     return HttpResponse.json({ workplace });
   }),
+  http.delete("/api/v1/workplaces/:id", ({ params }) => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    const id = Number(params.id);
+    const workplaceIndex = workplaces.findIndex((workplace) => workplace.id === id);
+
+    if (workplaceIndex === -1) {
+      return HttpResponse.json({ error: "勤務先が見つかりません" }, { status: 404 });
+    }
+
+    workplaces.splice(workplaceIndex, 1);
+
+    return new HttpResponse(null, { status: 204 });
+  }),
 ];
