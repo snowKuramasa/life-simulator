@@ -29,6 +29,10 @@ export interface CreateWorkplaceParams {
   city: string;
 }
 
+export interface UpdateWorkplaceParams extends CreateWorkplaceParams {
+  id: number;
+}
+
 export interface WorkplaceResponse {
   workplace: Workplace;
 }
