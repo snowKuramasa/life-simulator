@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { createWorkplace, updateWorkplace } from "@/lib/workplaces";
+import { createWorkplace, deleteWorkplace, updateWorkplace } from "@/lib/workplaces";
 
 export function useCreateWorkplaceMutation() {
   return useMutation({
@@ -11,5 +11,11 @@ export function useCreateWorkplaceMutation() {
 export function useUpdateWorkplaceMutation() {
   return useMutation({
     mutationFn: updateWorkplace,
+  });
+}
+
+export function useDeleteWorkplaceMutation() {
+  return useMutation({
+    mutationFn: deleteWorkplace,
   });
 }

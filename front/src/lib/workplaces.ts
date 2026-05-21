@@ -34,3 +34,14 @@ export async function updateWorkplace({ id, ...params }: UpdateWorkplaceParams) 
 
   return (await response.json()) as WorkplaceResponse;
 }
+
+export async function deleteWorkplace(id: number) {
+  const response = await fetch(buildApiUrl(`/api/v1/workplaces/${id}`), {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Workplace request failed with ${response.status}`);
+  }
+}
