@@ -36,3 +36,7 @@ export interface UpdateWorkplaceParams extends CreateWorkplaceParams {
 export interface WorkplaceResponse {
   workplace: Workplace;
 }
+
+export interface WorkplacesResponse {
+  workplaces: Workplace[];
+}
