@@ -182,4 +182,46 @@ class Api::V1::WorkplacesControllerTest < ActionDispatch::IntegrationTest
     assert_includes response_json.dig("errors", "city"), "City can't be blank"
     assert_equal "候補A", workplace.reload.name
   end
+
+  test "destroys a workplace for the current user" do
+    post "/api/v1/auth/guest", params: { name: "勤務先削除テストユーザー" }, as: :json
+    user_id = JSON.parse(response.body).dig("user", "id")
+    workplace = Workplace.create!(
+      user_id:,
+      name: "候補A",
+      salary: 220_000,
+      prefecture: "東京都",
+      city: "品川区"
+    )
+
+    assert_difference "Workplace.count", -1 do
+      delete "/api/v1/workplaces/#{workplace.id}", as: :json
+    end
+
+    assert_response :no_content
+    assert_empty response.body
+  end
+
+  test "returns unauthorized when destroying without a signed in user" do
+    workplace = workplaces(:one)
+
+    assert_no_difference "Workplace.count" do
+      delete "/api/v1/workplaces/#{workplace.id}", as: :json
+    end
+
+    assert_response :unauthorized
+    assert_equal "ログインが必要です", JSON.parse(response.body)["error"]
+  end
+
+  test "returns not found when destroying another user's workplace" do
+    post "/api/v1/auth/guest", params: { name: "勤務先削除テストユーザー" }, as: :json
+    workplace = workplaces(:two)
+
+    assert_no_difference "Workplace.count" do
+      delete "/api/v1/workplaces/#{workplace.id}", as: :json
+    end
+
+    assert_response :not_found
+    assert_equal "勤務先が見つかりません", JSON.parse(response.body)["error"]
+  end
 end

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { createWorkplace, updateWorkplace } from "@/lib/workplaces";
+import { createWorkplace, deleteWorkplace, updateWorkplace } from "@/lib/workplaces";
 
 describe("workplaces api", () => {
   afterEach(() => {
@@ -109,5 +109,24 @@ describe("workplaces api", () => {
         city: "横浜市",
       }),
     ).rejects.toThrow("Workplace request failed with 404");
+  });
+
+  it("deletes workplace request with credentials", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+      }),
+    );
+
+    await deleteWorkplace(1);
+
+    expect(fetch).toHaveBeenCalledWith(
+      "/api/v1/workplaces/1",
+      expect.objectContaining({
+        method: "DELETE",
+        credentials: "include",
+      }),
+    );
   });
 });

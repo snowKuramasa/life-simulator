@@ -48,6 +48,21 @@ module Api
         end
       end
 
+      # 勤務先候補を削除します。
+      #
+      # @route DELETE /api/v1/workplaces/:id
+      # @param id [Integer] 削除対象の勤務先ID
+      # @return [nil] 削除成功時はレスポンス本文なし
+      def destroy
+        return render_unauthorized unless current_user
+
+        workplace = current_user.workplaces.find_by(id: params[:id])
+        return render_not_found unless workplace
+
+        workplace.destroy!
+        head :no_content
+      end
+
       private
 
       # フロントエンドから受け取る勤務先パラメータを制限します。
