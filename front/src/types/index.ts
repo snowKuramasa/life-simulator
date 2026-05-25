@@ -40,3 +40,22 @@ export interface WorkplaceResponse {
 export interface WorkplacesResponse {
   workplaces: Workplace[];
 }
+
+export interface Residence {
+  id: number;
+  name: string;
+  rent: number;
+  prefecture: string;
+  city: string;
+}
+
+export interface CreateResidenceParams {
+  name: string;
+  rent: number;
+  prefecture: string;
+  city: string;
+}
+
+export interface ResidenceResponse {
+  residence: Residence;
+}
