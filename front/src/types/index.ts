@@ -56,6 +56,14 @@ export interface CreateResidenceParams {
   city: string;
 }
 
+export interface UpdateResidenceParams extends CreateResidenceParams {
+  id: number;
+}
+
 export interface ResidenceResponse {
   residence: Residence;
+}
+
+export interface ResidencesResponse {
+  residences: Residence[];
 }
