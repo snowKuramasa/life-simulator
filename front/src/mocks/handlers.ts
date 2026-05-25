@@ -91,6 +91,27 @@ export const handlers = [
 
     return HttpResponse.json({ workplace });
   }),
+  http.get("/api/v1/residences", () => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    return HttpResponse.json({ residences });
+  }),
+  http.get("/api/v1/residences/:id", ({ params }) => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    const id = Number(params.id);
+    const residence = residences.find((residenceItem) => residenceItem.id === id);
+
+    if (!residence) {
+      return HttpResponse.json({ error: "住居が見つかりません" }, { status: 404 });
+    }
+
+    return HttpResponse.json({ residence });
+  }),
   http.post("/api/v1/workplaces", async ({ request }) => {
     if (!currentUser) {
       return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
@@ -120,6 +141,43 @@ export const handlers = [
     residences.push(residence);
 
     return HttpResponse.json({ residence }, { status: 201 });
+  }),
+  http.patch("/api/v1/residences/:id", async ({ params, request }) => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    const id = Number(params.id);
+    const residenceIndex = residences.findIndex((residence) => residence.id === id);
+
+    if (residenceIndex === -1) {
+      return HttpResponse.json({ error: "住居が見つかりません" }, { status: 404 });
+    }
+
+    const body = (await request.json()) as { residence: CreateResidenceParams };
+    const residence = {
+      ...residences[residenceIndex],
+      ...body.residence,
+    };
+    residences[residenceIndex] = residence;
+
+    return HttpResponse.json({ residence });
+  }),
+  http.delete("/api/v1/residences/:id", ({ params }) => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    const id = Number(params.id);
+    const residenceIndex = residences.findIndex((residence) => residence.id === id);
+
+    if (residenceIndex === -1) {
+      return HttpResponse.json({ error: "住居が見つかりません" }, { status: 404 });
+    }
+
+    residences.splice(residenceIndex, 1);
+
+    return new HttpResponse(null, { status: 204 });
   }),
   http.patch("/api/v1/workplaces/:id", async ({ params, request }) => {
     if (!currentUser) {
