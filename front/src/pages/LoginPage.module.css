@@ -22,7 +22,7 @@
 
 .loginLabel {
   margin-top: -1.5rem;
-  color: #44403c;
+  color: #3f4d3c;
   font-size: 10px;
   font-weight: 600;
 }
@@ -48,7 +48,7 @@
 
 .separator {
   margin-top: 0.75rem;
-  color: #57534e;
+  color: #4f5f4b;
   font-size: 10px;
 }
 
@@ -62,7 +62,7 @@
 }
 
 .guestTitle {
-  color: #44403c;
+  color: #3f4d3c;
   font-size: 10px;
   font-weight: 600;
 }
@@ -73,15 +73,16 @@
   width: 100%;
   margin-top: 0.5rem;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #44403c;
-  border-radius: 5px;
-  color: #57534e;
+  border: 1px solid #6f8068;
+  border-radius: 8px;
+  background-color: #fffef8;
+  color: #4f5f4b;
   font-size: 10px;
   text-align: left;
 }
 
 .nameLabel {
-  color: #57534e;
+  color: #4f5f4b;
   font-size: 10px;
   font-weight: 400;
 }
@@ -90,7 +91,7 @@
   height: 1.75rem;
   margin-top: 0.25rem;
   padding-inline: 0.5rem;
-  border-color: #78716c;
+  border-color: #8d9a86;
   border-radius: 5px;
   background-color: #ffffff;
   color: #1c1917;
@@ -99,7 +100,7 @@
 }
 
 .nameInput:focus-visible {
-  outline: 2px solid #78716c;
+  outline: 2px solid #5f765d;
   outline-offset: 2px;
 }
 
@@ -122,7 +123,7 @@
 }
 
 .welcomeMessage {
-  color: #44403c;
+  color: #3f4d3c;
   font-size: 11px;
   font-weight: 600;
 }
@@ -134,7 +135,7 @@
 
 .successMessage {
   margin-top: 0.75rem;
-  color: #44403c;
+  color: #3f6f4a;
   font-size: 10px;
   font-weight: 600;
 }
@@ -150,7 +151,7 @@
 .note {
   max-width: 16rem;
   margin-top: 0.75rem;
-  color: #78716c;
+  color: #66745f;
   font-size: 9px;
   line-height: 1rem;
   text-align: left;
