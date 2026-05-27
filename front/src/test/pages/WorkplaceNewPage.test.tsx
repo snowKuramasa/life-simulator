@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { WorkplaceNewPage } from "@/pages/WorkplaceNewPage";
@@ -9,9 +9,17 @@ import { renderWithProviders } from "@/test/utils/renderWithProviders";
 function renderWorkplaceNewPage(initialEntry = "/workplaces/new?flow=initial") {
   return renderWithProviders(
     <MemoryRouter initialEntries={[initialEntry]}>
-      <WorkplaceNewPageProvider>
-        <WorkplaceNewPage />
-      </WorkplaceNewPageProvider>
+      <Routes>
+        <Route
+          path="/workplaces/new"
+          element={
+            <WorkplaceNewPageProvider>
+              <WorkplaceNewPage />
+            </WorkplaceNewPageProvider>
+          }
+        />
+        <Route path="/residences/new" element={<p>住居新規作成画面へ遷移しました</p>} />
+      </Routes>
     </MemoryRouter>,
   );
 }
@@ -82,7 +90,7 @@ describe("WorkplaceNewPage", () => {
     expect(screen.getByRole("button", { name: "保存" })).toBeInTheDocument();
   });
 
-  it("submits workplace create request", async () => {
+  it("submits workplace create request and navigates to initial residence create page", async () => {
     renderWorkplaceNewPage();
 
     fireEvent.change(screen.getByLabelText("勤務先"), { target: { value: "候補A" } });
@@ -109,7 +117,28 @@ describe("WorkplaceNewPage", () => {
         }),
       );
     });
-    expect(await screen.findByText("勤務先を登録しました。次の入力へ進めます。")).toBeInTheDocument();
+    expect(await screen.findByText("住居新規作成画面へ遷移しました")).toBeInTheDocument();
+  });
+
+  it("submits normal workplace create request and stays on create page", async () => {
+    renderWorkplaceNewPage("/workplaces/new");
+
+    fireEvent.change(screen.getByLabelText("勤務先"), { target: { value: "候補A" } });
+    fireEvent.change(screen.getByLabelText("給与（手取り）"), { target: { value: "220000" } });
+    await selectPrefecture("東京都");
+    fireEvent.change(screen.getByLabelText("勤務地（市区町村）"), { target: { value: "品川区" } });
+    fireEvent.click(screen.getByRole("button", { name: "保存" }));
+
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith(
+        "/api/v1/workplaces",
+        expect.objectContaining({
+          method: "POST",
+          credentials: "include",
+        }),
+      );
+    });
+    expect(await screen.findByText("勤務先を保存しました。")).toBeInTheDocument();
   });
 
   it("shows an error message when workplace create fails", async () => {

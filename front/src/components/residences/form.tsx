@@ -1,4 +1,4 @@
-import workplaceImage from "@/assets/113.png";
+import residenceImage from "@/assets/12.png";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
 import { Input } from "@/components/ui/input";
@@ -16,13 +16,13 @@ import { Link } from "react-router";
 
 import styles from "./form.module.css";
 
-type WorkplaceFormProps = {
+type ResidenceFormProps = {
   title: string;
   formId: string;
   name: string;
   setName: (name: string) => void;
-  salary: string;
-  setSalary: (salary: string) => void;
+  rent: string;
+  setRent: (rent: string) => void;
   prefecture: string;
   setPrefecture: (prefecture: string) => void;
   city: string;
@@ -36,21 +36,21 @@ type WorkplaceFormProps = {
   handleSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
 };
 
-function formatSalary(value: string) {
+function formatRent(value: string) {
   return value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function normalizeSalary(value: string) {
+function normalizeRent(value: string) {
   return value.replace(/[^\d]/g, "");
 }
 
-export function WorkplaceForm({
+export function ResidenceForm({
   title,
   formId,
   name,
   setName,
-  salary,
-  setSalary,
+  rent,
+  setRent,
   prefecture,
   setPrefecture,
   city,
@@ -62,25 +62,25 @@ export function WorkplaceForm({
   message,
   errorMessage,
   handleSubmit,
-}: WorkplaceFormProps) {
+}: ResidenceFormProps) {
   return (
     <section className={styles.hero} aria-labelledby={`${formId}-title`}>
       <h1 id={`${formId}-title`} className={styles.visuallyHidden}>
         {title}
       </h1>
       <Image
-        src={workplaceImage}
-        alt="駅の改札に立っている人のイラスト"
+        src={residenceImage}
+        alt="ソファに座っている人のイラスト"
         width={{ base: 170, md: 250 }}
         height={{ base: 170, md: 250 }}
       />
 
-      {showStepLabel ? <p className={styles.stepLabel}>ステップ1/2</p> : null}
+      {showStepLabel ? <p className={styles.stepLabel}>ステップ2/2</p> : null}
 
       <form id={formId} className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.field}>
           <Label className={styles.label} htmlFor={`${formId}-name`}>
-            勤務先
+            住居名
           </Label>
           <Input
             id={`${formId}-name`}
@@ -93,25 +93,25 @@ export function WorkplaceForm({
           />
         </div>
         <div className={styles.field}>
-          <Label className={styles.label} htmlFor={`${formId}-salary`}>
-            給与（手取り）
+          <Label className={styles.label} htmlFor={`${formId}-rent`}>
+            家賃
           </Label>
-          <div className={styles.salaryInputGroup}>
+          <div className={styles.rentInputGroup}>
             <Input
-              id={`${formId}-salary`}
-              className={styles.salaryInput}
+              id={`${formId}-rent`}
+              className={styles.rentInput}
               type="text"
-              value={formatSalary(salary)}
-              onChange={(event) => setSalary(normalizeSalary(event.target.value))}
+              value={formatRent(rent)}
+              onChange={(event) => setRent(normalizeRent(event.target.value))}
               inputMode="numeric"
               required
             />
-            <span className={styles.salaryUnit}>円</span>
+            <span className={styles.rentUnit}>円</span>
           </div>
         </div>
         <div className={styles.field}>
           <Label className={styles.label} htmlFor={`${formId}-prefecture`}>
-            勤務地（都道府県）
+            場所（都道府県）
           </Label>
           <Select value={prefecture} onValueChange={setPrefecture} required>
             <SelectTrigger id={`${formId}-prefecture`} className={styles.select}>
@@ -128,7 +128,7 @@ export function WorkplaceForm({
         </div>
         <div className={styles.field}>
           <Label className={styles.label} htmlFor={`${formId}-city`}>
-            勤務地（市区町村）
+            場所（市区町村）
           </Label>
           <Input
             id={`${formId}-city`}
