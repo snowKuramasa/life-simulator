@@ -1,5 +1,5 @@
 import { type FormEvent, type ReactNode, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 
 import { useCreateWorkplaceMutation } from "@/hooks/workplaces/useWorkplaceQueries";
 import { WorkplaceNewPageContext } from "@/providers/pages/WorkplaceNewPageContext";
@@ -9,6 +9,7 @@ type WorkplaceNewPageProviderProps = {
 };
 
 export function WorkplaceNewPageProvider({ children }: WorkplaceNewPageProviderProps) {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const createWorkplace = useCreateWorkplaceMutation();
   const [name, setName] = useState("");
@@ -31,7 +32,12 @@ export function WorkplaceNewPageProvider({ children }: WorkplaceNewPageProviderP
         prefecture,
         city,
       });
-      setMessage(isInitialFlow ? "勤務先を登録しました。次の入力へ進めます。" : "勤務先を保存しました。");
+      if (isInitialFlow) {
+        navigate("/residences/new?flow=initial");
+        return;
+      }
+
+      setMessage("勤務先を保存しました。");
     } catch {
       setErrorMessage("勤務先の保存に失敗しました。入力内容を確認してもう一度お試しください。");
     }
