@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  workplace: one
+  residence: one
+  commute_minutes: 30
+
+two:
+  user: two
+  workplace: two
+  residence: two
+  commute_minutes: 45
