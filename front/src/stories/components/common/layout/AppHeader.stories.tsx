@@ -7,7 +7,8 @@ const meta = {
   component: AppHeader,
   tags: ["autodocs"],
   args: {
-    appName: "アプリ名",
+    appName: "住みかとしごと",
+    subtitle: "これからの暮らしを、少し具体的に。",
   },
   parameters: {
     layout: "fullscreen",
@@ -22,6 +23,7 @@ export const Default: Story = {};
 
 export const LongName: Story = {
   args: {
-    appName: "Life Simulator",
+    appName: "住みかとしごと",
+    subtitle: "住む場所と働く場所から、これからの暮らしを少し具体的に描きます。",
   },
 };
