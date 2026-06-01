@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_25_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_01_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "commutes", force: :cascade do |t|
+    t.integer "commute_minutes", null: false
+    t.datetime "created_at", null: false
+    t.bigint "residence_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.bigint "workplace_id", null: false
+    t.index ["residence_id"], name: "index_commutes_on_residence_id"
+    t.index ["user_id", "workplace_id", "residence_id"], name: "index_commutes_on_user_id_and_workplace_id_and_residence_id", unique: true
+    t.index ["user_id"], name: "index_commutes_on_user_id"
+    t.index ["workplace_id"], name: "index_commutes_on_workplace_id"
+  end
 
   create_table "residences", force: :cascade do |t|
     t.string "city", null: false
@@ -47,6 +60,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_25_000000) do
     t.index ["user_id"], name: "index_workplaces_on_user_id"
   end
 
+  add_foreign_key "commutes", "residences"
+  add_foreign_key "commutes", "users"
+  add_foreign_key "commutes", "workplaces"
   add_foreign_key "residences", "users"
   add_foreign_key "workplaces", "users"
 end
