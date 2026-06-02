@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ResidenceNewPage } from "@/pages/ResidenceNewPage";
@@ -9,9 +9,17 @@ import { renderWithProviders } from "@/test/utils/renderWithProviders";
 function renderResidenceNewPage(initialEntry = "/residences/new?flow=initial") {
   return renderWithProviders(
     <MemoryRouter initialEntries={[initialEntry]}>
-      <ResidenceNewPageProvider>
-        <ResidenceNewPage />
-      </ResidenceNewPageProvider>
+      <Routes>
+        <Route
+          path="/residences/new"
+          element={
+            <ResidenceNewPageProvider>
+              <ResidenceNewPage />
+            </ResidenceNewPageProvider>
+          }
+        />
+        <Route path="/results" element={<p>結果一覧画面へ遷移しました</p>} />
+      </Routes>
     </MemoryRouter>,
   );
 }
@@ -82,7 +90,7 @@ describe("ResidenceNewPage", () => {
     expect(screen.getByRole("button", { name: "保存" })).toBeInTheDocument();
   });
 
-  it("submits residence create request", async () => {
+  it("submits residence create request and navigates to results in initial flow", async () => {
     renderResidenceNewPage();
 
     fireEvent.change(screen.getByLabelText("住居名"), { target: { value: "候補A" } });
@@ -109,7 +117,7 @@ describe("ResidenceNewPage", () => {
         }),
       );
     });
-    expect(await screen.findByText("住居を登録しました。結果を確認できます。")).toBeInTheDocument();
+    expect(await screen.findByText("結果一覧画面へ遷移しました")).toBeInTheDocument();
   });
 
   it("shows an error message when residence create fails", async () => {
