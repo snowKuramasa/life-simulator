@@ -9,7 +9,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { ResultListItem, ResultSortKey } from "@/providers/pages/ResultListPageContext";
-import { Building2, Cloud, Clock, Coins, Home, Infinity, MoreHorizontal, Sun } from "lucide-react";
+import {
+  Building2,
+  Cloud,
+  Clock,
+  Coins,
+  Home,
+  MoreHorizontal,
+  Sun,
+} from "lucide-react";
 import { Link } from "react-router";
 
 import styles from "./list.module.css";
@@ -81,7 +89,6 @@ export function ResultList({ results, sortKey, setSortKey, isLoading, errorMessa
                 <Home aria-hidden="true" size={18} />
                 <span>{result.residence.name}</span>
               </p>
-              <Infinity aria-hidden="true" size={18} />
             </div>
 
             <div className={styles.infoRow}>
