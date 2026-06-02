@@ -10,9 +10,24 @@ import type {
 } from "@/types";
 
 let currentUser: AuthUser | null = null;
-let workplaceId = 1;
+let workplaceId = 3;
 let residenceId = 1;
-const workplaces: Workplace[] = [];
+const workplaces: Workplace[] = [
+  {
+    id: 1,
+    name: "A社",
+    salary: 220000,
+    prefecture: "東京都",
+    city: "品川区",
+  },
+  {
+    id: 2,
+    name: "B社",
+    salary: 180000,
+    prefecture: "東京都",
+    city: "新宿区",
+  },
+];
 const residences: Residence[] = [];
 
 export const handlers = [

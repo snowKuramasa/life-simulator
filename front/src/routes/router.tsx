@@ -6,11 +6,13 @@ import { ResidenceEditPage } from "@/pages/ResidenceEditPage";
 import { ResidenceNewPage } from "@/pages/ResidenceNewPage";
 import { StartUpPage } from "@/pages/StartUpPage";
 import { WorkplaceEditPage } from "@/pages/WorkplaceEditPage";
+import { WorkplaceListPage } from "@/pages/WorkplaceListPage";
 import { WorkplaceNewPage } from "@/pages/WorkplaceNewPage";
 import { LoginPageProvider } from "@/providers/pages/LoginPageProvider";
 import { ResidenceEditPageProvider } from "@/providers/pages/ResidenceEditPageProvider";
 import { ResidenceNewPageProvider } from "@/providers/pages/ResidenceNewPageProvider";
 import { WorkplaceEditPageProvider } from "@/providers/pages/WorkplaceEditPageProvider";
+import { WorkplaceListPageProvider } from "@/providers/pages/WorkplaceListPageProvider";
 import { WorkplaceNewPageProvider } from "@/providers/pages/WorkplaceNewPageProvider";
 
 export const router = createBrowserRouter([
@@ -52,6 +54,14 @@ export const router = createBrowserRouter([
           <WorkplaceNewPageProvider>
             <WorkplaceNewPage />
           </WorkplaceNewPageProvider>
+        ),
+      },
+      {
+        path: "workplaces",
+        element: (
+          <WorkplaceListPageProvider>
+            <WorkplaceListPage />
+          </WorkplaceListPageProvider>
         ),
       },
       {
