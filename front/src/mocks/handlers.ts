@@ -2,6 +2,8 @@ import { http, HttpResponse } from "msw";
 
 import type {
   AuthUser,
+  Commute,
+  CreateCommuteParams,
   CreateResidenceParams,
   CreateWorkplaceParams,
   GuestLoginParams,
@@ -11,7 +13,8 @@ import type {
 
 let currentUser: AuthUser | null = null;
 let workplaceId = 3;
-let residenceId = 1;
+let residenceId = 3;
+let commuteId = 2;
 const workplaces: Workplace[] = [
   {
     id: 1,
@@ -28,7 +31,30 @@ const workplaces: Workplace[] = [
     city: "新宿区",
   },
 ];
-const residences: Residence[] = [];
+const residences: Residence[] = [
+  {
+    id: 1,
+    name: "〇〇",
+    rent: 80000,
+    prefecture: "東京都",
+    city: "杉並区",
+  },
+  {
+    id: 2,
+    name: "△△",
+    rent: 90000,
+    prefecture: "東京都",
+    city: "新宿区",
+  },
+];
+const commutes: Commute[] = [
+  {
+    id: 1,
+    workplace_id: 2,
+    residence_id: 2,
+    commute_minutes: 60,
+  },
+];
 
 export const handlers = [
   http.get("/api/v1/health", () => {
@@ -127,6 +153,27 @@ export const handlers = [
 
     return HttpResponse.json({ residence });
   }),
+  http.get("/api/v1/commutes", () => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    return HttpResponse.json({ commutes });
+  }),
+  http.get("/api/v1/commutes/:id", ({ params }) => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    const id = Number(params.id);
+    const commute = commutes.find((commuteItem) => commuteItem.id === id);
+
+    if (!commute) {
+      return HttpResponse.json({ error: "通勤時間設定が見つかりません" }, { status: 404 });
+    }
+
+    return HttpResponse.json({ commute });
+  }),
   http.post("/api/v1/workplaces", async ({ request }) => {
     if (!currentUser) {
       return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
@@ -156,6 +203,58 @@ export const handlers = [
     residences.push(residence);
 
     return HttpResponse.json({ residence }, { status: 201 });
+  }),
+  http.post("/api/v1/commutes", async ({ request }) => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    const body = (await request.json()) as { commute: CreateCommuteParams };
+    const commute = {
+      id: commuteId,
+      ...body.commute,
+    };
+    commuteId += 1;
+    commutes.push(commute);
+
+    return HttpResponse.json({ commute }, { status: 201 });
+  }),
+  http.patch("/api/v1/commutes/:id", async ({ params, request }) => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    const id = Number(params.id);
+    const commuteIndex = commutes.findIndex((commute) => commute.id === id);
+
+    if (commuteIndex === -1) {
+      return HttpResponse.json({ error: "通勤時間設定が見つかりません" }, { status: 404 });
+    }
+
+    const body = (await request.json()) as { commute: CreateCommuteParams };
+    const commute = {
+      ...commutes[commuteIndex],
+      ...body.commute,
+    };
+    commutes[commuteIndex] = commute;
+
+    return HttpResponse.json({ commute });
+  }),
+  http.delete("/api/v1/commutes/:id", ({ params }) => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    const id = Number(params.id);
+    const commuteIndex = commutes.findIndex((commute) => commute.id === id);
+
+    if (commuteIndex === -1) {
+      return HttpResponse.json({ error: "通勤時間設定が見つかりません" }, { status: 404 });
+    }
+
+    commutes.splice(commuteIndex, 1);
+
+    return new HttpResponse(null, { status: 204 });
   }),
   http.patch("/api/v1/residences/:id", async ({ params, request }) => {
     if (!currentUser) {

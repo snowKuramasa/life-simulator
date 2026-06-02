@@ -1,5 +1,6 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { type FormEvent, type ReactNode, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 
 import { useCreateResidenceMutation } from "@/hooks/residences/useResidenceQueries";
 import { ResidenceNewPageContext } from "@/providers/pages/ResidenceNewPageContext";
@@ -9,6 +10,8 @@ type ResidenceNewPageProviderProps = {
 };
 
 export function ResidenceNewPageProvider({ children }: ResidenceNewPageProviderProps) {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const createResidence = useCreateResidenceMutation();
   const [name, setName] = useState("");
@@ -31,7 +34,12 @@ export function ResidenceNewPageProvider({ children }: ResidenceNewPageProviderP
         prefecture,
         city,
       });
-      setMessage(isInitialFlow ? "住居を登録しました。結果を確認できます。" : "住居を保存しました。");
+      await queryClient.invalidateQueries({ queryKey: ["residences"] });
+      if (isInitialFlow) {
+        navigate("/results");
+        return;
+      }
+      setMessage("住居を保存しました。");
     } catch {
       setErrorMessage("住居の保存に失敗しました。入力内容を確認してもう一度お試しください。");
     }

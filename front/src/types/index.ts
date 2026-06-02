@@ -67,3 +67,28 @@ export interface ResidenceResponse {
 export interface ResidencesResponse {
   residences: Residence[];
 }
+
+export interface Commute {
+  id: number;
+  workplace_id: number;
+  residence_id: number;
+  commute_minutes: number;
+}
+
+export interface CreateCommuteParams {
+  workplace_id: number;
+  residence_id: number;
+  commute_minutes: number;
+}
+
+export interface UpdateCommuteParams extends CreateCommuteParams {
+  id: number;
+}
+
+export interface CommuteResponse {
+  commute: Commute;
+}
+
+export interface CommutesResponse {
+  commutes: Commute[];
+}
