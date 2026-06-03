@@ -20,6 +20,7 @@ export function LoginPage() {
     isSubmitting,
     message,
     errorMessage,
+    continuePath,
     handleGuestLogin,
   } = useLoginPage();
   const shouldShowLoginForm = !isAuthLoading && !isAuthenticated;
@@ -83,7 +84,7 @@ export function LoginPage() {
               <Link to="/">戻る</Link>
             </Button>
             <Button asChild className={styles.guestButton}>
-              <Link to="/workplaces/new?flow=initial">ゲストで続ける</Link>
+              <Link to={continuePath}>ゲストで続ける</Link>
             </Button>
           </div>
         </div>

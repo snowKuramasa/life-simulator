@@ -67,6 +67,8 @@ const meta = {
     ],
     sortKey: "disposableIncome",
     setSortKey: () => {},
+    commuteSaveStatuses: {},
+    saveCommuteMinutes: async () => true,
     isLoading: false,
     errorMessage: null,
   },

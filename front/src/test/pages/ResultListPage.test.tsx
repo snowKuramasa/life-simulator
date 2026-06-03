@@ -1,6 +1,6 @@
-import { fireEvent, screen, within } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ResultListPage } from "@/pages/ResultListPage";
 import { ResultListPageProvider } from "@/providers/pages/ResultListPageProvider";
@@ -110,12 +110,16 @@ describe("ResultListPage", () => {
     );
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("loads result combinations from API", async () => {
     renderResultListPage();
 
     expect(await screen.findAllByText("A社")).toHaveLength(2);
     expect(screen.getAllByText("〇〇")).toHaveLength(2);
-    expect(screen.getAllByText("未入力")).toHaveLength(3);
+    expect(screen.getAllByText("通勤時間を入力")).toHaveLength(3);
     expect(screen.getByText("60分")).toBeInTheDocument();
     expect(screen.getAllByText("余裕あり")).toHaveLength(3);
     expect(screen.getByText("普通")).toBeInTheDocument();
@@ -129,11 +133,46 @@ describe("ResultListPage", () => {
 
     trigger.focus();
     fireEvent.keyDown(trigger, { key: "ArrowDown" });
-    fireEvent.click(await screen.findByRole("option", { name: "並び順：通勤時間" }));
+    fireEvent.click(await screen.findByRole("option", { name: "通勤時間が短い順" }));
 
     const cards = screen.getAllByRole("article");
     expect(within(cards[0]).getByText("B社")).toBeInTheDocument();
     expect(within(cards[0]).getByText("△△")).toBeInTheDocument();
     expect(within(cards[0]).getByText("60分")).toBeInTheDocument();
+  });
+
+  it("creates commute minutes from a result card", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    renderResultListPage();
+
+    fireEvent.click(await screen.findByRole("button", { name: "A社と〇〇の通勤時間を編集" }));
+    const input = screen.getByRole("spinbutton", { name: "A社と〇〇の通勤時間" });
+
+    fireEvent.change(input, { target: { value: "45" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith(
+        "/api/v1/commutes",
+        expect.objectContaining({
+          method: "POST",
+          credentials: "include",
+          body: JSON.stringify({
+            commute: {
+              workplace_id: 1,
+              residence_id: 1,
+              commute_minutes: 45,
+            },
+          }),
+        }),
+      );
+    });
+    expect(await screen.findByLabelText("保存しました")).toBeInTheDocument();
+
+    vi.advanceTimersByTime(2500);
+
+    await waitFor(() => {
+      expect(screen.queryByLabelText("保存しました")).not.toBeInTheDocument();
+    });
   });
 });

@@ -92,6 +92,7 @@ describe("ResidenceEditPage", () => {
     expect(screen.getByLabelText("家賃")).toHaveValue("80,000");
     expect(screen.getByRole("combobox", { name: "場所（都道府県）" })).toHaveTextContent("東京都");
     expect(screen.getByDisplayValue("品川区")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "戻る" })).toHaveAttribute("href", "/residences");
     expect(screen.getByRole("button", { name: "保存" })).toBeInTheDocument();
   });
 

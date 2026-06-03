@@ -8,6 +8,7 @@ export interface AuthUser {
 export interface AuthResponse {
   authenticated: boolean;
   user: AuthUser | null;
+  first_login?: boolean;
 }
 
 export interface GuestLoginParams {

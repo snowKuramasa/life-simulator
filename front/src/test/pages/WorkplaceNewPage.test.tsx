@@ -19,6 +19,7 @@ function renderWorkplaceNewPage(initialEntry = "/workplaces/new?flow=initial") {
           }
         />
         <Route path="/residences/new" element={<p>住居新規作成画面へ遷移しました</p>} />
+        <Route path="/workplaces" element={<p>勤務先一覧画面へ遷移しました</p>} />
       </Routes>
     </MemoryRouter>,
   );
@@ -86,7 +87,7 @@ describe("WorkplaceNewPage", () => {
     renderWorkplaceNewPage("/workplaces/new");
 
     expect(screen.queryByText("ステップ1/2")).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "戻る" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: "戻る" })).toHaveAttribute("href", "/workplaces");
     expect(screen.getByRole("button", { name: "保存" })).toBeInTheDocument();
   });
 
@@ -120,7 +121,7 @@ describe("WorkplaceNewPage", () => {
     expect(await screen.findByText("住居新規作成画面へ遷移しました")).toBeInTheDocument();
   });
 
-  it("submits normal workplace create request and stays on create page", async () => {
+  it("submits normal workplace create request and navigates to workplace list", async () => {
     renderWorkplaceNewPage("/workplaces/new");
 
     fireEvent.change(screen.getByLabelText("勤務先"), { target: { value: "候補A" } });
@@ -138,7 +139,7 @@ describe("WorkplaceNewPage", () => {
         }),
       );
     });
-    expect(await screen.findByText("勤務先を保存しました。")).toBeInTheDocument();
+    expect(await screen.findByText("勤務先一覧画面へ遷移しました")).toBeInTheDocument();
   });
 
   it("shows an error message when workplace create fails", async () => {

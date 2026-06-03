@@ -2,37 +2,37 @@ import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { WorkplaceListPage } from "@/pages/WorkplaceListPage";
-import { WorkplaceListPageProvider } from "@/providers/pages/WorkplaceListPageProvider";
+import { ResidenceListPage } from "@/pages/ResidenceListPage";
+import { ResidenceListPageProvider } from "@/providers/pages/ResidenceListPageProvider";
 import { renderWithProviders } from "@/test/utils/renderWithProviders";
 
-let workplaces = [
+let residences = [
   {
     id: 1,
-    name: "A社",
-    salary: 220000,
+    name: "〇〇",
+    rent: 60000,
     prefecture: "東京都",
-    city: "品川区",
+    city: "杉並区",
   },
   {
     id: 2,
-    name: "B社",
-    salary: 180000,
+    name: "△△",
+    rent: 80000,
     prefecture: "東京都",
-    city: "新宿区",
+    city: "世田谷区",
   },
 ];
 
-function renderWorkplaceListPage() {
+function renderResidenceListPage() {
   return renderWithProviders(
-    <MemoryRouter initialEntries={["/workplaces"]}>
+    <MemoryRouter initialEntries={["/residences"]}>
       <Routes>
         <Route
-          path="/workplaces"
+          path="/residences"
           element={
-            <WorkplaceListPageProvider>
-              <WorkplaceListPage />
-            </WorkplaceListPageProvider>
+            <ResidenceListPageProvider>
+              <ResidenceListPage />
+            </ResidenceListPageProvider>
           }
         />
       </Routes>
@@ -40,22 +40,22 @@ function renderWorkplaceListPage() {
   );
 }
 
-describe("WorkplaceListPage", () => {
+describe("ResidenceListPage", () => {
   beforeEach(() => {
-    workplaces = [
+    residences = [
       {
         id: 1,
-        name: "A社",
-        salary: 220000,
+        name: "〇〇",
+        rent: 60000,
         prefecture: "東京都",
-        city: "品川区",
+        city: "杉並区",
       },
       {
         id: 2,
-        name: "B社",
-        salary: 180000,
+        name: "△△",
+        rent: 80000,
         prefecture: "東京都",
-        city: "新宿区",
+        city: "世田谷区",
       },
     ];
 
@@ -80,15 +80,15 @@ describe("WorkplaceListPage", () => {
           } as Response);
         }
 
-        if (url === "/api/v1/workplaces" && !init?.method) {
+        if (url === "/api/v1/residences" && !init?.method) {
           return Promise.resolve({
             ok: true,
-            json: async () => ({ workplaces }),
+            json: async () => ({ residences }),
           } as Response);
         }
 
-        if (url === "/api/v1/workplaces/1" && init?.method === "DELETE") {
-          workplaces = workplaces.filter((workplace) => workplace.id !== 1);
+        if (url === "/api/v1/residences/1" && init?.method === "DELETE") {
+          residences = residences.filter((residence) => residence.id !== 1);
 
           return Promise.resolve({
             ok: true,
@@ -104,34 +104,34 @@ describe("WorkplaceListPage", () => {
     );
   });
 
-  it("loads workplaces from API", async () => {
-    renderWorkplaceListPage();
+  it("loads residences from API", async () => {
+    renderResidenceListPage();
 
-    expect(await screen.findByText("A社")).toBeInTheDocument();
-    expect(screen.getByText("B社")).toBeInTheDocument();
+    expect(await screen.findByText("〇〇")).toBeInTheDocument();
+    expect(screen.getByText("△△")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "戻る" })).toHaveAttribute("href", "/results");
-    expect(screen.getByRole("link", { name: "勤務先追加" })).toHaveAttribute("href", "/workplaces/new");
-    expect(screen.getByRole("link", { name: "A社を編集" })).toHaveAttribute("href", "/workplaces/1/edit");
+    expect(screen.getByRole("link", { name: "住居追加" })).toHaveAttribute("href", "/residences/new");
+    expect(screen.getByRole("link", { name: "〇〇を編集" })).toHaveAttribute("href", "/residences/1/edit");
   });
 
-  it("deletes a workplace through API", async () => {
-    renderWorkplaceListPage();
+  it("deletes a residence through API", async () => {
+    renderResidenceListPage();
 
-    await screen.findByText("A社");
-    fireEvent.click(screen.getByRole("button", { name: "A社を削除" }));
+    await screen.findByText("〇〇");
+    fireEvent.click(screen.getByRole("button", { name: "〇〇を削除" }));
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        "/api/v1/workplaces/1",
+        "/api/v1/residences/1",
         expect.objectContaining({
           method: "DELETE",
           credentials: "include",
         }),
       );
     });
-    expect(await screen.findByText("勤務先を削除しました。")).toBeInTheDocument();
+    expect(await screen.findByText("住居を削除しました。")).toBeInTheDocument();
     await waitFor(() => {
-      expect(screen.queryByText("A社")).not.toBeInTheDocument();
+      expect(screen.queryByText("〇〇")).not.toBeInTheDocument();
     });
   });
 });

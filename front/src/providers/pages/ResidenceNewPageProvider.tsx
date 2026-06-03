@@ -39,7 +39,8 @@ export function ResidenceNewPageProvider({ children }: ResidenceNewPageProviderP
         navigate("/results");
         return;
       }
-      setMessage("住居を保存しました。");
+
+      navigate("/residences");
     } catch {
       setErrorMessage("住居の保存に失敗しました。入力内容を確認してもう一度お試しください。");
     }

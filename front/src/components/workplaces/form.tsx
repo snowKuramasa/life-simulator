@@ -28,6 +28,7 @@ type WorkplaceFormProps = {
   city: string;
   setCity: (city: string) => void;
   showStepLabel?: boolean;
+  backTo?: string;
   submitLabel: string;
   submittingLabel: string;
   isSubmitting: boolean;
@@ -56,6 +57,7 @@ export function WorkplaceForm({
   city,
   setCity,
   showStepLabel = false,
+  backTo = "/",
   submitLabel,
   submittingLabel,
   isSubmitting,
@@ -144,7 +146,7 @@ export function WorkplaceForm({
 
       <div className={styles.actions}>
         <Button asChild className={styles.backButton}>
-          <Link to="/">戻る</Link>
+          <Link to={backTo}>戻る</Link>
         </Button>
         <Button type="submit" form={formId} className={styles.saveButton} disabled={isSubmitting}>
           {isSubmitting ? submittingLabel : submitLabel}

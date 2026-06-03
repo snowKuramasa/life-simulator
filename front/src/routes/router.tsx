@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router";
 import { AppLayout } from "@/components/common/layouts/AppLayout";
 import { LoginPage } from "@/pages/LoginPage";
 import { ResidenceEditPage } from "@/pages/ResidenceEditPage";
+import { ResidenceListPage } from "@/pages/ResidenceListPage";
 import { ResidenceNewPage } from "@/pages/ResidenceNewPage";
 import { ResultListPage } from "@/pages/ResultListPage";
 import { StartUpPage } from "@/pages/StartUpPage";
@@ -11,6 +12,7 @@ import { WorkplaceListPage } from "@/pages/WorkplaceListPage";
 import { WorkplaceNewPage } from "@/pages/WorkplaceNewPage";
 import { LoginPageProvider } from "@/providers/pages/LoginPageProvider";
 import { ResidenceEditPageProvider } from "@/providers/pages/ResidenceEditPageProvider";
+import { ResidenceListPageProvider } from "@/providers/pages/ResidenceListPageProvider";
 import { ResidenceNewPageProvider } from "@/providers/pages/ResidenceNewPageProvider";
 import { ResultListPageProvider } from "@/providers/pages/ResultListPageProvider";
 import { WorkplaceEditPageProvider } from "@/providers/pages/WorkplaceEditPageProvider";
@@ -48,6 +50,14 @@ export const router = createBrowserRouter([
           <ResidenceNewPageProvider>
             <ResidenceNewPage />
           </ResidenceNewPageProvider>
+        ),
+      },
+      {
+        path: "residences",
+        element: (
+          <ResidenceListPageProvider>
+            <ResidenceListPage />
+          </ResidenceListPageProvider>
         ),
       },
       {

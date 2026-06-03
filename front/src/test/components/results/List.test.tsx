@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 
@@ -53,18 +53,27 @@ const results: ResultListItem[] = [
   },
 ];
 
-function renderResultList() {
+function renderResultList(
+  overrides: Partial<React.ComponentProps<typeof ResultList>> = {},
+) {
+  const props: React.ComponentProps<typeof ResultList> = {
+    results,
+    sortKey: "disposableIncome",
+    setSortKey: vi.fn(),
+    commuteSaveStatuses: {},
+    saveCommuteMinutes: vi.fn(async () => true),
+    isLoading: false,
+    errorMessage: null,
+    ...overrides,
+  };
+
   render(
     <MemoryRouter>
-      <ResultList
-        results={results}
-        sortKey="disposableIncome"
-        setSortKey={vi.fn()}
-        isLoading={false}
-        errorMessage={null}
-      />
+      <ResultList {...props} />
     </MemoryRouter>,
   );
+
+  return props;
 }
 
 describe("ResultList", () => {
@@ -73,16 +82,40 @@ describe("ResultList", () => {
 
     expect(screen.getByRole("heading", { name: "結果一覧画面" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "赤い自動販売機の横に立っている人のイラスト" })).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: "並び順" })).toHaveTextContent("並び順：残るお金");
+    expect(screen.getByText("並び順")).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "並び順" })).toHaveTextContent("残るお金が多い順");
     expect(screen.getByText("A社")).toBeInTheDocument();
     expect(screen.getByText("〇〇")).toBeInTheDocument();
     expect(screen.getAllByText("残るお金")).toHaveLength(2);
     expect(screen.getByText("14万円")).toBeInTheDocument();
-    expect(screen.getByText("未入力")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "A社と〇〇の通勤時間を編集" })).toHaveTextContent(
+      "通勤時間を入力",
+    );
     expect(screen.getByText("余裕あり")).toBeInTheDocument();
     expect(screen.getByText("60分")).toBeInTheDocument();
     expect(screen.getByText("普通")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "勤務先一覧" })).toHaveAttribute("href", "/workplaces");
     expect(screen.getByRole("link", { name: "住居一覧" })).toHaveAttribute("href", "/residences");
+  });
+
+  it("edits commute minutes inline", async () => {
+    const saveCommuteMinutes = vi.fn(async () => true);
+    renderResultList({ saveCommuteMinutes });
+
+    fireEvent.click(screen.getByRole("button", { name: "A社と〇〇の通勤時間を編集" }));
+    const input = screen.getByRole("spinbutton", { name: "A社と〇〇の通勤時間" });
+
+    fireEvent.change(input, { target: { value: "45" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    await waitFor(() => {
+      expect(saveCommuteMinutes).toHaveBeenCalledWith(results[0], 45);
+    });
+  });
+
+  it("shows commute save status icons", () => {
+    renderResultList({ commuteSaveStatuses: { "1-1": "success" } });
+
+    expect(screen.getByLabelText("保存しました")).toBeInTheDocument();
   });
 });

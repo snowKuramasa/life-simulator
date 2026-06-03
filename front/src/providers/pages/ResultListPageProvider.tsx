@@ -1,10 +1,16 @@
-import { type ReactNode, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { type ReactNode, useMemo, useRef, useState } from "react";
 
-import { useCommutesQuery } from "@/hooks/commutes/useCommuteQueries";
+import {
+  useCommutesQuery,
+  useCreateCommuteMutation,
+  useUpdateCommuteMutation,
+} from "@/hooks/commutes/useCommuteQueries";
 import { useResidencesQuery } from "@/hooks/residences/useResidenceQueries";
 import { useWorkplacesQuery } from "@/hooks/workplaces/useWorkplaceQueries";
 import { calculateDisposableIncome } from "@/lib/calculateDisposableIncome";
 import {
+  type CommuteSaveStatus,
   ResultListPageContext,
   type ResultListItem,
   type ResultSortKey,
@@ -28,10 +34,17 @@ function getResultStatus(disposableIncome: number): ResultStatus {
 }
 
 export function ResultListPageProvider({ children }: ResultListPageProviderProps) {
+  const queryClient = useQueryClient();
   const workplacesQuery = useWorkplacesQuery();
   const residencesQuery = useResidencesQuery();
   const commutesQuery = useCommutesQuery();
+  const createCommute = useCreateCommuteMutation();
+  const updateCommute = useUpdateCommuteMutation();
   const [sortKey, setSortKey] = useState<ResultSortKey>("disposableIncome");
+  const [commuteSaveStatuses, setCommuteSaveStatuses] = useState<
+    Record<string, CommuteSaveStatus | undefined>
+  >({});
+  const successTimerIdsRef = useRef<Record<string, ReturnType<typeof setTimeout> | undefined>>({});
 
   const results = useMemo<ResultListItem[]>(() => {
     const workplaces = workplacesQuery.data?.workplaces ?? [];
@@ -86,8 +99,58 @@ export function ResultListPageProvider({ children }: ResultListPageProviderProps
       ? "結果一覧の読み込みに失敗しました。もう一度お試しください。"
       : null;
 
+  async function saveCommuteMinutes(result: ResultListItem, commuteMinutes: number) {
+    const successTimerId = successTimerIdsRef.current[result.id];
+
+    if (successTimerId) {
+      clearTimeout(successTimerId);
+    }
+
+    setCommuteSaveStatuses((statuses) => ({ ...statuses, [result.id]: "saving" }));
+
+    try {
+      if (result.commute) {
+        await updateCommute.mutateAsync({
+          id: result.commute.id,
+          workplace_id: result.workplace.id,
+          residence_id: result.residence.id,
+          commute_minutes: commuteMinutes,
+        });
+      } else {
+        await createCommute.mutateAsync({
+          workplace_id: result.workplace.id,
+          residence_id: result.residence.id,
+          commute_minutes: commuteMinutes,
+        });
+      }
+
+      await queryClient.invalidateQueries({ queryKey: ["commutes"] });
+      setCommuteSaveStatuses((statuses) => ({ ...statuses, [result.id]: "success" }));
+      successTimerIdsRef.current[result.id] = setTimeout(() => {
+        setCommuteSaveStatuses((statuses) => ({ ...statuses, [result.id]: "idle" }));
+        successTimerIdsRef.current[result.id] = undefined;
+      }, 2500);
+
+      return true;
+    } catch {
+      setCommuteSaveStatuses((statuses) => ({ ...statuses, [result.id]: "error" }));
+
+      return false;
+    }
+  }
+
   return (
-    <ResultListPageContext.Provider value={{ results, sortKey, setSortKey, isLoading, errorMessage }}>
+    <ResultListPageContext.Provider
+      value={{
+        results,
+        sortKey,
+        setSortKey,
+        commuteSaveStatuses,
+        saveCommuteMinutes,
+        isLoading,
+        errorMessage,
+      }}
+    >
       {children}
     </ResultListPageContext.Provider>
   );

@@ -20,6 +20,7 @@ describe("auth api", () => {
             provider: "guest",
             guest: true,
           },
+          first_login: true,
         }),
       }),
     );
@@ -35,6 +36,7 @@ describe("auth api", () => {
       }),
     );
     expect(response.user?.name).toBe("ゲスト");
+    expect(response.first_login).toBe(true);
   });
 
   it("fetches current user with credentials", async () => {

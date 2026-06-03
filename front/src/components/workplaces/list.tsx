@@ -2,7 +2,7 @@ import workplaceImage from "@/assets/113.png";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
 import type { Workplace } from "@/types";
-import { Building2, Coins, MapPin, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
+import { Building2, Coins, MapPin, Pencil, Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router";
 
 import styles from "./list.module.css";
@@ -47,9 +47,6 @@ export function WorkplaceList({
       </h1>
 
       <div className={styles.headerArea}>
-        <Button asChild variant="outline" size="sm" className={styles.sortButton}>
-          <button type="button">並び順：手取り</button>
-        </Button>
         <Image
           src={workplaceImage}
           alt="駅の改札に立っている人のイラスト"
@@ -111,17 +108,21 @@ export function WorkplaceList({
               <Pencil aria-hidden="true" size={19} strokeWidth={2} />
             </Link>
 
-            <MoreHorizontal className={styles.moreIcon} aria-hidden="true" size={22} />
           </article>
         ))}
       </div>
 
-      <Button asChild className={styles.addButton}>
-        <Link to="/workplaces/new">
-          <Plus aria-hidden="true" size={15} />
-          勤務先追加
-        </Link>
-      </Button>
+      <div className={styles.actions}>
+        <Button asChild className={styles.backButton}>
+          <Link to="/results">戻る</Link>
+        </Button>
+        <Button asChild className={styles.addButton}>
+          <Link to="/workplaces/new">
+            <Plus aria-hidden="true" size={15} />
+            勤務先追加
+          </Link>
+        </Button>
+      </div>
 
       {message ? <p className={styles.successMessage}>{message}</p> : null}
       {errorMessage ? <p className={styles.errorMessage}>{errorMessage}</p> : null}
