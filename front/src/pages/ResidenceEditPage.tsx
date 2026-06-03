@@ -29,6 +29,7 @@ export function ResidenceEditPage() {
       setPrefecture={setPrefecture}
       city={city}
       setCity={setCity}
+      backTo="/residences"
       submitLabel="保存"
       submittingLabel="保存中..."
       isSubmitting={isSubmitting}

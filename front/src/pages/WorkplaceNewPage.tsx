@@ -31,6 +31,7 @@ export function WorkplaceNewPage() {
       city={city}
       setCity={setCity}
       showStepLabel={isInitialFlow}
+      backTo={isInitialFlow ? "/" : "/workplaces"}
       submitLabel={isInitialFlow ? "次へ" : "保存"}
       submittingLabel="保存中..."
       isSubmitting={isSubmitting}

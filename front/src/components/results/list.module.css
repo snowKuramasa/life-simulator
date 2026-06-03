@@ -20,28 +20,38 @@
 }
 
 .headerArea {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
   width: min(360px, calc(100vw - 24px));
   margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
 }
 
 .sortField {
-  width: fit-content;
-  min-width: 10.5rem;
-  justify-self: center;
-  margin-bottom: 1rem;
+  display: flex;
+  width: 11.75rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  text-align: left;
+}
+
+.sortLabel {
+  color: #4f5f4b;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .sortSelect {
-  width: 10.5rem;
+  width: 11.75rem;
   height: 2rem;
   border: 1px solid #8d9a86;
   border-radius: 6px;
   background-color: #fffef8;
   color: #3f4d3c;
-  font-size: 0.75rem;
+  font-size: 0.73rem;
   font-weight: 600;
 }
 
@@ -96,6 +106,82 @@
   margin-left: 0.35rem;
 }
 
+.commuteDisplayButton {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.commuteDisplayButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.commuteDisplayButton:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid #5f765d;
+  outline-offset: 2px;
+}
+
+.editIcon {
+  flex: 0 0 auto;
+  color: #6f8068;
+  opacity: 0.72;
+  transition: opacity 160ms ease;
+}
+
+.commuteDisplayButton:hover .editIcon,
+.commuteDisplayButton:focus-visible .editIcon {
+  opacity: 1;
+}
+
+.commuteEditField {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18rem;
+  min-width: 0;
+  min-height: 1rem;
+}
+
+.commuteInput {
+  box-sizing: content-box;
+  width: 2.4rem;
+  height: 1rem;
+  padding: 0 0.1rem;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  background-color: transparent;
+  color: #263224;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1rem;
+  appearance: textfield;
+}
+
+.commuteInput:focus {
+  border-bottom-color: #6f8068;
+  box-shadow: none;
+}
+
+.commuteInput::-webkit-inner-spin-button,
+.commuteInput::-webkit-outer-spin-button {
+  margin: 0;
+  appearance: none;
+}
+
+.minutesUnit {
+  color: #263224;
+}
+
 .icon {
   color: #4f5f4b;
 }
@@ -108,11 +194,23 @@
   color: #5f675d;
 }
 
-.moreIcon {
-  position: absolute;
-  right: 0.85rem;
-  bottom: 0.55rem;
-  color: #3f4d3c;
+.savingIcon,
+.successIcon,
+.errorIcon {
+  flex: 0 0 auto;
+}
+
+.savingIcon {
+  color: #5f675d;
+  animation: spin 900ms linear infinite;
+}
+
+.successIcon {
+  color: #3f8f4b;
+}
+
+.errorIcon {
+  color: #b91c1c;
 }
 
 .actions {
@@ -122,6 +220,12 @@
   width: min(360px, calc(100vw - 24px));
   max-width: 320px;
   margin-top: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .statusMessage,
@@ -151,10 +255,11 @@
 
   .headerArea {
     margin-top: 0;
+    margin-bottom: 0.9rem;
   }
 
   .sortField {
-    margin-bottom: 1.75rem;
+    width: 11.75rem;
   }
 
   .card {

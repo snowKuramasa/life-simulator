@@ -8,10 +8,11 @@ import {
   updateWorkplace,
 } from "@/lib/workplaces";
 
-export function useWorkplacesQuery() {
+export function useWorkplacesQuery(enabled = true) {
   return useQuery({
     queryKey: ["workplaces"],
     queryFn: getWorkplaces,
+    enabled,
   });
 }
 

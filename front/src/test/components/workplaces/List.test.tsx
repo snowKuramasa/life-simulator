@@ -48,11 +48,12 @@ describe("WorkplaceList", () => {
 
     expect(screen.getByRole("heading", { name: "勤務先一覧画面" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "駅の改札に立っている人のイラスト" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "並び順：手取り" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "並び順：手取り" })).not.toBeInTheDocument();
     expect(screen.getByText("A社")).toBeInTheDocument();
     expect(screen.getByText("22万円")).toBeInTheDocument();
     expect(screen.getByText("東京都品川区")).toBeInTheDocument();
     expect(screen.getByText("185,000円")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "戻る" })).toHaveAttribute("href", "/results");
     expect(screen.getByRole("link", { name: "勤務先追加" })).toHaveAttribute("href", "/workplaces/new");
     expect(screen.getByRole("link", { name: "A社を編集" })).toHaveAttribute("href", "/workplaces/1/edit");
   });

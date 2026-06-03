@@ -16,6 +16,24 @@ class AuthControllerTest < ActionDispatch::IntegrationTest
     assert_equal "テストゲスト", response_json.dig("user", "name")
     assert_equal "guest", response_json.dig("user", "provider")
     assert_equal true, response_json.dig("user", "guest")
+    assert_equal true, response_json["first_login"]
+  end
+
+  test "returns false for first login when a guest user already exists in the session" do
+    post "/api/v1/auth/guest", params: { name: "初回ゲスト" }, as: :json
+    created_user_id = JSON.parse(response.body).dig("user", "id")
+
+    assert_no_difference "User.count" do
+      post "/api/v1/auth/guest", params: { name: "再ログインゲスト" }, as: :json
+    end
+
+    assert_response :success
+
+    response_json = JSON.parse(response.body)
+
+    assert_equal true, response_json["authenticated"]
+    assert_equal created_user_id, response_json.dig("user", "id")
+    assert_equal false, response_json["first_login"]
   end
 
   test "uses default guest name when name is blank" do

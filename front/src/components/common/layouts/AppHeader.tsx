@@ -6,7 +6,7 @@ type AppHeaderProps = {
 };
 
 export function AppHeader({
-  appName = "住みかとしごと",
+  appName = "さきミル",
   subtitle = "これからの暮らしを、少し具体的に。",
 }: AppHeaderProps) {
   return (

@@ -14,12 +14,14 @@ module Api
       # @param name [String, nil] 任意の表示名。空なら「ゲスト」を使います。
       # @return [JSON] authenticated と user 情報
       def guest
+        first_login = current_user.blank?
         user = current_user || User.create_guest!(name: guest_name)
         session[:user_id] = user.id
 
         render json: {
           authenticated: true,
-          user: user_json(user)
+          user: user_json(user),
+          first_login: first_login
         }, status: :ok
       end
 

@@ -8,10 +8,11 @@ import {
   updateResidence,
 } from "@/lib/residences";
 
-export function useResidencesQuery() {
+export function useResidencesQuery(enabled = true) {
   return useQuery({
     queryKey: ["residences"],
     queryFn: getResidences,
+    enabled,
   });
 }
 

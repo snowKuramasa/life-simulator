@@ -72,6 +72,7 @@ export const handlers = [
   http.post("/api/v1/auth/guest", async ({ request }) => {
     const body = (await request.json().catch(() => ({}))) as GuestLoginParams;
     const name = body.name?.trim() || "ゲスト";
+    const firstLogin = currentUser === null;
 
     currentUser ||= {
       id: 1,
@@ -88,6 +89,7 @@ export const handlers = [
     return HttpResponse.json({
       authenticated: true,
       user: currentUser,
+      first_login: firstLogin,
     });
   }),
   http.get("/api/v1/auth/me", () => {

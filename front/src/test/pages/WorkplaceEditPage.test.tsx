@@ -92,6 +92,7 @@ describe("WorkplaceEditPage", () => {
     expect(screen.getByLabelText("給与（手取り）")).toHaveValue("220,000");
     expect(screen.getByRole("combobox", { name: "勤務地（都道府県）" })).toHaveTextContent("東京都");
     expect(screen.getByDisplayValue("品川区")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "戻る" })).toHaveAttribute("href", "/workplaces");
     expect(screen.getByRole("button", { name: "保存" })).toBeInTheDocument();
   });
 

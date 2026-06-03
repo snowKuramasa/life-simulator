@@ -19,6 +19,7 @@ function renderResidenceNewPage(initialEntry = "/residences/new?flow=initial") {
           }
         />
         <Route path="/results" element={<p>結果一覧画面へ遷移しました</p>} />
+        <Route path="/residences" element={<p>住居一覧画面へ遷移しました</p>} />
       </Routes>
     </MemoryRouter>,
   );
@@ -86,7 +87,7 @@ describe("ResidenceNewPage", () => {
     renderResidenceNewPage("/residences/new");
 
     expect(screen.queryByText("ステップ2/2")).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "戻る" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: "戻る" })).toHaveAttribute("href", "/residences");
     expect(screen.getByRole("button", { name: "保存" })).toBeInTheDocument();
   });
 
@@ -118,6 +119,27 @@ describe("ResidenceNewPage", () => {
       );
     });
     expect(await screen.findByText("結果一覧画面へ遷移しました")).toBeInTheDocument();
+  });
+
+  it("submits normal residence create request and navigates to residence list", async () => {
+    renderResidenceNewPage("/residences/new");
+
+    fireEvent.change(screen.getByLabelText("住居名"), { target: { value: "候補A" } });
+    fireEvent.change(screen.getByLabelText("家賃"), { target: { value: "80000" } });
+    await selectPrefecture("東京都");
+    fireEvent.change(screen.getByLabelText("場所（市区町村）"), { target: { value: "品川区" } });
+    fireEvent.click(screen.getByRole("button", { name: "保存" }));
+
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith(
+        "/api/v1/residences",
+        expect.objectContaining({
+          method: "POST",
+          credentials: "include",
+        }),
+      );
+    });
+    expect(await screen.findByText("住居一覧画面へ遷移しました")).toBeInTheDocument();
   });
 
   it("shows an error message when residence create fails", async () => {

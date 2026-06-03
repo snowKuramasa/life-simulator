@@ -29,6 +29,7 @@ export function WorkplaceEditPage() {
       setPrefecture={setPrefecture}
       city={city}
       setCity={setCity}
+      backTo="/workplaces"
       submitLabel="保存"
       submittingLabel="保存中..."
       isSubmitting={isSubmitting}

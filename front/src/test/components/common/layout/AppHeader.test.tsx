@@ -7,7 +7,7 @@ describe("AppHeader", () => {
   it("renders the default brand", () => {
     render(<AppHeader />);
 
-    expect(screen.getByText("住みかとしごと")).toBeInTheDocument();
+    expect(screen.getByText("さきミル")).toBeInTheDocument();
     expect(screen.getByText("これからの暮らしを、少し具体的に。")).toBeInTheDocument();
   });
 

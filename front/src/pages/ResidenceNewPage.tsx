@@ -31,6 +31,7 @@ export function ResidenceNewPage() {
       city={city}
       setCity={setCity}
       showStepLabel={isInitialFlow}
+      backTo={isInitialFlow ? "/" : "/residences"}
       submitLabel={isInitialFlow ? "結果を見る" : "保存"}
       submittingLabel="保存中..."
       isSubmitting={isSubmitting}

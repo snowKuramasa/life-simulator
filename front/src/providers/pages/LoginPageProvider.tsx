@@ -14,6 +14,7 @@ export function LoginPageProvider({ children }: LoginPageProviderProps) {
   const [name, setName] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const continuePath = isAuthenticated ? "/results" : "/workplaces/new?flow=initial";
 
   async function handleGuestLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -23,7 +24,7 @@ export function LoginPageProvider({ children }: LoginPageProviderProps) {
     try {
       const response = await guestLogin({ name });
       setMessage(`こんにちは${response.user?.name ?? "ゲスト"}さん`);
-      navigate("/workplaces/new?flow=initial");
+      navigate(response.first_login ? "/workplaces/new?flow=initial" : "/results");
     } catch {
       setErrorMessage("ゲストログインに失敗しました。時間をおいてもう一度お試しください。");
     }
@@ -40,6 +41,7 @@ export function LoginPageProvider({ children }: LoginPageProviderProps) {
         isSubmitting: isLoggingIn,
         message,
         errorMessage,
+        continuePath,
         handleGuestLogin,
       }}
     >

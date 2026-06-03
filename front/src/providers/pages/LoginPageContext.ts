@@ -11,6 +11,7 @@ export type LoginPageContextValue = {
   isSubmitting: boolean;
   message: string | null;
   errorMessage: string | null;
+  continuePath: string;
   handleGuestLogin: (event: FormEvent<HTMLFormElement>) => Promise<void>;
 };
 

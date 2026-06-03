@@ -1,6 +1,7 @@
 import resultImage from "@/assets/2.png";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -8,16 +9,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { ResultListItem, ResultSortKey } from "@/providers/pages/ResultListPageContext";
+import type {
+  CommuteSaveStatus,
+  ResultListItem,
+  ResultSortKey,
+} from "@/providers/pages/ResultListPageContext";
 import {
   Building2,
+  Check,
   Cloud,
   Clock,
   Coins,
   Home,
-  MoreHorizontal,
+  LoaderCircle,
+  Pencil,
   Sun,
+  X,
 } from "lucide-react";
+import { type KeyboardEvent, useRef, useState } from "react";
 import { Link } from "react-router";
 
 import styles from "./list.module.css";
@@ -26,6 +35,8 @@ type ResultListProps = {
   results: ResultListItem[];
   sortKey: ResultSortKey;
   setSortKey: (sortKey: ResultSortKey) => void;
+  commuteSaveStatuses: Record<string, CommuteSaveStatus | undefined>;
+  saveCommuteMinutes: (result: ResultListItem, commuteMinutes: number) => Promise<boolean>;
   isLoading: boolean;
   errorMessage: string | null;
 };
@@ -46,7 +57,130 @@ function StatusIcon({ status }: { status: ResultListItem["status"] }) {
   return <Cloud className={styles.cloudIcon} aria-hidden="true" size={20} />;
 }
 
-export function ResultList({ results, sortKey, setSortKey, isLoading, errorMessage }: ResultListProps) {
+function SaveStatusIcon({ status }: { status: CommuteSaveStatus | undefined }) {
+  if (status === "saving") {
+    return <LoaderCircle className={styles.savingIcon} aria-label="保存中" size={17} />;
+  }
+
+  if (status === "success") {
+    return <Check className={styles.successIcon} aria-label="保存しました" size={17} />;
+  }
+
+  if (status === "error") {
+    return <X className={styles.errorIcon} aria-label="保存に失敗しました" size={17} />;
+  }
+
+  return null;
+}
+
+type CommuteMinutesFieldProps = {
+  result: ResultListItem;
+  status: CommuteSaveStatus | undefined;
+  saveCommuteMinutes: (result: ResultListItem, commuteMinutes: number) => Promise<boolean>;
+};
+
+function CommuteMinutesField({ result, status, saveCommuteMinutes }: CommuteMinutesFieldProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [commuteMinutes, setCommuteMinutes] = useState("");
+  const isCommittingRef = useRef(false);
+  const isSaving = status === "saving";
+  const currentMinutes = result.commute?.commute_minutes ?? null;
+
+  function startEditing() {
+    setCommuteMinutes(currentMinutes === null ? "" : String(currentMinutes));
+    setIsEditing(true);
+  }
+
+  function cancelEditing() {
+    setIsEditing(false);
+    setCommuteMinutes("");
+  }
+
+  async function commitEditing() {
+    if (isCommittingRef.current || isSaving) {
+      return;
+    }
+
+    const nextMinutes = Number(commuteMinutes);
+
+    if (commuteMinutes.trim() === "" || !Number.isInteger(nextMinutes) || nextMinutes < 0) {
+      cancelEditing();
+      return;
+    }
+
+    if (currentMinutes === nextMinutes) {
+      cancelEditing();
+      return;
+    }
+
+    isCommittingRef.current = true;
+    const saved = await saveCommuteMinutes(result, nextMinutes);
+    isCommittingRef.current = false;
+
+    if (saved) {
+      cancelEditing();
+    }
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      void commitEditing();
+      return;
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      cancelEditing();
+    }
+  }
+
+  if (isEditing) {
+    return (
+      <div className={styles.commuteEditField}>
+        <Input
+          className={styles.commuteInput}
+          type="number"
+          min={0}
+          step={1}
+          value={commuteMinutes}
+          disabled={isSaving}
+          aria-label={`${result.workplace.name}と${result.residence.name}の通勤時間`}
+          onChange={(event) => setCommuteMinutes(event.target.value)}
+          onBlur={() => void commitEditing()}
+          onKeyDown={handleKeyDown}
+          autoFocus
+        />
+        <span className={styles.minutesUnit}>分</span>
+        <SaveStatusIcon status={status} />
+      </div>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      className={styles.commuteDisplayButton}
+      onClick={startEditing}
+      aria-label={`${result.workplace.name}と${result.residence.name}の通勤時間を編集`}
+      disabled={isSaving}
+    >
+      <span>{currentMinutes === null ? "通勤時間を入力" : `${currentMinutes}分`}</span>
+      <Pencil className={styles.editIcon} aria-hidden="true" size={15} />
+      <SaveStatusIcon status={status} />
+    </button>
+  );
+}
+
+export function ResultList({
+  results,
+  sortKey,
+  setSortKey,
+  commuteSaveStatuses,
+  saveCommuteMinutes,
+  isLoading,
+  errorMessage,
+}: ResultListProps) {
   return (
     <section className={styles.hero} aria-labelledby="result-list-title">
       <h1 id="result-list-title" className={styles.visuallyHidden}>
@@ -55,13 +189,16 @@ export function ResultList({ results, sortKey, setSortKey, isLoading, errorMessa
 
       <div className={styles.headerArea}>
         <div className={styles.sortField}>
+          <label htmlFor="result-sort" className={styles.sortLabel}>
+            並び順
+          </label>
           <Select value={sortKey} onValueChange={(value) => setSortKey(value as ResultSortKey)}>
-            <SelectTrigger className={styles.sortSelect} aria-label="並び順">
+            <SelectTrigger id="result-sort" className={styles.sortSelect}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="disposableIncome">並び順：残るお金</SelectItem>
-              <SelectItem value="commuteMinutes">並び順：通勤時間</SelectItem>
+              <SelectItem value="disposableIncome">残るお金が多い順</SelectItem>
+              <SelectItem value="commuteMinutes">通勤時間が短い順</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -101,15 +238,17 @@ export function ResultList({ results, sortKey, setSortKey, isLoading, errorMessa
 
             <div className={styles.infoRow}>
               <Clock className={styles.icon} aria-hidden="true" size={20} />
-              <p>{result.commute ? `${result.commute.commute_minutes}分` : "未入力"}</p>
+              <CommuteMinutesField
+                result={result}
+                status={commuteSaveStatuses[result.id]}
+                saveCommuteMinutes={saveCommuteMinutes}
+              />
             </div>
 
             <div className={styles.infoRow}>
               <StatusIcon status={result.status} />
               <p>{result.status}</p>
             </div>
-
-            <MoreHorizontal className={styles.moreIcon} aria-hidden="true" size={22} />
           </article>
         ))}
       </div>
