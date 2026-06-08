@@ -253,6 +253,8 @@ export function ResultList({
         ))}
       </div>
 
+      {errorMessage ? <p className={styles.errorMessage}>{errorMessage}</p> : null}
+
       <div className={styles.actions}>
         <Button asChild>
           <Link to="/workplaces">勤務先一覧</Link>
@@ -261,8 +263,6 @@ export function ResultList({
           <Link to="/residences">住居一覧</Link>
         </Button>
       </div>
-
-      {errorMessage ? <p className={styles.errorMessage}>{errorMessage}</p> : null}
     </section>
   );
 }

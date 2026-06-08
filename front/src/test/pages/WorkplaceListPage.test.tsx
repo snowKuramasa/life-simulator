@@ -59,7 +59,6 @@ describe("WorkplaceListPage", () => {
       },
     ];
 
-    vi.stubGlobal("confirm", vi.fn(() => true));
     vi.stubGlobal(
       "fetch",
       vi.fn((input, init) => {
@@ -119,6 +118,9 @@ describe("WorkplaceListPage", () => {
 
     await screen.findByText("A社");
     fireEvent.click(screen.getByRole("button", { name: "A社を削除" }));
+    expect(screen.getByRole("dialog", { name: "削除確認" })).toBeInTheDocument();
+    expect(screen.getByText("以下のデータを削除します。よろしいですか？")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "削除" }));
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
