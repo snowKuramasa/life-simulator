@@ -1,15 +1,15 @@
 import workplaceImage from "@/assets/113.png";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/components/common/baseUi/Input";
+import { Label } from "@/components/common/baseUi/Label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/common/baseUi/Select";
 import { PREFECTURES } from "@/constants/prefectures";
 import { type FormEvent } from "react";
 import { Link } from "react-router";

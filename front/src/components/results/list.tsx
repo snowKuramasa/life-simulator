@@ -1,14 +1,14 @@
 import resultImage from "@/assets/2.png";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/common/baseUi/Input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/common/baseUi/Select";
 import type {
   CommuteSaveStatus,
   ResultListItem,

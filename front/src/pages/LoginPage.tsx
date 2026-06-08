@@ -1,8 +1,8 @@
 import loginImage from "@/assets/4.png";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/components/common/baseUi/Input";
+import { Label } from "@/components/common/baseUi/Label";
 import { useLoginPage } from "@/hooks/useLoginPage";
 import { Link } from "react-router";
 

@@ -6,7 +6,7 @@ import {
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/common/baseUi/Dialog";
 import { type ReactNode, useState } from "react";
 
 import styles from "./DeleteConfirmDialog.module.css";
