@@ -1,14 +1,14 @@
 import resultImage from "@/assets/2.png";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/common/baseUi/Input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/common/baseUi/Select";
 import type {
   CommuteSaveStatus,
   ResultListItem,
@@ -253,6 +253,8 @@ export function ResultList({
         ))}
       </div>
 
+      {errorMessage ? <p className={styles.errorMessage}>{errorMessage}</p> : null}
+
       <div className={styles.actions}>
         <Button asChild>
           <Link to="/workplaces">勤務先一覧</Link>
@@ -261,8 +263,6 @@ export function ResultList({
           <Link to="/residences">住居一覧</Link>
         </Button>
       </div>
-
-      {errorMessage ? <p className={styles.errorMessage}>{errorMessage}</p> : null}
     </section>
   );
 }

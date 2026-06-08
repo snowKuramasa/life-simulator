@@ -1,4 +1,5 @@
 import residenceImage from "@/assets/12.png";
+import { DeleteConfirmDialog } from "@/components/common/DeleteConfirmDialog";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
 import type { Residence } from "@/types";
@@ -32,14 +33,6 @@ export function ResidenceList({
   errorMessage,
   handleDelete,
 }: ResidenceListProps) {
-  async function confirmAndDelete(residence: Residence) {
-    if (!window.confirm(`${residence.name}を削除しますか？`)) {
-      return;
-    }
-
-    await handleDelete(residence.id);
-  }
-
   return (
     <section className={styles.hero} aria-labelledby="residence-list-title">
       <h1 id="residence-list-title" className={styles.visuallyHidden}>
@@ -64,15 +57,21 @@ export function ResidenceList({
 
         {residences.map((residence) => (
           <article key={residence.id} className={styles.card}>
-            <button
-              type="button"
-              className={styles.deleteButton}
-              aria-label={`${residence.name}を削除`}
-              disabled={deletingId === residence.id}
-              onClick={() => void confirmAndDelete(residence)}
-            >
-              <Trash2 aria-hidden="true" size={18} strokeWidth={2.1} />
-            </button>
+            <DeleteConfirmDialog
+              dataName={residence.name}
+              isDeleting={deletingId === residence.id}
+              onConfirm={() => handleDelete(residence.id)}
+              trigger={
+                <button
+                  type="button"
+                  className={styles.deleteButton}
+                  aria-label={`${residence.name}を削除`}
+                  disabled={deletingId === residence.id}
+                >
+                  <Trash2 aria-hidden="true" size={18} strokeWidth={2.1} />
+                </button>
+              }
+            />
 
             <div className={styles.row}>
               <Home className={styles.icon} aria-hidden="true" size={19} />
@@ -113,6 +112,9 @@ export function ResidenceList({
         ))}
       </div>
 
+      {message ? <p className={styles.successMessage}>{message}</p> : null}
+      {errorMessage ? <p className={styles.errorMessage}>{errorMessage}</p> : null}
+
       <div className={styles.actions}>
         <Button asChild className={styles.backButton}>
           <Link to="/results">戻る</Link>
@@ -124,9 +126,6 @@ export function ResidenceList({
           </Link>
         </Button>
       </div>
-
-      {message ? <p className={styles.successMessage}>{message}</p> : null}
-      {errorMessage ? <p className={styles.errorMessage}>{errorMessage}</p> : null}
     </section>
   );
 }

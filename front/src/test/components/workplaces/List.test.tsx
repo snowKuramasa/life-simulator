@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 
@@ -60,22 +60,26 @@ describe("WorkplaceList", () => {
 
   it("deletes a workplace after confirmation", () => {
     const handleDelete = vi.fn(async () => {});
-    vi.stubGlobal("confirm", vi.fn(() => true));
     renderWorkplaceList({ handleDelete });
 
     fireEvent.click(screen.getByRole("button", { name: "A社を削除" }));
+    const dialog = screen.getByRole("dialog", { name: "削除確認" });
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByText("以下のデータを削除します。よろしいですか？")).toBeInTheDocument();
+    expect(within(dialog).getByText("A社")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "削除" }));
 
-    expect(confirm).toHaveBeenCalledWith("A社を削除しますか？");
     expect(handleDelete).toHaveBeenCalledWith(1);
   });
 
   it("does not delete a workplace when confirmation is cancelled", () => {
     const handleDelete = vi.fn(async () => {});
-    vi.stubGlobal("confirm", vi.fn(() => false));
     renderWorkplaceList({ handleDelete });
 
     fireEvent.click(screen.getByRole("button", { name: "A社を削除" }));
+    fireEvent.click(screen.getByRole("button", { name: "キャンセル" }));
 
     expect(handleDelete).not.toHaveBeenCalled();
+    expect(screen.queryByRole("dialog", { name: "削除確認" })).not.toBeInTheDocument();
   });
 });
