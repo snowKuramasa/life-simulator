@@ -121,8 +121,10 @@ describe("ResultListPage", () => {
     expect(screen.getAllByText("〇〇")).toHaveLength(2);
     expect(screen.getAllByText("通勤時間を入力")).toHaveLength(3);
     expect(screen.getByText("60分")).toBeInTheDocument();
-    expect(screen.getAllByText("余裕あり")).toHaveLength(3);
+    expect(screen.getByText("0円")).toBeInTheDocument();
+    expect(screen.getAllByText("余裕あり")).toHaveLength(1);
     expect(screen.getByText("普通")).toBeInTheDocument();
+    expect(screen.getAllByText("やや厳しい")).toHaveLength(2);
   });
 
   it("sorts results by commute minutes", async () => {

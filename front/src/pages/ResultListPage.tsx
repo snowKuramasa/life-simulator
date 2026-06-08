@@ -6,6 +6,8 @@ export function ResultListPage() {
     results,
     sortKey,
     setSortKey,
+    householdSize,
+    setHouseholdSize,
     commuteSaveStatuses,
     saveCommuteMinutes,
     isLoading,
@@ -17,6 +19,8 @@ export function ResultListPage() {
       results={results}
       sortKey={sortKey}
       setSortKey={setSortKey}
+      householdSize={householdSize}
+      setHouseholdSize={setHouseholdSize}
       commuteSaveStatuses={commuteSaveStatuses}
       saveCommuteMinutes={saveCommuteMinutes}
       isLoading={isLoading}
