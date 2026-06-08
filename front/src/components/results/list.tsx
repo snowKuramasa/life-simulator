@@ -11,6 +11,7 @@ import {
 } from "@/components/common/baseUi/Select";
 import type {
   CommuteSaveStatus,
+  HouseholdSize,
   ResultListItem,
   ResultSortKey,
 } from "@/providers/pages/ResultListPageContext";
@@ -35,6 +36,8 @@ type ResultListProps = {
   results: ResultListItem[];
   sortKey: ResultSortKey;
   setSortKey: (sortKey: ResultSortKey) => void;
+  householdSize: HouseholdSize;
+  setHouseholdSize: (householdSize: HouseholdSize) => void;
   commuteSaveStatuses: Record<string, CommuteSaveStatus | undefined>;
   saveCommuteMinutes: (result: ResultListItem, commuteMinutes: number) => Promise<boolean>;
   isLoading: boolean;
@@ -42,6 +45,10 @@ type ResultListProps = {
 };
 
 function formatMoney(amount: number) {
+  if (amount === 0) {
+    return "0円";
+  }
+
   if (amount % 10_000 === 0) {
     return `${amount / 10_000}万円`;
   }
@@ -176,6 +183,8 @@ export function ResultList({
   results,
   sortKey,
   setSortKey,
+  householdSize,
+  setHouseholdSize,
   commuteSaveStatuses,
   saveCommuteMinutes,
   isLoading,
@@ -188,19 +197,46 @@ export function ResultList({
       </h1>
 
       <div className={styles.headerArea}>
-        <div className={styles.sortField}>
-          <label htmlFor="result-sort" className={styles.sortLabel}>
-            並び順
-          </label>
-          <Select value={sortKey} onValueChange={(value) => setSortKey(value as ResultSortKey)}>
-            <SelectTrigger id="result-sort" className={styles.sortSelect}>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="disposableIncome">残るお金が多い順</SelectItem>
-              <SelectItem value="commuteMinutes">通勤時間が短い順</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className={styles.controlGroup}>
+          <div className={styles.controlField}>
+            <label htmlFor="household-size" className={styles.controlLabel}>
+              世帯人数
+            </label>
+            <Select
+              value={householdSize}
+              onValueChange={(value) => setHouseholdSize(value as HouseholdSize)}
+            >
+              <SelectTrigger id="household-size" className={styles.controlSelect}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="single">1人</SelectItem>
+                <SelectItem value="two" disabled>
+                  2人（今後対応）
+                </SelectItem>
+                <SelectItem value="three" disabled>
+                  3人（今後対応）
+                </SelectItem>
+                <SelectItem value="fourOrMore" disabled>
+                  4人以上（今後対応）
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className={styles.controlField}>
+            <label htmlFor="result-sort" className={styles.controlLabel}>
+              並び順
+            </label>
+            <Select value={sortKey} onValueChange={(value) => setSortKey(value as ResultSortKey)}>
+              <SelectTrigger id="result-sort" className={styles.controlSelect}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="monthlySurplus">月のゆとりが多い順</SelectItem>
+                <SelectItem value="commuteMinutes">通勤時間が短い順</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <Image
           src={resultImage}
@@ -231,8 +267,8 @@ export function ResultList({
             <div className={styles.infoRow}>
               <Coins className={styles.icon} aria-hidden="true" size={20} />
               <p>
-                残るお金
-                <span className={styles.inlineValue}>{formatMoney(result.disposableIncome)}</span>
+                月のゆとり
+                <span className={styles.inlineValue}>{formatMoney(result.monthlySurplus)}</span>
               </p>
             </div>
 

@@ -8,9 +8,10 @@ import {
 } from "@/hooks/commutes/useCommuteQueries";
 import { useResidencesQuery } from "@/hooks/residences/useResidenceQueries";
 import { useWorkplacesQuery } from "@/hooks/workplaces/useWorkplaceQueries";
-import { calculateDisposableIncome } from "@/lib/calculateDisposableIncome";
+import { calculateMonthlySurplus } from "@/lib/calculateMonthlySurplus";
 import {
   type CommuteSaveStatus,
+  type HouseholdSize,
   ResultListPageContext,
   type ResultListItem,
   type ResultSortKey,
@@ -21,12 +22,12 @@ type ResultListPageProviderProps = {
   children: ReactNode;
 };
 
-function getResultStatus(disposableIncome: number): ResultStatus {
-  if (disposableIncome >= 100_000) {
+function getResultStatus(monthlySurplus: number): ResultStatus {
+  if (monthlySurplus >= 0) {
     return "余裕あり";
   }
 
-  if (disposableIncome >= 50_000) {
+  if (monthlySurplus >= -30_000) {
     return "普通";
   }
 
@@ -40,7 +41,8 @@ export function ResultListPageProvider({ children }: ResultListPageProviderProps
   const commutesQuery = useCommutesQuery();
   const createCommute = useCreateCommuteMutation();
   const updateCommute = useUpdateCommuteMutation();
-  const [sortKey, setSortKey] = useState<ResultSortKey>("disposableIncome");
+  const [sortKey, setSortKey] = useState<ResultSortKey>("monthlySurplus");
+  const [householdSize, setHouseholdSize] = useState<HouseholdSize>("single");
   const [commuteSaveStatuses, setCommuteSaveStatuses] = useState<
     Record<string, CommuteSaveStatus | undefined>
   >({});
@@ -58,9 +60,9 @@ export function ResultListPageProvider({ children }: ResultListPageProviderProps
             (commuteItem) =>
               commuteItem.workplace_id === workplace.id && commuteItem.residence_id === residence.id,
           ) ?? null;
-        const disposableIncome = calculateDisposableIncome({
+        const monthlySurplus = calculateMonthlySurplus({
           monthlyIncome: workplace.salary,
-          fixedCosts: residence.rent,
+          rent: residence.rent,
         });
 
         return {
@@ -68,8 +70,8 @@ export function ResultListPageProvider({ children }: ResultListPageProviderProps
           workplace,
           residence,
           commute,
-          disposableIncome,
-          status: getResultStatus(disposableIncome),
+          monthlySurplus,
+          status: getResultStatus(monthlySurplus),
         };
       }),
     );
@@ -84,7 +86,7 @@ export function ResultListPageProvider({ children }: ResultListPageProviderProps
     }
 
     return nextResults.sort(
-      (firstResult, secondResult) => secondResult.disposableIncome - firstResult.disposableIncome,
+      (firstResult, secondResult) => secondResult.monthlySurplus - firstResult.monthlySurplus,
     );
   }, [
     commutesQuery.data?.commutes,
@@ -145,6 +147,8 @@ export function ResultListPageProvider({ children }: ResultListPageProviderProps
         results,
         sortKey,
         setSortKey,
+        householdSize,
+        setHouseholdSize,
         commuteSaveStatuses,
         saveCommuteMinutes,
         isLoading,

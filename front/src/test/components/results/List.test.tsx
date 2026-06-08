@@ -23,7 +23,7 @@ const results: ResultListItem[] = [
       city: "杉並区",
     },
     commute: null,
-    disposableIncome: 140000,
+    monthlySurplus: 0,
     status: "余裕あり",
   },
   {
@@ -48,7 +48,7 @@ const results: ResultListItem[] = [
       residence_id: 2,
       commute_minutes: 60,
     },
-    disposableIncome: 90000,
+    monthlySurplus: -10000,
     status: "普通",
   },
 ];
@@ -58,8 +58,10 @@ function renderResultList(
 ) {
   const props: React.ComponentProps<typeof ResultList> = {
     results,
-    sortKey: "disposableIncome",
+    sortKey: "monthlySurplus",
     setSortKey: vi.fn(),
+    householdSize: "single",
+    setHouseholdSize: vi.fn(),
     commuteSaveStatuses: {},
     saveCommuteMinutes: vi.fn(async () => true),
     isLoading: false,
@@ -82,12 +84,14 @@ describe("ResultList", () => {
 
     expect(screen.getByRole("heading", { name: "結果一覧画面" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "赤い自動販売機の横に立っている人のイラスト" })).toBeInTheDocument();
+    expect(screen.getByText("世帯人数")).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "世帯人数" })).toHaveTextContent("1人");
     expect(screen.getByText("並び順")).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: "並び順" })).toHaveTextContent("残るお金が多い順");
+    expect(screen.getByRole("combobox", { name: "並び順" })).toHaveTextContent("月のゆとりが多い順");
     expect(screen.getByText("A社")).toBeInTheDocument();
     expect(screen.getByText("〇〇")).toBeInTheDocument();
-    expect(screen.getAllByText("残るお金")).toHaveLength(2);
-    expect(screen.getByText("14万円")).toBeInTheDocument();
+    expect(screen.getAllByText("月のゆとり")).toHaveLength(2);
+    expect(screen.getByText("0円")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "A社と〇〇の通勤時間を編集" })).toHaveTextContent(
       "通勤時間を入力",
     );

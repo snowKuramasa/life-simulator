@@ -6,7 +6,7 @@
   height: calc(100svh - 3rem);
   min-height: 0;
   overflow-y: auto;
-  padding: 7.25rem 0.75rem 4.75rem;
+  padding: 8rem 0.75rem 4.75rem;
   text-align: center;
 }
 
@@ -37,23 +37,29 @@
   transform: translateX(-50%);
 }
 
-.sortField {
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.controlField {
   display: flex;
   width: 11.75rem;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.25rem;
+  gap: 0.22rem;
   text-align: left;
 }
 
-.sortLabel {
+.controlLabel {
   color: #4f5f4b;
   font-size: 0.68rem;
   font-weight: 700;
   line-height: 1;
 }
 
-.sortSelect {
+.controlSelect {
   width: 11.75rem;
   height: 2rem;
   border: 1px solid #8d9a86;
@@ -279,7 +285,7 @@
     margin-bottom: 0.9rem;
   }
 
-  .sortField {
+  .controlField {
     width: 11.75rem;
   }
 
