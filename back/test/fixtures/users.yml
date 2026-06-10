@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: ゲスト1
+  guest_token: guest_token_1
+  provider: guest
+  uid:
+
+two:
+  name: ゲスト2
+  guest_token: guest_token_2
+  provider: guest
+  uid:

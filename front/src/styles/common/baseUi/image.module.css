@@ -1,0 +1,14 @@
+.image {
+  display: block;
+  max-width: 100%;
+  object-fit: contain;
+  width: var(--image-width, auto);
+  height: var(--image-height, auto);
+}
+
+@media (min-width: 768px) {
+  .image {
+    width: var(--image-width-md, var(--image-width, auto));
+    height: var(--image-height-md, var(--image-height, auto));
+  }
+}

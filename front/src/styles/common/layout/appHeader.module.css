@@ -1,0 +1,75 @@
+.header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  justify-content: space-between;
+  height: 3rem;
+  border-bottom: 1px solid #78906f;
+  background-color: #fbfdf7;
+  padding-inline: 1rem;
+  color: #263224;
+}
+
+.action {
+  position: absolute;
+  right: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.brand {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.appName {
+  overflow: hidden;
+  color: #2f5438;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subtitle {
+  overflow: hidden;
+  color: #65745f;
+  font-size: 0.625rem;
+  line-height: 0.875rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .header {
+    justify-content: center;
+    height: 3.25rem;
+    padding-inline: 1.5rem;
+  }
+
+  .action {
+    right: 1.5rem;
+  }
+
+  .brand {
+    align-items: center;
+  }
+
+  .appName {
+    font-size: 0.9375rem;
+    line-height: 1.125rem;
+  }
+
+  .subtitle {
+    font-size: 0.6875rem;
+    line-height: 0.9375rem;
+  }
+}

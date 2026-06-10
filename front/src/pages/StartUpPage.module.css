@@ -1,0 +1,51 @@
+.hero {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem 2rem;
+  text-align: center;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.description {
+  margin-top: 1.25rem;
+  color: #4f5f4b;
+  font-size: 10px;
+  line-height: 1rem;
+}
+
+.startButton {
+  margin-top: 1.25rem;
+  max-width: 11rem;
+}
+
+@media (min-width: 768px) {
+  .hero {
+    padding-top: 1.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .description {
+    margin-top: 1.75rem;
+    font-size: 11px;
+    line-height: 1.25rem;
+  }
+
+  .startButton {
+    margin-top: 1.5rem;
+    max-width: 16rem;
+  }
+}

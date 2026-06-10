@@ -1,0 +1,221 @@
+.hero {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  align-items: center;
+  height: calc(100svh - 3rem);
+  min-height: 0;
+  overflow-y: auto;
+  padding: 7.25rem 0.75rem 4.75rem;
+  text-align: center;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.headerArea {
+  position: fixed;
+  top: 3rem;
+  left: 50%;
+  z-index: 5;
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  width: min(360px, calc(100vw - 24px));
+  padding: 0.25rem 0 0.5rem;
+  background-color: #f3f8ed;
+  transform: translateX(-50%);
+}
+
+.list {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: min(360px, calc(100vw - 24px));
+  overflow-y: visible;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  min-height: 7rem;
+  padding: 0.875rem 3.25rem 0.875rem 1rem;
+  border: 1px solid #6f8068;
+  border-radius: 8px;
+  background-color: #fffef8;
+  box-shadow: 0 8px 24px rgb(61 79 54 / 8%);
+  text-align: left;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  gap: 0.45rem;
+  align-items: start;
+}
+
+.icon {
+  margin-top: 0.05rem;
+  color: #3f4d3c;
+}
+
+.label {
+  color: #3f4d3c;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1rem;
+}
+
+.value {
+  margin-top: 0.1rem;
+  color: #263224;
+  font-size: 0.72rem;
+  line-height: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+.deleteButton,
+.editLink {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+.deleteButton {
+  top: 0.7rem;
+  right: 0.8rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 0;
+  color: #f97316;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  background-color: #fff1e7;
+}
+
+.deleteButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.editLink {
+  right: 0.8rem;
+  bottom: 0.55rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  color: #3f4d3c;
+  text-decoration: none;
+}
+
+.editLink:hover {
+  background-color: #eef5e7;
+}
+
+.deleteButton:focus-visible,
+.editLink:focus-visible {
+  outline: 2px solid #5f765d;
+  outline-offset: 2px;
+}
+
+.actions {
+  position: fixed;
+  bottom: 0.75rem;
+  left: 50%;
+  z-index: 5;
+  display: grid;
+  flex: 0 0 auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  width: min(360px, calc(100vw - 24px));
+  max-width: 320px;
+  padding: 0.25rem 0;
+  background-color: #f3f8ed;
+  transform: translateX(-50%);
+}
+
+.emptyActions {
+  bottom: 35%;
+}
+
+.backButton,
+.addButton {
+  min-width: 0;
+}
+
+.addButton {
+  gap: 0.35rem;
+}
+
+.statusMessage,
+.successMessage,
+.errorMessage {
+  color: #4f5f4b;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1rem;
+}
+
+.successMessage {
+  margin-top: 0.75rem;
+  color: #3f6f4a;
+}
+
+.errorMessage {
+  max-width: 20rem;
+  margin-top: 0.75rem;
+  color: #b91c1c;
+}
+
+@media (min-width: 768px) {
+  .hero {
+    height: calc(100svh - 3.25rem);
+    padding-top: 10.75rem;
+    padding-bottom: 5rem;
+  }
+
+  .headerArea,
+  .list {
+    width: 420px;
+  }
+
+  .headerArea {
+    top: 3.25rem;
+    margin-top: 0;
+  }
+
+  .card {
+    min-height: 7.5rem;
+    padding: 1rem 3.5rem 1rem 1.25rem;
+  }
+
+  .actions {
+    width: 420px;
+    max-width: 360px;
+    margin-top: 0.9rem;
+  }
+
+  .emptyActions {
+    bottom: 32%;
+  }
+}

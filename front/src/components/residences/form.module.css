@@ -1,0 +1,180 @@
+.hero {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.75rem 0.875rem;
+  text-align: center;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.stepLabel {
+  width: 100%;
+  max-width: min(320px, calc(100vw - 24px));
+  margin: -0.25rem 0 0.35rem;
+  color: #536653;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: min(320px, calc(100vw - 24px));
+  padding: 0.75rem 0.875rem 0.875rem;
+  border: 1px solid #6f8068;
+  border-radius: 8px;
+  background-color: #fffef8;
+  box-shadow: 0 8px 24px rgb(61 79 54 / 8%);
+  text-align: left;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field + .field {
+  margin-top: 14px;
+}
+
+.labelRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.label {
+  color: #4f5f4b;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.input,
+.select,
+.rentInput {
+  box-sizing: border-box;
+  height: 2rem;
+  margin-top: 6px;
+  padding-inline: 0.5rem;
+  border: 1px solid #8d9a86;
+  border-color: #8d9a86;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #263224;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.select {
+  appearance: auto;
+}
+
+.rentInputGroup {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.rentInput {
+  width: 100%;
+}
+
+.rentUnit {
+  margin-top: 6px;
+  color: #4f5f4b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.input:focus-visible,
+.select:focus-visible,
+.rentInput:focus-visible {
+  outline: 2px solid #78716c;
+  outline-offset: 2px;
+}
+
+.input[aria-invalid="true"],
+.select[aria-invalid="true"],
+.rentInput[aria-invalid="true"] {
+  border-color: #b91c1c;
+}
+
+.fieldError {
+  margin: 0.35rem 0 0;
+  color: #b91c1c;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  width: min(350px, calc(100vw - 24px));
+  max-width: 300px;
+  margin-top: 14px;
+}
+
+.backButton,
+.saveButton {
+  min-width: 0;
+}
+
+.successMessage {
+  max-width: 16rem;
+  margin-top: 0.75rem;
+  color: #3f6f4a;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.errorMessage {
+  max-width: 16rem;
+  margin-top: 0.75rem;
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .hero {
+    padding-top: 0.75rem;
+    padding-bottom: 1rem;
+  }
+
+  .stepLabel {
+    max-width: 360px;
+    margin-top: -0.5rem;
+  }
+
+  .form {
+    width: 360px;
+    padding: 0.85rem 1rem 1rem;
+  }
+
+  .actions {
+    width: 360px;
+    max-width: 320px;
+    margin-top: 16px;
+  }
+
+  .label {
+    font-size: 12px;
+  }
+}
