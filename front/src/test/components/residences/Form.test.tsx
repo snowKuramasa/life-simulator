@@ -52,6 +52,7 @@ describe("ResidenceForm", () => {
     expect(screen.getByLabelText("家賃")).toHaveValue("80,000");
     expect(screen.getByRole("combobox", { name: "場所（都道府県）" })).toHaveTextContent("東京都");
     expect(screen.getByLabelText("場所（市区町村）")).toHaveValue("品川区");
+    expect(screen.getAllByLabelText("必須")).toHaveLength(3);
     expect(screen.getByRole("link", { name: "戻る" })).toHaveAttribute("href", "/");
     expect(screen.getByRole("button", { name: "結果を見る" })).toBeInTheDocument();
   });
@@ -74,5 +75,25 @@ describe("ResidenceForm", () => {
     fireEvent.click(screen.getByRole("button", { name: "結果を見る" }));
 
     expect(handleSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it("disables submit when required fields are empty", () => {
+    renderResidenceForm({ name: "", rent: "", prefecture: "", city: "" });
+
+    expect(screen.getByRole("button", { name: "結果を見る" })).toBeDisabled();
+  });
+
+  it("allows submit when only city is empty", () => {
+    renderResidenceForm({ city: "" });
+
+    expect(screen.getByRole("button", { name: "結果を見る" })).toBeEnabled();
+  });
+
+  it("shows required error after leaving an empty field", () => {
+    renderResidenceForm({ name: "" });
+
+    fireEvent.blur(screen.getByLabelText("住居名"));
+
+    expect(screen.getByText("住居名は必須です")).toBeInTheDocument();
   });
 });

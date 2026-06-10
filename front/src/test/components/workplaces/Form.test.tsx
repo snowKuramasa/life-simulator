@@ -52,6 +52,7 @@ describe("WorkplaceForm", () => {
     expect(screen.getByLabelText("給与（手取り）")).toHaveValue("220,000");
     expect(screen.getByRole("combobox", { name: "勤務地（都道府県）" })).toHaveTextContent("東京都");
     expect(screen.getByLabelText("勤務地（市区町村）")).toHaveValue("品川区");
+    expect(screen.getAllByLabelText("必須")).toHaveLength(3);
     expect(screen.getByRole("link", { name: "戻る" })).toHaveAttribute("href", "/");
     expect(screen.getByRole("button", { name: "次へ" })).toBeInTheDocument();
   });
@@ -74,5 +75,25 @@ describe("WorkplaceForm", () => {
     fireEvent.click(screen.getByRole("button", { name: "次へ" }));
 
     expect(handleSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it("disables submit when required fields are empty", () => {
+    renderWorkplaceForm({ name: "", salary: "", prefecture: "", city: "" });
+
+    expect(screen.getByRole("button", { name: "次へ" })).toBeDisabled();
+  });
+
+  it("allows submit when only city is empty", () => {
+    renderWorkplaceForm({ city: "" });
+
+    expect(screen.getByRole("button", { name: "次へ" })).toBeEnabled();
+  });
+
+  it("shows required error after leaving an empty field", () => {
+    renderWorkplaceForm({ name: "" });
+
+    fireEvent.blur(screen.getByLabelText("勤務先"));
+
+    expect(screen.getByText("勤務先は必須です")).toBeInTheDocument();
   });
 });

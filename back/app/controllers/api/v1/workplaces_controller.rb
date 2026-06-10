@@ -111,7 +111,7 @@ module Api
           name: workplace.name,
           salary: workplace.salary,
           prefecture: workplace.prefecture,
-          city: workplace.city
+          city: workplace.city.to_s
         }
       end
 

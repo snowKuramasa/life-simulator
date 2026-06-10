@@ -1,4 +1,5 @@
 import residenceImage from "@/assets/12.png";
+import { RequiredBadge } from "@/components/common/RequiredBadge";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
 import { Input } from "@/components/common/baseUi/Input";
@@ -11,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/common/baseUi/Select";
 import { PREFECTURES } from "@/constants/prefectures";
-import { type FormEvent } from "react";
+import { type FormEvent, useState } from "react";
 import { Link } from "react-router";
 
 import styles from "./form.module.css";
@@ -45,6 +46,18 @@ function normalizeRent(value: string) {
   return value.replace(/[^\d]/g, "");
 }
 
+type RequiredField = "name" | "rent" | "prefecture";
+
+const REQUIRED_FIELD_LABELS: Record<RequiredField, string> = {
+  name: "住居名",
+  rent: "家賃",
+  prefecture: "場所（都道府県）",
+};
+
+function getRequiredError(label: string, value: string) {
+  return value.trim() ? null : `${label}は必須です`;
+}
+
 export function ResidenceForm({
   title,
   formId,
@@ -65,6 +78,41 @@ export function ResidenceForm({
   errorMessage,
   handleSubmit,
 }: ResidenceFormProps) {
+  const [touchedFields, setTouchedFields] = useState<Partial<Record<RequiredField, boolean>>>({});
+  const requiredErrors: Record<RequiredField, string | null> = {
+    name: getRequiredError(REQUIRED_FIELD_LABELS.name, name),
+    rent: getRequiredError(REQUIRED_FIELD_LABELS.rent, rent),
+    prefecture: getRequiredError(REQUIRED_FIELD_LABELS.prefecture, prefecture),
+  };
+  const visibleErrors = {
+    name: touchedFields.name ? requiredErrors.name : null,
+    rent: touchedFields.rent ? requiredErrors.rent : null,
+    prefecture: touchedFields.prefecture ? requiredErrors.prefecture : null,
+  };
+  const isFormValid = Object.values(requiredErrors).every((error) => error === null);
+
+  function markTouched(field: RequiredField) {
+    setTouchedFields((fields) => ({ ...fields, [field]: true }));
+  }
+
+  function markAllTouched() {
+    setTouchedFields({
+      name: true,
+      rent: true,
+      prefecture: true,
+    });
+  }
+
+  async function handleValidatedSubmit(event: FormEvent<HTMLFormElement>) {
+    if (!isFormValid) {
+      event.preventDefault();
+      markAllTouched();
+      return;
+    }
+
+    await handleSubmit(event);
+  }
+
   return (
     <section className={styles.hero} aria-labelledby={`${formId}-title`}>
       <h1 id={`${formId}-title`} className={styles.visuallyHidden}>
@@ -79,25 +127,39 @@ export function ResidenceForm({
 
       {showStepLabel ? <p className={styles.stepLabel}>ステップ2/2</p> : null}
 
-      <form id={formId} className={styles.form} onSubmit={handleSubmit}>
+      <form id={formId} className={styles.form} onSubmit={handleValidatedSubmit} noValidate>
         <div className={styles.field}>
-          <Label className={styles.label} htmlFor={`${formId}-name`}>
-            住居名
-          </Label>
+          <div className={styles.labelRow}>
+            <Label className={styles.label} htmlFor={`${formId}-name`}>
+              住居名
+            </Label>
+            <RequiredBadge />
+          </div>
           <Input
             id={`${formId}-name`}
             className={styles.input}
             type="text"
             value={name}
             onChange={(event) => setName(event.target.value)}
+            onBlur={() => markTouched("name")}
             maxLength={50}
-            required
+            aria-required="true"
+            aria-invalid={Boolean(visibleErrors.name)}
+            aria-describedby={visibleErrors.name ? `${formId}-name-error` : undefined}
           />
+          {visibleErrors.name ? (
+            <p id={`${formId}-name-error`} className={styles.fieldError}>
+              {visibleErrors.name}
+            </p>
+          ) : null}
         </div>
         <div className={styles.field}>
-          <Label className={styles.label} htmlFor={`${formId}-rent`}>
-            家賃
-          </Label>
+          <div className={styles.labelRow}>
+            <Label className={styles.label} htmlFor={`${formId}-rent`}>
+              家賃
+            </Label>
+            <RequiredBadge />
+          </div>
           <div className={styles.rentInputGroup}>
             <Input
               id={`${formId}-rent`}
@@ -105,18 +167,38 @@ export function ResidenceForm({
               type="text"
               value={formatRent(rent)}
               onChange={(event) => setRent(normalizeRent(event.target.value))}
+              onBlur={() => markTouched("rent")}
               inputMode="numeric"
-              required
+              aria-required="true"
+              aria-invalid={Boolean(visibleErrors.rent)}
+              aria-describedby={visibleErrors.rent ? `${formId}-rent-error` : undefined}
             />
             <span className={styles.rentUnit}>円</span>
           </div>
+          {visibleErrors.rent ? (
+            <p id={`${formId}-rent-error`} className={styles.fieldError}>
+              {visibleErrors.rent}
+            </p>
+          ) : null}
         </div>
         <div className={styles.field}>
-          <Label className={styles.label} htmlFor={`${formId}-prefecture`}>
-            場所（都道府県）
-          </Label>
-          <Select value={prefecture} onValueChange={setPrefecture} required>
-            <SelectTrigger id={`${formId}-prefecture`} className={styles.select}>
+          <div className={styles.labelRow}>
+            <Label className={styles.label} htmlFor={`${formId}-prefecture`}>
+              場所（都道府県）
+            </Label>
+            <RequiredBadge />
+          </div>
+          <Select value={prefecture} onValueChange={setPrefecture}>
+            <SelectTrigger
+              id={`${formId}-prefecture`}
+              className={styles.select}
+              onBlur={() => markTouched("prefecture")}
+              aria-required="true"
+              aria-invalid={Boolean(visibleErrors.prefecture)}
+              aria-describedby={
+                visibleErrors.prefecture ? `${formId}-prefecture-error` : undefined
+              }
+            >
               <SelectValue placeholder="選択してください" />
             </SelectTrigger>
             <SelectContent>
@@ -127,6 +209,11 @@ export function ResidenceForm({
               ))}
             </SelectContent>
           </Select>
+          {visibleErrors.prefecture ? (
+            <p id={`${formId}-prefecture-error`} className={styles.fieldError}>
+              {visibleErrors.prefecture}
+            </p>
+          ) : null}
         </div>
         <div className={styles.field}>
           <Label className={styles.label} htmlFor={`${formId}-city`}>
@@ -139,7 +226,6 @@ export function ResidenceForm({
             value={city}
             onChange={(event) => setCity(event.target.value)}
             maxLength={50}
-            required
           />
         </div>
       </form>
@@ -148,7 +234,12 @@ export function ResidenceForm({
         <Button asChild className={styles.backButton}>
           <Link to={backTo}>戻る</Link>
         </Button>
-        <Button type="submit" form={formId} className={styles.saveButton} disabled={isSubmitting}>
+        <Button
+          type="submit"
+          form={formId}
+          className={styles.saveButton}
+          disabled={isSubmitting || !isFormValid}
+        >
           {isSubmitting ? submittingLabel : submitLabel}
         </Button>
       </div>

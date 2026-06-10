@@ -1,0 +1,8 @@
+.mark {
+  display: inline-flex;
+  align-items: center;
+  color: #8f4f3b;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}

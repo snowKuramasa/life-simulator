@@ -27,7 +27,13 @@ class ResidenceTest < ActiveSupport::TestCase
     assert_includes residence.errors[:name], "can't be blank"
     assert_includes residence.errors[:rent], "can't be blank"
     assert_includes residence.errors[:prefecture], "can't be blank"
-    assert_includes residence.errors[:city], "can't be blank"
+    assert_empty residence.errors[:city]
+  end
+
+  test "allows blank city" do
+    residence = Residence.new(user: users(:one), name: "候補A", rent: 80_000, prefecture: "東京都", city: "")
+
+    assert residence.valid?
   end
 
   test "requires non-negative rent" do

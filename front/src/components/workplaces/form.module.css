@@ -48,7 +48,13 @@
 }
 
 .field + .field {
-  margin-top: 10px;
+  margin-top: 14px;
+}
+
+.labelRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .label {
@@ -100,6 +106,20 @@
 .salaryInput:focus-visible {
   outline: 2px solid #78716c;
   outline-offset: 2px;
+}
+
+.input[aria-invalid="true"],
+.select[aria-invalid="true"],
+.salaryInput[aria-invalid="true"] {
+  border-color: #b91c1c;
+}
+
+.fieldError {
+  margin: 0.35rem 0 0;
+  color: #b91c1c;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.35;
 }
 
 .actions {
