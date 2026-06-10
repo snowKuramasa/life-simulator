@@ -8,10 +8,17 @@ import type {
   CreateWorkplaceParams,
   GuestLoginParams,
   Residence,
+  UsageMetric,
   Workplace,
 } from "@/types";
 
 let currentUser: AuthUser | null = null;
+let usageMetric: UsageMetric = {
+  visit_count: 0,
+  last_visited_at: null,
+  max_combination_count: 0,
+  recalculation_count: 0,
+};
 let workplaceId = 3;
 let residenceId = 3;
 let commuteId = 2;
@@ -55,6 +62,13 @@ const commutes: Commute[] = [
     commute_minutes: 60,
   },
 ];
+
+function incrementRecalculationCount() {
+  usageMetric = {
+    ...usageMetric,
+    recalculation_count: usageMetric.recalculation_count + 1,
+  };
+}
 
 export const handlers = [
   http.get("/api/v1/health", () => {
@@ -112,6 +126,30 @@ export const handlers = [
     currentUser = null;
 
     return new HttpResponse(null, { status: 204 });
+  }),
+  http.get("/api/v1/usage_metric", () => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    return HttpResponse.json({ usage_metric: usageMetric });
+  }),
+  http.post("/api/v1/usage_metric/result_view", async ({ request }) => {
+    if (!currentUser) {
+      return HttpResponse.json({ error: "ログインが必要です" }, { status: 401 });
+    }
+
+    const body = (await request.json().catch(() => ({}))) as { combination_count?: number };
+    const combinationCount = Math.max(Number(body.combination_count ?? 0), 0);
+
+    usageMetric = {
+      ...usageMetric,
+      visit_count: usageMetric.last_visited_at ? usageMetric.visit_count : usageMetric.visit_count + 1,
+      last_visited_at: new Date().toISOString(),
+      max_combination_count: Math.max(usageMetric.max_combination_count, combinationCount),
+    };
+
+    return HttpResponse.json({ usage_metric: usageMetric });
   }),
   http.get("/api/v1/workplaces", () => {
     if (!currentUser) {
@@ -188,6 +226,7 @@ export const handlers = [
     };
     workplaceId += 1;
     workplaces.push(workplace);
+    incrementRecalculationCount();
 
     return HttpResponse.json({ workplace }, { status: 201 });
   }),
@@ -203,6 +242,7 @@ export const handlers = [
     };
     residenceId += 1;
     residences.push(residence);
+    incrementRecalculationCount();
 
     return HttpResponse.json({ residence }, { status: 201 });
   }),
@@ -218,6 +258,7 @@ export const handlers = [
     };
     commuteId += 1;
     commutes.push(commute);
+    incrementRecalculationCount();
 
     return HttpResponse.json({ commute }, { status: 201 });
   }),
@@ -239,6 +280,7 @@ export const handlers = [
       ...body.commute,
     };
     commutes[commuteIndex] = commute;
+    incrementRecalculationCount();
 
     return HttpResponse.json({ commute });
   }),
@@ -255,6 +297,7 @@ export const handlers = [
     }
 
     commutes.splice(commuteIndex, 1);
+    incrementRecalculationCount();
 
     return new HttpResponse(null, { status: 204 });
   }),
@@ -276,6 +319,7 @@ export const handlers = [
       ...body.residence,
     };
     residences[residenceIndex] = residence;
+    incrementRecalculationCount();
 
     return HttpResponse.json({ residence });
   }),
@@ -292,6 +336,7 @@ export const handlers = [
     }
 
     residences.splice(residenceIndex, 1);
+    incrementRecalculationCount();
 
     return new HttpResponse(null, { status: 204 });
   }),
@@ -313,6 +358,7 @@ export const handlers = [
       ...body.workplace,
     };
     workplaces[workplaceIndex] = workplace;
+    incrementRecalculationCount();
 
     return HttpResponse.json({ workplace });
   }),
@@ -329,6 +375,7 @@ export const handlers = [
     }
 
     workplaces.splice(workplaceIndex, 1);
+    incrementRecalculationCount();
 
     return new HttpResponse(null, { status: 204 });
   }),

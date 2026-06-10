@@ -45,6 +45,7 @@ module Api
         residence = current_user.residences.build(residence_params)
 
         if residence.save
+          increment_recalculation_metric
           render json: { residence: residence_json(residence) }, status: :created
         else
           render json: { errors: residence.errors.to_hash(true) }, status: :unprocessable_entity
@@ -68,6 +69,7 @@ module Api
         return render_not_found unless residence
 
         if residence.update(residence_params)
+          increment_recalculation_metric
           render json: { residence: residence_json(residence) }, status: :ok
         else
           render json: { errors: residence.errors.to_hash(true) }, status: :unprocessable_entity
@@ -86,6 +88,7 @@ module Api
         return render_not_found unless residence
 
         residence.destroy!
+        increment_recalculation_metric
         head :no_content
       end
 

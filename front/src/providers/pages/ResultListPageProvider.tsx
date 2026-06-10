@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { type ReactNode, useMemo, useRef, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   useCommutesQuery,
@@ -7,6 +7,7 @@ import {
   useUpdateCommuteMutation,
 } from "@/hooks/commutes/useCommuteQueries";
 import { useResidencesQuery } from "@/hooks/residences/useResidenceQueries";
+import { useRecordResultViewMutation } from "@/hooks/usageMetrics/useUsageMetricQueries";
 import { useWorkplacesQuery } from "@/hooks/workplaces/useWorkplaceQueries";
 import { calculateMonthlySurplus } from "@/lib/calculateMonthlySurplus";
 import {
@@ -41,6 +42,7 @@ export function ResultListPageProvider({ children }: ResultListPageProviderProps
   const commutesQuery = useCommutesQuery();
   const createCommute = useCreateCommuteMutation();
   const updateCommute = useUpdateCommuteMutation();
+  const { mutate: recordResultView } = useRecordResultViewMutation();
   const [sortKey, setSortKey] = useState<ResultSortKey>("monthlySurplus");
   const [householdSize, setHouseholdSize] = useState<HouseholdSize>("single");
   const [commuteSaveStatuses, setCommuteSaveStatuses] = useState<
@@ -100,6 +102,14 @@ export function ResultListPageProvider({ children }: ResultListPageProviderProps
     workplacesQuery.isError || residencesQuery.isError || commutesQuery.isError
       ? "結果一覧の読み込みに失敗しました。もう一度お試しください。"
       : null;
+
+  useEffect(() => {
+    if (isLoading || errorMessage) {
+      return;
+    }
+
+    recordResultView(results.length);
+  }, [errorMessage, isLoading, recordResultView, results.length]);
 
   async function saveCommuteMinutes(result: ResultListItem, commuteMinutes: number) {
     const successTimerId = successTimerIdsRef.current[result.id];

@@ -2,6 +2,7 @@ class User < ApplicationRecord
   has_many :workplaces, dependent: :destroy
   has_many :residences, dependent: :destroy
   has_many :commutes, dependent: :destroy
+  has_one :usage_metric, class_name: "UserUsageMetric", dependent: :destroy
 
   # ゲストユーザーを識別するためのランダムトークンを作成時に付与します。
   before_validation :set_guest_token, on: :create
@@ -28,6 +29,10 @@ class User < ApplicationRecord
   # @return [Boolean]
   def guest?
     provider == "guest"
+  end
+
+  def usage_metric!
+    usage_metric || create_usage_metric!
   end
 
   private

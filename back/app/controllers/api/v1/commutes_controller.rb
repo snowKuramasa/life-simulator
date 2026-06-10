@@ -45,6 +45,7 @@ module Api
         return render_not_found unless commute
 
         if commute.save
+          increment_recalculation_metric
           render json: { commute: commute_json(commute) }, status: :created
         else
           render json: { errors: commute.errors.to_hash(true) }, status: :unprocessable_entity
@@ -70,6 +71,7 @@ module Api
         return render_not_found unless attributes
 
         if commute.update(attributes)
+          increment_recalculation_metric
           render json: { commute: commute_json(commute) }, status: :ok
         else
           render json: { errors: commute.errors.to_hash(true) }, status: :unprocessable_entity
@@ -88,6 +90,7 @@ module Api
         return render_not_found unless commute
 
         commute.destroy!
+        increment_recalculation_metric
         head :no_content
       end
 
