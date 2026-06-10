@@ -93,3 +93,14 @@ export interface CommuteResponse {
 export interface CommutesResponse {
   commutes: Commute[];
 }
+
+export interface UsageMetric {
+  visit_count: number;
+  last_visited_at: string | null;
+  max_combination_count: number;
+  recalculation_count: number;
+}
+
+export interface UsageMetricResponse {
+  usage_metric: UsageMetric;
+}

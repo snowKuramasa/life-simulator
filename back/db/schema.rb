@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_01_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_10_130428) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -36,6 +36,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_01_000000) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_residences_on_user_id"
+  end
+
+  create_table "user_usage_metrics", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "last_visited_at"
+    t.integer "max_combination_count", default: 0, null: false
+    t.integer "recalculation_count", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.integer "visit_count", default: 0, null: false
+    t.index ["user_id"], name: "index_user_usage_metrics_on_user_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -64,5 +75,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_01_000000) do
   add_foreign_key "commutes", "users"
   add_foreign_key "commutes", "workplaces"
   add_foreign_key "residences", "users"
+  add_foreign_key "user_usage_metrics", "users"
   add_foreign_key "workplaces", "users"
 end

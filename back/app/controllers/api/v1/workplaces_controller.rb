@@ -45,6 +45,7 @@ module Api
         workplace = current_user.workplaces.build(workplace_params)
 
         if workplace.save
+          increment_recalculation_metric
           render json: { workplace: workplace_json(workplace) }, status: :created
         else
           render json: { errors: workplace.errors.to_hash(true) }, status: :unprocessable_entity
@@ -68,6 +69,7 @@ module Api
         return render_not_found unless workplace
 
         if workplace.update(workplace_params)
+          increment_recalculation_metric
           render json: { workplace: workplace_json(workplace) }, status: :ok
         else
           render json: { errors: workplace.errors.to_hash(true) }, status: :unprocessable_entity
@@ -86,6 +88,7 @@ module Api
         return render_not_found unless workplace
 
         workplace.destroy!
+        increment_recalculation_metric
         head :no_content
       end
 

@@ -48,9 +48,21 @@ commutes {
   datetime updated_at
 }
 
+user_usage_metrics {
+  bigint id PK
+  bigint user_id FK
+  integer visit_count
+  datetime last_visited_at
+  integer max_combination_count
+  integer recalculation_count
+  datetime created_at
+  datetime updated_at
+}
+
 users ||--o{ workplaces : "1対N"
 users ||--o{ residences : "1対N"
 users ||--o{ commutes : "1対N"
+users ||--o| user_usage_metrics : "1対0..1"
 
 workplaces ||--o{ commutes : "1対N"
 residences ||--o{ commutes : "1対N"

@@ -24,4 +24,8 @@ class ApplicationController < ActionController::API
       guest: user.guest?
     }
   end
+
+  def increment_recalculation_metric
+    current_user&.usage_metric!&.increment_recalculation_count!
+  end
 end

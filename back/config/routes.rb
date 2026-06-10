@@ -10,6 +10,9 @@ Rails.application.routes.draw do
       resources :workplaces, only: %i[index show create update destroy]
       resources :residences, only: %i[index show create update destroy]
       resources :commutes, only: %i[index show create update destroy]
+      resource :usage_metric, only: %i[show] do
+        post :result_view
+      end
       get "health", to: "health#show"
       post "auth/guest", to: "auth#guest"
       get "auth/me", to: "auth#me"
