@@ -47,11 +47,14 @@ module Api
       end
 
       # 現在の session から user_id を削除してログアウトします。
+      # ゲストユーザーの場合は保存データも含めてユーザーを削除します。
       #
       # @route DELETE /api/v1/auth/logout
       # @return [void] 成功時は 204 No Content
       def logout
+        user = current_user
         session.delete(:user_id)
+        user.destroy! if user&.guest?
 
         head :no_content
       end
