@@ -27,7 +27,13 @@ class WorkplaceTest < ActiveSupport::TestCase
     assert_includes workplace.errors[:name], "can't be blank"
     assert_includes workplace.errors[:salary], "can't be blank"
     assert_includes workplace.errors[:prefecture], "can't be blank"
-    assert_includes workplace.errors[:city], "can't be blank"
+    assert_empty workplace.errors[:city]
+  end
+
+  test "allows blank city" do
+    workplace = Workplace.new(user: users(:one), name: "候補A", salary: 220_000, prefecture: "東京都", city: "")
+
+    assert workplace.valid?
   end
 
   test "requires non negative salary" do

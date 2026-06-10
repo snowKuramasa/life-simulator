@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_10_130428) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_10_131819) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -28,7 +28,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_10_130428) do
   end
 
   create_table "residences", force: :cascade do |t|
-    t.string "city", null: false
+    t.string "city"
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.string "prefecture", null: false
@@ -61,7 +61,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_10_130428) do
   end
 
   create_table "workplaces", force: :cascade do |t|
-    t.string "city", null: false
+    t.string "city"
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.string "prefecture", null: false

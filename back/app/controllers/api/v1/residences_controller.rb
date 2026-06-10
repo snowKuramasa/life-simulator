@@ -111,7 +111,7 @@ module Api
           name: residence.name,
           rent: residence.rent,
           prefecture: residence.prefecture,
-          city: residence.city
+          city: residence.city.to_s
         }
       end
 

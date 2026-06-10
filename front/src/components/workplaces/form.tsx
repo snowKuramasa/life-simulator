@@ -1,4 +1,5 @@
 import workplaceImage from "@/assets/113.png";
+import { RequiredBadge } from "@/components/common/RequiredBadge";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
 import { Input } from "@/components/common/baseUi/Input";
@@ -11,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/common/baseUi/Select";
 import { PREFECTURES } from "@/constants/prefectures";
-import { type FormEvent } from "react";
+import { type FormEvent, useState } from "react";
 import { Link } from "react-router";
 
 import styles from "./form.module.css";
@@ -45,6 +46,18 @@ function normalizeSalary(value: string) {
   return value.replace(/[^\d]/g, "");
 }
 
+type RequiredField = "name" | "salary" | "prefecture";
+
+const REQUIRED_FIELD_LABELS: Record<RequiredField, string> = {
+  name: "勤務先",
+  salary: "給与（手取り）",
+  prefecture: "勤務地（都道府県）",
+};
+
+function getRequiredError(label: string, value: string) {
+  return value.trim() ? null : `${label}は必須です`;
+}
+
 export function WorkplaceForm({
   title,
   formId,
@@ -65,6 +78,41 @@ export function WorkplaceForm({
   errorMessage,
   handleSubmit,
 }: WorkplaceFormProps) {
+  const [touchedFields, setTouchedFields] = useState<Partial<Record<RequiredField, boolean>>>({});
+  const requiredErrors: Record<RequiredField, string | null> = {
+    name: getRequiredError(REQUIRED_FIELD_LABELS.name, name),
+    salary: getRequiredError(REQUIRED_FIELD_LABELS.salary, salary),
+    prefecture: getRequiredError(REQUIRED_FIELD_LABELS.prefecture, prefecture),
+  };
+  const visibleErrors = {
+    name: touchedFields.name ? requiredErrors.name : null,
+    salary: touchedFields.salary ? requiredErrors.salary : null,
+    prefecture: touchedFields.prefecture ? requiredErrors.prefecture : null,
+  };
+  const isFormValid = Object.values(requiredErrors).every((error) => error === null);
+
+  function markTouched(field: RequiredField) {
+    setTouchedFields((fields) => ({ ...fields, [field]: true }));
+  }
+
+  function markAllTouched() {
+    setTouchedFields({
+      name: true,
+      salary: true,
+      prefecture: true,
+    });
+  }
+
+  async function handleValidatedSubmit(event: FormEvent<HTMLFormElement>) {
+    if (!isFormValid) {
+      event.preventDefault();
+      markAllTouched();
+      return;
+    }
+
+    await handleSubmit(event);
+  }
+
   return (
     <section className={styles.hero} aria-labelledby={`${formId}-title`}>
       <h1 id={`${formId}-title`} className={styles.visuallyHidden}>
@@ -79,25 +127,39 @@ export function WorkplaceForm({
 
       {showStepLabel ? <p className={styles.stepLabel}>ステップ1/2</p> : null}
 
-      <form id={formId} className={styles.form} onSubmit={handleSubmit}>
+      <form id={formId} className={styles.form} onSubmit={handleValidatedSubmit} noValidate>
         <div className={styles.field}>
-          <Label className={styles.label} htmlFor={`${formId}-name`}>
-            勤務先
-          </Label>
+          <div className={styles.labelRow}>
+            <Label className={styles.label} htmlFor={`${formId}-name`}>
+              勤務先
+            </Label>
+            <RequiredBadge />
+          </div>
           <Input
             id={`${formId}-name`}
             className={styles.input}
             type="text"
             value={name}
             onChange={(event) => setName(event.target.value)}
+            onBlur={() => markTouched("name")}
             maxLength={50}
-            required
+            aria-required="true"
+            aria-invalid={Boolean(visibleErrors.name)}
+            aria-describedby={visibleErrors.name ? `${formId}-name-error` : undefined}
           />
+          {visibleErrors.name ? (
+            <p id={`${formId}-name-error`} className={styles.fieldError}>
+              {visibleErrors.name}
+            </p>
+          ) : null}
         </div>
         <div className={styles.field}>
-          <Label className={styles.label} htmlFor={`${formId}-salary`}>
-            給与（手取り）
-          </Label>
+          <div className={styles.labelRow}>
+            <Label className={styles.label} htmlFor={`${formId}-salary`}>
+              給与（手取り）
+            </Label>
+            <RequiredBadge />
+          </div>
           <div className={styles.salaryInputGroup}>
             <Input
               id={`${formId}-salary`}
@@ -105,18 +167,38 @@ export function WorkplaceForm({
               type="text"
               value={formatSalary(salary)}
               onChange={(event) => setSalary(normalizeSalary(event.target.value))}
+              onBlur={() => markTouched("salary")}
               inputMode="numeric"
-              required
+              aria-required="true"
+              aria-invalid={Boolean(visibleErrors.salary)}
+              aria-describedby={visibleErrors.salary ? `${formId}-salary-error` : undefined}
             />
             <span className={styles.salaryUnit}>円</span>
           </div>
+          {visibleErrors.salary ? (
+            <p id={`${formId}-salary-error`} className={styles.fieldError}>
+              {visibleErrors.salary}
+            </p>
+          ) : null}
         </div>
         <div className={styles.field}>
-          <Label className={styles.label} htmlFor={`${formId}-prefecture`}>
-            勤務地（都道府県）
-          </Label>
-          <Select value={prefecture} onValueChange={setPrefecture} required>
-            <SelectTrigger id={`${formId}-prefecture`} className={styles.select}>
+          <div className={styles.labelRow}>
+            <Label className={styles.label} htmlFor={`${formId}-prefecture`}>
+              勤務地（都道府県）
+            </Label>
+            <RequiredBadge />
+          </div>
+          <Select value={prefecture} onValueChange={setPrefecture}>
+            <SelectTrigger
+              id={`${formId}-prefecture`}
+              className={styles.select}
+              onBlur={() => markTouched("prefecture")}
+              aria-required="true"
+              aria-invalid={Boolean(visibleErrors.prefecture)}
+              aria-describedby={
+                visibleErrors.prefecture ? `${formId}-prefecture-error` : undefined
+              }
+            >
               <SelectValue placeholder="選択してください" />
             </SelectTrigger>
             <SelectContent>
@@ -127,6 +209,11 @@ export function WorkplaceForm({
               ))}
             </SelectContent>
           </Select>
+          {visibleErrors.prefecture ? (
+            <p id={`${formId}-prefecture-error`} className={styles.fieldError}>
+              {visibleErrors.prefecture}
+            </p>
+          ) : null}
         </div>
         <div className={styles.field}>
           <Label className={styles.label} htmlFor={`${formId}-city`}>
@@ -139,7 +226,6 @@ export function WorkplaceForm({
             value={city}
             onChange={(event) => setCity(event.target.value)}
             maxLength={50}
-            required
           />
         </div>
       </form>
@@ -148,7 +234,12 @@ export function WorkplaceForm({
         <Button asChild className={styles.backButton}>
           <Link to={backTo}>戻る</Link>
         </Button>
-        <Button type="submit" form={formId} className={styles.saveButton} disabled={isSubmitting}>
+        <Button
+          type="submit"
+          form={formId}
+          className={styles.saveButton}
+          disabled={isSubmitting || !isFormValid}
+        >
           {isSubmitting ? submittingLabel : submitLabel}
         </Button>
       </div>

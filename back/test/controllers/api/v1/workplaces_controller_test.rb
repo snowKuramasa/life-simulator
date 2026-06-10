@@ -161,7 +161,27 @@ class Api::V1::WorkplacesControllerTest < ActionDispatch::IntegrationTest
     assert_includes response_json.dig("errors", "name"), "Name can't be blank"
     assert_includes response_json.dig("errors", "salary"), "Salary must be greater than or equal to 0"
     assert_includes response_json.dig("errors", "prefecture"), "Prefecture can't be blank"
-    assert_includes response_json.dig("errors", "city"), "City can't be blank"
+    assert_nil response_json.dig("errors", "city")
+  end
+
+  test "creates a workplace without city" do
+    post "/api/v1/auth/guest", params: { name: "勤務先市区町村任意テストユーザー" }, as: :json
+
+    assert_difference "Workplace.count", 1 do
+      post "/api/v1/workplaces",
+           params: {
+             workplace: {
+               name: "候補A",
+               salary: 220_000,
+               prefecture: "東京都"
+             }
+           },
+           as: :json
+    end
+
+    assert_response :created
+    assert_nil Workplace.last.city
+    assert_equal "", JSON.parse(response.body).dig("workplace", "city")
   end
 
   test "updates a workplace for the current user" do
@@ -269,7 +289,7 @@ class Api::V1::WorkplacesControllerTest < ActionDispatch::IntegrationTest
     assert_includes response_json.dig("errors", "name"), "Name can't be blank"
     assert_includes response_json.dig("errors", "salary"), "Salary must be greater than or equal to 0"
     assert_includes response_json.dig("errors", "prefecture"), "Prefecture can't be blank"
-    assert_includes response_json.dig("errors", "city"), "City can't be blank"
+    assert_nil response_json.dig("errors", "city")
     assert_equal "候補A", workplace.reload.name
   end
 

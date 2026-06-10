@@ -161,7 +161,27 @@ class Api::V1::ResidencesControllerTest < ActionDispatch::IntegrationTest
     assert_includes response_json.dig("errors", "name"), "Name can't be blank"
     assert_includes response_json.dig("errors", "rent"), "Rent must be greater than or equal to 0"
     assert_includes response_json.dig("errors", "prefecture"), "Prefecture can't be blank"
-    assert_includes response_json.dig("errors", "city"), "City can't be blank"
+    assert_nil response_json.dig("errors", "city")
+  end
+
+  test "creates a residence without city" do
+    post "/api/v1/auth/guest", params: { name: "住居市区町村任意テストユーザー" }, as: :json
+
+    assert_difference "Residence.count", 1 do
+      post "/api/v1/residences",
+           params: {
+             residence: {
+               name: "候補A",
+               rent: 80_000,
+               prefecture: "東京都"
+             }
+           },
+           as: :json
+    end
+
+    assert_response :created
+    assert_nil Residence.last.city
+    assert_equal "", JSON.parse(response.body).dig("residence", "city")
   end
 
   test "updates a residence for the current user" do
@@ -269,7 +289,7 @@ class Api::V1::ResidencesControllerTest < ActionDispatch::IntegrationTest
     assert_includes response_json.dig("errors", "name"), "Name can't be blank"
     assert_includes response_json.dig("errors", "rent"), "Rent must be greater than or equal to 0"
     assert_includes response_json.dig("errors", "prefecture"), "Prefecture can't be blank"
-    assert_includes response_json.dig("errors", "city"), "City can't be blank"
+    assert_nil response_json.dig("errors", "city")
     assert_equal "候補A", residence.reload.name
   end
 
