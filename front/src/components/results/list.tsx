@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/common/baseUi/Select";
+import { cn } from "@/lib/utils";
 import type {
   CommuteSaveStatus,
   HouseholdSize,
@@ -190,6 +191,8 @@ export function ResultList({
   isLoading,
   errorMessage,
 }: ResultListProps) {
+  const isEmpty = !isLoading && results.length === 0;
+
   return (
     <section className={styles.hero} aria-labelledby="result-list-title">
       <h1 id="result-list-title" className={styles.visuallyHidden}>
@@ -291,7 +294,7 @@ export function ResultList({
 
       {errorMessage ? <p className={styles.errorMessage}>{errorMessage}</p> : null}
 
-      <div className={styles.actions}>
+      <div className={cn(styles.actions, isEmpty && styles.emptyActions)}>
         <Button asChild>
           <Link to="/workplaces">勤務先一覧</Link>
         </Button>

@@ -9,6 +9,14 @@
   color: #263224;
 }
 
+.pageContent {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  animation: pageFadeIn 180ms ease-out;
+}
+
 .logoutButton {
   width: auto;
   min-width: 2rem;
@@ -28,6 +36,22 @@
   display: none;
   font-size: 0.72rem;
   font-weight: 700;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pageContent {
+    animation: none;
+  }
 }
 
 @media (min-width: 768px) {

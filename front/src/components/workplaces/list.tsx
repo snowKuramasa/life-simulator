@@ -2,6 +2,7 @@ import workplaceImage from "@/assets/113.png";
 import { DeleteConfirmDialog } from "@/components/common/DeleteConfirmDialog";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
+import { cn } from "@/lib/utils";
 import type { Workplace } from "@/types";
 import { Building2, Coins, MapPin, Pencil, Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router";
@@ -33,6 +34,8 @@ export function WorkplaceList({
   errorMessage,
   handleDelete,
 }: WorkplaceListProps) {
+  const isEmpty = !isLoading && workplaces.length === 0;
+
   return (
     <section className={styles.hero} aria-labelledby="workplace-list-title">
       <h1 id="workplace-list-title" className={styles.visuallyHidden}>
@@ -114,7 +117,7 @@ export function WorkplaceList({
       {message ? <p className={styles.successMessage}>{message}</p> : null}
       {errorMessage ? <p className={styles.errorMessage}>{errorMessage}</p> : null}
 
-      <div className={styles.actions}>
+      <div className={cn(styles.actions, isEmpty && styles.emptyActions)}>
         <Button asChild className={styles.backButton}>
           <Link to="/results">戻る</Link>
         </Button>

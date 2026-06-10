@@ -154,6 +154,10 @@
   transform: translateX(-50%);
 }
 
+.emptyActions {
+  bottom: 35%;
+}
+
 .backButton,
 .addButton {
   min-width: 0;
@@ -209,5 +213,9 @@
     width: 420px;
     max-width: 360px;
     margin-top: 0.9rem;
+  }
+
+  .emptyActions {
+    bottom: 32%;
   }
 }

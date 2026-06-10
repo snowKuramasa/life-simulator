@@ -247,6 +247,10 @@
   transform: translateX(-50%);
 }
 
+.emptyActions {
+  bottom: 35%;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -298,5 +302,9 @@
     width: 420px;
     max-width: 360px;
     margin-top: 0.9rem;
+  }
+
+  .emptyActions {
+    bottom: 32%;
   }
 }

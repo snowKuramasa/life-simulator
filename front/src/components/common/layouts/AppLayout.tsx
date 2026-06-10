@@ -1,5 +1,5 @@
 import { LogOut } from "lucide-react";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, useLocation, useNavigate } from "react-router";
 
 import { Button } from "@/components/common/baseUi/Button";
 import { GuestLogoutConfirmDialog } from "@/components/common/GuestLogoutConfirmDialog";
@@ -10,8 +10,10 @@ import styles from "@/styles/common/layout/appLayout.module.css";
 
 export function AppLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout, isLoggingOut } = useAuth();
   const guestUser = user?.guest ? user : null;
+  const pageKey = `${location.pathname}${location.search}`;
 
   async function handleLogout() {
     await logout();
@@ -43,7 +45,9 @@ export function AppLayout() {
           ) : null
         }
       />
-      <Outlet />
+      <div key={pageKey} className={styles.pageContent}>
+        <Outlet />
+      </div>
     </main>
   );
 }

@@ -2,6 +2,7 @@ import residenceImage from "@/assets/12.png";
 import { DeleteConfirmDialog } from "@/components/common/DeleteConfirmDialog";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
+import { cn } from "@/lib/utils";
 import type { Residence } from "@/types";
 import { Home, MapPin, Pencil, Plus, ReceiptText, Trash2 } from "lucide-react";
 import { Link } from "react-router";
@@ -33,6 +34,8 @@ export function ResidenceList({
   errorMessage,
   handleDelete,
 }: ResidenceListProps) {
+  const isEmpty = !isLoading && residences.length === 0;
+
   return (
     <section className={styles.hero} aria-labelledby="residence-list-title">
       <h1 id="residence-list-title" className={styles.visuallyHidden}>
@@ -115,7 +118,7 @@ export function ResidenceList({
       {message ? <p className={styles.successMessage}>{message}</p> : null}
       {errorMessage ? <p className={styles.errorMessage}>{errorMessage}</p> : null}
 
-      <div className={styles.actions}>
+      <div className={cn(styles.actions, isEmpty && styles.emptyActions)}>
         <Button asChild className={styles.backButton}>
           <Link to="/results">戻る</Link>
         </Button>
