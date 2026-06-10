@@ -149,6 +149,19 @@
   outline-offset: 2px;
 }
 
+.commuteMinutesText {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.45rem;
+}
+
+.roundTripMinutes {
+  color: #5f675d;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
 .editIcon {
   flex: 0 0 auto;
   color: #6f8068;
@@ -167,6 +180,12 @@
   gap: 0.18rem;
   min-width: 0;
   min-height: 1rem;
+}
+
+.commuteInputLabel {
+  color: #5f675d;
+  font-size: 0.7rem;
+  font-weight: 700;
 }
 
 .commuteInput {

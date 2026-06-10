@@ -93,6 +93,7 @@ function CommuteMinutesField({ result, status, saveCommuteMinutes }: CommuteMinu
   const isCommittingRef = useRef(false);
   const isSaving = status === "saving";
   const currentMinutes = result.commute?.commute_minutes ?? null;
+  const roundTripMinutes = currentMinutes === null ? null : currentMinutes * 2;
 
   function startEditing() {
     setCommuteMinutes(currentMinutes === null ? "" : String(currentMinutes));
@@ -146,6 +147,7 @@ function CommuteMinutesField({ result, status, saveCommuteMinutes }: CommuteMinu
   if (isEditing) {
     return (
       <div className={styles.commuteEditField}>
+        <span className={styles.commuteInputLabel}>片道</span>
         <Input
           className={styles.commuteInput}
           type="number"
@@ -153,7 +155,7 @@ function CommuteMinutesField({ result, status, saveCommuteMinutes }: CommuteMinu
           step={1}
           value={commuteMinutes}
           disabled={isSaving}
-          aria-label={`${result.workplace.name}と${result.residence.name}の通勤時間`}
+          aria-label={`${result.workplace.name}と${result.residence.name}の片道通勤時間`}
           onChange={(event) => setCommuteMinutes(event.target.value)}
           onBlur={() => void commitEditing()}
           onKeyDown={handleKeyDown}
@@ -170,10 +172,17 @@ function CommuteMinutesField({ result, status, saveCommuteMinutes }: CommuteMinu
       type="button"
       className={styles.commuteDisplayButton}
       onClick={startEditing}
-      aria-label={`${result.workplace.name}と${result.residence.name}の通勤時間を編集`}
+      aria-label={`${result.workplace.name}と${result.residence.name}の片道通勤時間を編集`}
       disabled={isSaving}
     >
-      <span>{currentMinutes === null ? "通勤時間を入力" : `${currentMinutes}分`}</span>
+      {currentMinutes === null ? (
+        <span>片道通勤時間を入力</span>
+      ) : (
+        <span className={styles.commuteMinutesText}>
+          <span>片道{currentMinutes}分</span>
+          <span className={styles.roundTripMinutes}>往復{roundTripMinutes}分</span>
+        </span>
+      )}
       <Pencil className={styles.editIcon} aria-hidden="true" size={15} />
       <SaveStatusIcon status={status} />
     </button>
