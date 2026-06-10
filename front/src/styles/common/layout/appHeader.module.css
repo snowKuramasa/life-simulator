@@ -7,11 +7,19 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  justify-content: space-between;
   height: 3rem;
   border-bottom: 1px solid #78906f;
   background-color: #fbfdf7;
   padding-inline: 1rem;
   color: #263224;
+}
+
+.action {
+  position: absolute;
+  right: 0.75rem;
+  display: inline-flex;
+  align-items: center;
 }
 
 .brand {
@@ -45,6 +53,10 @@
     justify-content: center;
     height: 3.25rem;
     padding-inline: 1.5rem;
+  }
+
+  .action {
+    right: 1.5rem;
   }
 
   .brand {

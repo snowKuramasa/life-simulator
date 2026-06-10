@@ -61,10 +61,36 @@ class AuthControllerTest < ActionDispatch::IntegrationTest
     assert_equal false, JSON.parse(response.body)["authenticated"]
   end
 
-  test "logs out the current user" do
+  test "logs out and destroys the current guest user with saved data" do
     post "/api/v1/auth/guest", as: :json
+    user = User.find(JSON.parse(response.body).dig("user", "id"))
+    workplace = user.workplaces.create!(
+      name: "テスト勤務先",
+      salary: 220_000,
+      prefecture: "東京都",
+      city: "渋谷区"
+    )
+    residence = user.residences.create!(
+      name: "テスト住居",
+      rent: 80_000,
+      prefecture: "東京都",
+      city: "世田谷区"
+    )
+    user.commutes.create!(
+      workplace: workplace,
+      residence: residence,
+      commute_minutes: 30
+    )
 
-    delete "/api/v1/auth/logout"
+    assert_difference -> { User.count }, -1 do
+      assert_difference -> { Workplace.count }, -1 do
+        assert_difference -> { Residence.count }, -1 do
+          assert_difference -> { Commute.count }, -1 do
+            delete "/api/v1/auth/logout"
+          end
+        end
+      end
+    end
 
     assert_response :no_content
 

@@ -119,8 +119,9 @@ describe("ResultListPage", () => {
 
     expect(await screen.findAllByText("A社")).toHaveLength(2);
     expect(screen.getAllByText("〇〇")).toHaveLength(2);
-    expect(screen.getAllByText("通勤時間を入力")).toHaveLength(3);
-    expect(screen.getByText("60分")).toBeInTheDocument();
+    expect(screen.getAllByText("片道通勤時間を入力")).toHaveLength(3);
+    expect(screen.getByText("片道60分")).toBeInTheDocument();
+    expect(screen.getByText("往復120分")).toBeInTheDocument();
     expect(screen.getByText("0円")).toBeInTheDocument();
     expect(screen.getAllByText("余裕あり")).toHaveLength(1);
     expect(screen.getByText("普通")).toBeInTheDocument();
@@ -140,15 +141,16 @@ describe("ResultListPage", () => {
     const cards = screen.getAllByRole("article");
     expect(within(cards[0]).getByText("B社")).toBeInTheDocument();
     expect(within(cards[0]).getByText("△△")).toBeInTheDocument();
-    expect(within(cards[0]).getByText("60分")).toBeInTheDocument();
+    expect(within(cards[0]).getByText("片道60分")).toBeInTheDocument();
+    expect(within(cards[0]).getByText("往復120分")).toBeInTheDocument();
   });
 
   it("creates commute minutes from a result card", async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     renderResultListPage();
 
-    fireEvent.click(await screen.findByRole("button", { name: "A社と〇〇の通勤時間を編集" }));
-    const input = screen.getByRole("spinbutton", { name: "A社と〇〇の通勤時間" });
+    fireEvent.click(await screen.findByRole("button", { name: "A社と〇〇の片道通勤時間を編集" }));
+    const input = screen.getByRole("spinbutton", { name: "A社と〇〇の片道通勤時間" });
 
     fireEvent.change(input, { target: { value: "45" } });
     fireEvent.keyDown(input, { key: "Enter" });

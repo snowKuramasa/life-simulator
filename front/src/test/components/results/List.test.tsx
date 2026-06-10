@@ -92,11 +92,12 @@ describe("ResultList", () => {
     expect(screen.getByText("〇〇")).toBeInTheDocument();
     expect(screen.getAllByText("月のゆとり")).toHaveLength(2);
     expect(screen.getByText("0円")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "A社と〇〇の通勤時間を編集" })).toHaveTextContent(
-      "通勤時間を入力",
+    expect(screen.getByRole("button", { name: "A社と〇〇の片道通勤時間を編集" })).toHaveTextContent(
+      "片道通勤時間を入力",
     );
     expect(screen.getByText("余裕あり")).toBeInTheDocument();
-    expect(screen.getByText("60分")).toBeInTheDocument();
+    expect(screen.getByText("片道60分")).toBeInTheDocument();
+    expect(screen.getByText("往復120分")).toBeInTheDocument();
     expect(screen.getByText("普通")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "勤務先一覧" })).toHaveAttribute("href", "/workplaces");
     expect(screen.getByRole("link", { name: "住居一覧" })).toHaveAttribute("href", "/residences");
@@ -106,8 +107,8 @@ describe("ResultList", () => {
     const saveCommuteMinutes = vi.fn(async () => true);
     renderResultList({ saveCommuteMinutes });
 
-    fireEvent.click(screen.getByRole("button", { name: "A社と〇〇の通勤時間を編集" }));
-    const input = screen.getByRole("spinbutton", { name: "A社と〇〇の通勤時間" });
+    fireEvent.click(screen.getByRole("button", { name: "A社と〇〇の片道通勤時間を編集" }));
+    const input = screen.getByRole("spinbutton", { name: "A社と〇〇の片道通勤時間" });
 
     fireEvent.change(input, { target: { value: "45" } });
     fireEvent.keyDown(input, { key: "Enter" });

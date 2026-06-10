@@ -1,0 +1,54 @@
+.content {
+  width: min(21rem, calc(100vw - 2rem));
+  padding: 1.15rem;
+  border: 1px solid #6f8068;
+  border-radius: 8px;
+  background-color: #fffef8;
+  box-shadow: 0 18px 42px rgb(38 50 36 / 18%);
+  color: #263224;
+}
+
+.title {
+  color: #263224;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.description {
+  margin-top: 0.65rem;
+  color: #4f5f4b;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.userName {
+  margin-top: 0.85rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #d9e5cf;
+  border-radius: 6px;
+  background-color: #f7fbf1;
+  color: #263224;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin-top: 1rem;
+}
+
+.logoutButton {
+  background-color: #f97316;
+  color: #fffef8;
+}
+
+.logoutButton:hover {
+  background-color: #ea580c;
+}
