@@ -13,7 +13,8 @@ describe("StartUpPage", () => {
     );
 
     expect(screen.getByRole("heading", { name: "利用開始画面" })).toBeInTheDocument();
-    expect(screen.getByText(/生活のバランスを簡単に/)).toBeInTheDocument();
+    expect(screen.getByText("mitooshi")).toBeInTheDocument();
+    expect(screen.getByText("住まいとお金から、暮らしを考える")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "はじめる" })).toHaveAttribute("href", "/login");
     expect(screen.getByRole("img", { name: "食卓で過ごす人と犬のイラスト" })).toBeInTheDocument();
   });

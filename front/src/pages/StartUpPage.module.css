@@ -21,10 +21,19 @@
 }
 
 .description {
-  margin-top: 1.25rem;
+  margin-top: 0.5rem;
   color: #4f5f4b;
   font-size: 10px;
   line-height: 1rem;
+}
+
+.appName {
+  margin-top: 1.25rem;
+  color: #2f3d2d;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
 }
 
 .startButton {
@@ -39,9 +48,14 @@
   }
 
   .description {
-    margin-top: 1.75rem;
+    margin-top: 0.625rem;
     font-size: 11px;
     line-height: 1.25rem;
+  }
+
+  .appName {
+    margin-top: 1.75rem;
+    font-size: 40px;
   }
 
   .startButton {

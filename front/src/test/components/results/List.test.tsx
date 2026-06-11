@@ -91,6 +91,8 @@ describe("ResultList", () => {
     expect(screen.getByText("A社")).toBeInTheDocument();
     expect(screen.getByText("〇〇")).toBeInTheDocument();
     expect(screen.getAllByText("月のゆとり")).toHaveLength(2);
+    expect(screen.getAllByRole("button", { name: /月のゆとりの説明/ })).toHaveLength(2);
+    expect(screen.getAllByText("手取り月収から家賃と標準生活費14万円を引いた目安です。")).toHaveLength(2);
     expect(screen.getByText("0円")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "A社と〇〇の片道通勤時間を編集" })).toHaveTextContent(
       "片道通勤時間を入力",

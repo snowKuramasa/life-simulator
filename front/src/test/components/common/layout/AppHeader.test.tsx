@@ -7,8 +7,8 @@ describe("AppHeader", () => {
   it("renders the default brand", () => {
     render(<AppHeader />);
 
-    expect(screen.getByText("さきミル")).toBeInTheDocument();
-    expect(screen.getByText("これからの暮らしを、少し具体的に。")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "mitooshi" })).toBeInTheDocument();
+    expect(screen.getByText("住まいとお金から、暮らしを考える")).toBeInTheDocument();
   });
 
   it("renders the provided brand", () => {

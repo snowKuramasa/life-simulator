@@ -7,8 +7,7 @@ const meta = {
   component: AppHeader,
   tags: ["autodocs"],
   args: {
-    appName: "さきミル",
-    subtitle: "これからの暮らしを、少し具体的に。",
+    subtitle: "住まいとお金から、暮らしを考える",
   },
   parameters: {
     layout: "fullscreen",
@@ -23,7 +22,7 @@ export const Default: Story = {};
 
 export const LongName: Story = {
   args: {
-    appName: "さきミル",
-    subtitle: "住む場所と働く場所から、これからの暮らしを少し具体的に描きます。",
+    appName: "mitooshi",
+    subtitle: "勤務先と住まいの組み合わせから、暮らしの見通しを立てます。",
   },
 };

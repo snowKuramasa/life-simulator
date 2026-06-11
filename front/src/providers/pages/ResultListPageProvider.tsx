@@ -32,7 +32,11 @@ function getResultStatus(monthlySurplus: number): ResultStatus {
     return "普通";
   }
 
-  return "やや厳しい";
+  if (monthlySurplus >= -50_000) {
+    return "やや厳しい";
+  }
+
+  return "厳しい";
 }
 
 export function ResultListPageProvider({ children }: ResultListPageProviderProps) {

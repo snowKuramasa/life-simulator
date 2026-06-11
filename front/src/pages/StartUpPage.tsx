@@ -19,10 +19,9 @@ export function StartUpPage() {
         width={{ base: 250, md: 410 }}
         height={{ base: 250, md: 410 }}
       />
+      <p className={styles.appName}>mitooshi</p>
       <p className={styles.description}>
-        生活のバランスを簡単に
-        <br />
-        シミュレーションできます
+        住まいとお金から、暮らしを考える
       </p>
       <Button asChild className={styles.startButton}>
         <Link to="/login">はじめる</Link>
