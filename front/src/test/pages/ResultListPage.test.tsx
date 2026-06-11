@@ -84,7 +84,7 @@ describe("ResultListPage", () => {
                 {
                   id: 2,
                   name: "△△",
-                  rent: 90000,
+                  rent: 110000,
                   prefecture: "東京都",
                   city: "中野区",
                 },
@@ -125,7 +125,8 @@ describe("ResultListPage", () => {
     expect(screen.getByText("0円")).toBeInTheDocument();
     expect(screen.getAllByText("余裕あり")).toHaveLength(1);
     expect(screen.getByText("普通")).toBeInTheDocument();
-    expect(screen.getAllByText("やや厳しい")).toHaveLength(2);
+    expect(screen.getAllByText("やや厳しい")).toHaveLength(1);
+    expect(screen.getByText("厳しい")).toBeInTheDocument();
   });
 
   it("sorts results by commute minutes", async () => {

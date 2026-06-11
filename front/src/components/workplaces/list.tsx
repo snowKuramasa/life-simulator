@@ -43,6 +43,7 @@ export function WorkplaceList({
       </h1>
 
       <div className={styles.headerArea}>
+        <div aria-hidden="true" />
         <Image
           src={workplaceImage}
           alt="駅の改札に立っている人のイラスト"
