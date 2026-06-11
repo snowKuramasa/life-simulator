@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 import type { Commute, Residence, Workplace } from "@/types";
 
-export type ResultStatus = "余裕あり" | "普通" | "やや厳しい";
+export type ResultStatus = "余裕あり" | "普通" | "やや厳しい" | "厳しい";
 export type ResultSortKey = "monthlySurplus" | "commuteMinutes";
 export type HouseholdSize = "single";
 export type CommuteSaveStatus = "idle" | "saving" | "success" | "error";

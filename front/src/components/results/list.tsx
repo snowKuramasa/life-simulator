@@ -28,7 +28,9 @@ import {
   LoaderCircle,
   Pencil,
   Sun,
+  Umbrella,
   X,
+  CloudRain,
 } from "lucide-react";
 import { type KeyboardEvent, useRef, useState } from "react";
 import { Link } from "react-router";
@@ -62,6 +64,14 @@ function formatMoney(amount: number) {
 function StatusIcon({ status }: { status: ResultListItem["status"] }) {
   if (status === "余裕あり") {
     return <Sun className={styles.sunIcon} aria-hidden="true" size={20} />;
+  }
+
+  if (status === "やや厳しい") {
+    return <CloudRain className={styles.rainIcon} aria-hidden="true" size={20} />;
+  }
+
+  if (status === "厳しい") {
+    return <Umbrella className={styles.umbrellaIcon} aria-hidden="true" size={20} />;
   }
 
   return <Cloud className={styles.cloudIcon} aria-hidden="true" size={20} />;

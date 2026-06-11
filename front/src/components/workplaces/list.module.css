@@ -33,22 +33,26 @@
   width: min(360px, calc(100vw - 24px));
   padding: 0.25rem 0 0.5rem;
   background-color: #f3f8ed;
+  box-shadow: 0 0 0 100vmax #f3f8ed;
+  clip-path: inset(0 -100vmax);
   transform: translateX(-50%);
 }
 
 .list {
   display: flex;
   min-height: 0;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   flex-direction: column;
   gap: 0.75rem;
   width: min(360px, calc(100vw - 24px));
+  padding-bottom: 1.75rem;
   overflow-y: visible;
 }
 
 .card {
   position: relative;
   display: flex;
+  flex: 0 0 auto;
   flex-direction: column;
   gap: 0.55rem;
   min-height: 7rem;
