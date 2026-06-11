@@ -39,6 +39,10 @@
   white-space: nowrap;
 }
 
+.logo {
+  align-self: flex-start;
+}
+
 .subtitle {
   overflow: hidden;
   color: #65745f;
@@ -61,6 +65,10 @@
 
   .brand {
     align-items: center;
+  }
+
+  .logo {
+    align-self: center;
   }
 
   .appName {
