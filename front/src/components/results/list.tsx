@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/common/baseUi/Select";
+import { STANDARD_MONTHLY_LIVING_COST } from "@/constants/livingCosts";
 import { cn } from "@/lib/utils";
 import type {
   CommuteSaveStatus,
@@ -23,6 +24,7 @@ import {
   Clock,
   Coins,
   Home,
+  Info,
   LoaderCircle,
   Pencil,
   Sun,
@@ -79,6 +81,25 @@ function SaveStatusIcon({ status }: { status: CommuteSaveStatus | undefined }) {
   }
 
   return null;
+}
+
+function MonthlySurplusHelp() {
+  const description = `手取り月収から家賃と標準生活費${formatMoney(STANDARD_MONTHLY_LIVING_COST)}を引いた目安です。`;
+
+  return (
+    <span className={styles.helpWrapper}>
+      <button
+        type="button"
+        className={styles.helpButton}
+        aria-label={`月のゆとりの説明。${description}`}
+      >
+        <Info aria-hidden="true" size={13} />
+      </button>
+      <span className={styles.tooltip} role="tooltip">
+        {description}
+      </span>
+    </span>
+  );
 }
 
 type CommuteMinutesFieldProps = {
@@ -278,8 +299,11 @@ export function ResultList({
 
             <div className={styles.infoRow}>
               <Coins className={styles.icon} aria-hidden="true" size={20} />
-              <p>
-                月のゆとり
+              <p className={styles.monthlySurplusText}>
+                <span className={styles.metricLabel}>
+                  月のゆとり
+                  <MonthlySurplusHelp />
+                </span>
                 <span className={styles.inlineValue}>{formatMoney(result.monthlySurplus)}</span>
               </p>
             </div>
@@ -295,7 +319,7 @@ export function ResultList({
 
             <div className={styles.infoRow}>
               <StatusIcon status={result.status} />
-              <p>{result.status}</p>
+              <p className={styles.statusText}>{result.status}</p>
             </div>
           </article>
         ))}

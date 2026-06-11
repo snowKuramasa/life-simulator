@@ -85,8 +85,8 @@
   display: flex;
   min-height: 6.75rem;
   flex-direction: column;
-  gap: 0.35rem;
-  padding: 0.875rem 2.8rem 0.875rem 1rem;
+  gap: 0.55rem;
+  padding: 1rem 2.8rem 1rem 1rem;
   border: 1px solid #6f8068;
   border-radius: 8px;
   background-color: #fffef8;
@@ -122,6 +122,86 @@
 
 .inlineValue {
   margin-left: 0.35rem;
+}
+
+.monthlySurplusText {
+  display: inline-flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.metricLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.helpWrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.helpButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.9rem;
+  height: 0.9rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background-color: transparent;
+  color: #7a8875;
+  cursor: help;
+}
+
+.helpButton:hover,
+.helpButton:focus-visible {
+  background-color: #edf3e7;
+  color: #3f4d3c;
+}
+
+.helpButton:focus-visible {
+  outline: 2px solid #5f765d;
+  outline-offset: 1px;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 0.4rem);
+  left: 50%;
+  z-index: 10;
+  width: min(13.5rem, calc(100vw - 3rem));
+  padding: 0.45rem 0.55rem;
+  border: 1px solid #8d9a86;
+  border-radius: 6px;
+  background-color: #fffef8;
+  box-shadow: 0 8px 20px rgb(61 79 54 / 14%);
+  color: #3f4d3c;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  text-align: left;
+  transform: translateX(-50%) translateY(0.15rem);
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
+}
+
+.helpWrapper:hover .tooltip,
+.helpWrapper:focus-within .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.statusText {
+  color: #4f5f4b;
+  font-size: 0.73rem;
+  font-weight: 700;
 }
 
 .commuteDisplayButton {
@@ -313,8 +393,9 @@
   }
 
   .card {
-    min-height: 7rem;
-    padding: 1rem 3rem 1rem 1.25rem;
+    min-height: 7.5rem;
+    gap: 0.65rem;
+    padding: 1.1rem 3rem 1.1rem 1.25rem;
   }
 
   .actions {
