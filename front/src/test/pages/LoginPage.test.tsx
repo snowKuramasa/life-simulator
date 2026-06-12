@@ -82,6 +82,35 @@ describe("LoginPage", () => {
     expect(screen.getByRole("button", { name: "ゲストで続ける" })).toBeInTheDocument();
   });
 
+  it("does not show the guest continue action while checking authentication", () => {
+    vi.mocked(fetch).mockImplementation((input) => {
+      const url = String(input);
+
+      if (url === "/api/v1/auth/me") {
+        return new Promise(() => undefined);
+      }
+
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({
+          authenticated: true,
+          user: {
+            id: 1,
+            name: "テストゲスト",
+            provider: "guest",
+            guest: true,
+          },
+        }),
+      } as Response);
+    });
+
+    renderLoginPage();
+
+    expect(screen.getByText("確認中...")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "ゲストで続ける" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "ゲストで続ける" })).not.toBeInTheDocument();
+  });
+
   it("submits guest login request and navigates to initial workplace step on first login", async () => {
     renderLoginPage();
 
