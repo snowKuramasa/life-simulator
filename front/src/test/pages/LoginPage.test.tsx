@@ -33,7 +33,7 @@ describe("LoginPage", () => {
       vi.fn((input) => {
         const url = String(input);
 
-        if (url === "/api/v1/auth/me") {
+        if (url === "/api/v1/auth/session") {
           return Promise.resolve({
             ok: false,
             status: 401,
@@ -83,11 +83,10 @@ describe("LoginPage", () => {
   });
 
   it("does not show the guest continue action while checking authentication", () => {
-    window.localStorage.setItem("lifeSimulatorGuestToken", "guest-token-1");
     vi.mocked(fetch).mockImplementation((input) => {
       const url = String(input);
 
-      if (url === "/api/v1/auth/me") {
+      if (url === "/api/v1/auth/session") {
         return new Promise(() => undefined);
       }
 
@@ -137,7 +136,7 @@ describe("LoginPage", () => {
     vi.mocked(fetch).mockImplementation((input) => {
       const url = String(input);
 
-      if (url === "/api/v1/auth/me") {
+      if (url === "/api/v1/auth/session") {
         return Promise.resolve({
           ok: false,
           status: 401,
@@ -181,11 +180,10 @@ describe("LoginPage", () => {
   });
 
   it("shows welcome message instead of login form when already authenticated", async () => {
-    window.localStorage.setItem("lifeSimulatorGuestToken", "guest-token-1");
     vi.mocked(fetch).mockImplementation((input) => {
       const url = String(input);
 
-      if (url === "/api/v1/auth/me") {
+      if (url === "/api/v1/auth/session") {
         return Promise.resolve({
           ok: true,
           json: async () => ({
@@ -229,7 +227,7 @@ describe("LoginPage", () => {
     vi.mocked(fetch).mockImplementation((input) => {
       const url = String(input);
 
-      if (url === "/api/v1/auth/me") {
+      if (url === "/api/v1/auth/session") {
         return Promise.resolve({
           ok: false,
           status: 401,

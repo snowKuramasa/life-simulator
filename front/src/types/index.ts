@@ -3,7 +3,6 @@ export interface AuthUser {
   name: string;
   provider: string;
   guest: boolean;
-  guest_token?: string;
 }
 
 export interface AuthResponse {

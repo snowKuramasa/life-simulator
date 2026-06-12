@@ -40,7 +40,7 @@ describe("ResidenceNewPage", () => {
       vi.fn((input) => {
         const url = String(input);
 
-        if (url === "/api/v1/auth/me") {
+        if (url === "/api/v1/auth/session") {
           return Promise.resolve({
             ok: true,
             json: async () => ({
@@ -146,7 +146,7 @@ describe("ResidenceNewPage", () => {
     vi.mocked(fetch).mockImplementation((input) => {
       const url = String(input);
 
-      if (url === "/api/v1/auth/me") {
+      if (url === "/api/v1/auth/session") {
         return Promise.resolve({
           ok: true,
           json: async () => ({

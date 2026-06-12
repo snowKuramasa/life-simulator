@@ -9,7 +9,7 @@ class ApplicationController < ActionController::API
   #
   # @return [User, nil] ログイン中なら User、未ログインなら nil
   def current_user
-    @current_user ||= User.find_by(id: session[:user_id]) || User.find_by(guest_token: guest_token)
+    @current_user ||= User.find_by(id: session[:user_id])
   end
 
   # 認証系APIで返すユーザーJSONの形をそろえます。
@@ -17,22 +17,15 @@ class ApplicationController < ActionController::API
   # @param user [User] レスポンスに含めるユーザー
   # @return [Hash] フロントエンドへ返すユーザー情報
   def user_json(user)
-    user_hash = {
+    {
       id: user.id,
       name: user.name,
       provider: user.provider,
       guest: user.guest?
     }
-
-    user_hash[:guest_token] = user.guest_token if user.guest?
-    user_hash
   end
 
   def increment_recalculation_metric
     current_user&.usage_metric!&.increment_recalculation_count!
-  end
-
-  def guest_token
-    request.headers["X-Guest-Token"].presence
   end
 end
