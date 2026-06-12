@@ -35,11 +35,36 @@ export function clearGuestToken() {
   window.localStorage.removeItem(guestTokenStorageKey);
 }
 
-export function buildAuthHeaders(headers: Record<string, string> = {}) {
+function normalizeHeaders(headers: HeadersInit) {
+  const normalizedHeaders: Record<string, string> = {};
+
+  if (headers instanceof Headers) {
+    headers.forEach((value, key) => {
+      normalizedHeaders[key] = value;
+    });
+
+    return normalizedHeaders;
+  }
+
+  if (Array.isArray(headers)) {
+    headers.forEach(([key, value]) => {
+      normalizedHeaders[key] = value;
+    });
+
+    return normalizedHeaders;
+  }
+
+  return {
+    ...headers,
+  };
+}
+
+export function buildAuthHeaders(headers: HeadersInit = {}, defaultHeaders: Record<string, string> = {}) {
   const guestToken = getGuestToken();
 
   return {
     ...(guestToken ? { "X-Guest-Token": guestToken } : {}),
-    ...headers,
+    ...defaultHeaders,
+    ...normalizeHeaders(headers),
   };
 }
