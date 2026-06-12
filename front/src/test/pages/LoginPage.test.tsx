@@ -83,6 +83,7 @@ describe("LoginPage", () => {
   });
 
   it("does not show the guest continue action while checking authentication", () => {
+    window.localStorage.setItem("lifeSimulatorGuestToken", "guest-token-1");
     vi.mocked(fetch).mockImplementation((input) => {
       const url = String(input);
 
@@ -180,6 +181,7 @@ describe("LoginPage", () => {
   });
 
   it("shows welcome message instead of login form when already authenticated", async () => {
+    window.localStorage.setItem("lifeSimulatorGuestToken", "guest-token-1");
     vi.mocked(fetch).mockImplementation((input) => {
       const url = String(input);
 
