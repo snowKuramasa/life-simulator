@@ -95,6 +95,7 @@ describe("auth api", () => {
   });
 
   it("returns unauthenticated response when current user request returns 401", async () => {
+    window.localStorage.setItem("lifeSimulatorGuestToken", "stale-guest-token");
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -107,6 +108,7 @@ describe("auth api", () => {
       authenticated: false,
       user: null,
     });
+    expect(window.localStorage.getItem("lifeSimulatorGuestToken")).toBeNull();
   });
 
   it("throws when current user request fails with an unexpected status", async () => {

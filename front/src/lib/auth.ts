@@ -38,6 +38,8 @@ export async function fetchCurrentUser() {
   });
 
   if (response.status === 401) {
+    clearGuestToken();
+
     return {
       authenticated: false,
       user: null,
