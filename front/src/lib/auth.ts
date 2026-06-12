@@ -1,14 +1,13 @@
-import { buildApiUrl } from "@/lib/api";
+import { buildApiUrl, buildAuthHeaders, clearGuestToken, saveGuestToken } from "@/lib/api";
 import type { AuthResponse, GuestLoginParams } from "@/types";
 
 async function requestAuth(path: string, init: RequestInit = {}) {
   const response = await fetch(buildApiUrl(path), {
     ...init,
     credentials: "include",
-    headers: {
+    headers: buildAuthHeaders(init.headers, {
       "Content-Type": "application/json",
-      ...init.headers,
-    },
+    }),
   });
 
   if (!response.ok) {
@@ -24,15 +23,18 @@ export async function guestLogin({ name }: GuestLoginParams = {}) {
     body: JSON.stringify({ name }),
   });
 
-  return (await response.json()) as AuthResponse;
+  const authResponse = (await response.json()) as AuthResponse;
+  saveGuestToken(authResponse.user?.guest_token);
+
+  return authResponse;
 }
 
 export async function fetchCurrentUser() {
   const response = await fetch(buildApiUrl("/api/v1/auth/me"), {
     credentials: "include",
-    headers: {
+    headers: buildAuthHeaders({
       "Content-Type": "application/json",
-    },
+    }),
   });
 
   if (response.status === 401) {
@@ -53,4 +55,5 @@ export async function logout() {
   await requestAuth("/api/v1/auth/logout", {
     method: "DELETE",
   });
+  clearGuestToken();
 }

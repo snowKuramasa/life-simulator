@@ -1,4 +1,4 @@
-import { buildApiUrl } from "@/lib/api";
+import { buildApiUrl, buildAuthHeaders } from "@/lib/api";
 import type {
   CommuteResponse,
   CommutesResponse,
@@ -9,6 +9,7 @@ import type {
 export async function getCommutes() {
   const response = await fetch(buildApiUrl("/api/v1/commutes"), {
     credentials: "include",
+    headers: buildAuthHeaders(),
   });
 
   if (!response.ok) {
@@ -21,6 +22,7 @@ export async function getCommutes() {
 export async function getCommute(id: number) {
   const response = await fetch(buildApiUrl(`/api/v1/commutes/${id}`), {
     credentials: "include",
+    headers: buildAuthHeaders(),
   });
 
   if (!response.ok) {
@@ -34,9 +36,9 @@ export async function createCommute(params: CreateCommuteParams) {
   const response = await fetch(buildApiUrl("/api/v1/commutes"), {
     method: "POST",
     credentials: "include",
-    headers: {
+    headers: buildAuthHeaders({
       "Content-Type": "application/json",
-    },
+    }),
     body: JSON.stringify({ commute: params }),
   });
 
@@ -51,9 +53,9 @@ export async function updateCommute({ id, ...params }: UpdateCommuteParams) {
   const response = await fetch(buildApiUrl(`/api/v1/commutes/${id}`), {
     method: "PATCH",
     credentials: "include",
-    headers: {
+    headers: buildAuthHeaders({
       "Content-Type": "application/json",
-    },
+    }),
     body: JSON.stringify({ commute: params }),
   });
 
@@ -68,6 +70,7 @@ export async function deleteCommute(id: number) {
   const response = await fetch(buildApiUrl(`/api/v1/commutes/${id}`), {
     method: "DELETE",
     credentials: "include",
+    headers: buildAuthHeaders(),
   });
 
   if (!response.ok) {

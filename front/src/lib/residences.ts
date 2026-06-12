@@ -1,4 +1,4 @@
-import { buildApiUrl } from "@/lib/api";
+import { buildApiUrl, buildAuthHeaders } from "@/lib/api";
 import type {
   CreateResidenceParams,
   ResidenceResponse,
@@ -9,6 +9,7 @@ import type {
 export async function getResidences() {
   const response = await fetch(buildApiUrl("/api/v1/residences"), {
     credentials: "include",
+    headers: buildAuthHeaders(),
   });
 
   if (!response.ok) {
@@ -21,6 +22,7 @@ export async function getResidences() {
 export async function getResidence(id: number) {
   const response = await fetch(buildApiUrl(`/api/v1/residences/${id}`), {
     credentials: "include",
+    headers: buildAuthHeaders(),
   });
 
   if (!response.ok) {
@@ -34,9 +36,9 @@ export async function createResidence(params: CreateResidenceParams) {
   const response = await fetch(buildApiUrl("/api/v1/residences"), {
     method: "POST",
     credentials: "include",
-    headers: {
+    headers: buildAuthHeaders({
       "Content-Type": "application/json",
-    },
+    }),
     body: JSON.stringify({ residence: params }),
   });
 
@@ -51,9 +53,9 @@ export async function updateResidence({ id, ...params }: UpdateResidenceParams) 
   const response = await fetch(buildApiUrl(`/api/v1/residences/${id}`), {
     method: "PATCH",
     credentials: "include",
-    headers: {
+    headers: buildAuthHeaders({
       "Content-Type": "application/json",
-    },
+    }),
     body: JSON.stringify({ residence: params }),
   });
 
@@ -68,6 +70,7 @@ export async function deleteResidence(id: number) {
   const response = await fetch(buildApiUrl(`/api/v1/residences/${id}`), {
     method: "DELETE",
     credentials: "include",
+    headers: buildAuthHeaders(),
   });
 
   if (!response.ok) {

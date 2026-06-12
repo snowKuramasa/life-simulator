@@ -4,6 +4,7 @@ import { fetchCurrentUser, guestLogin, logout } from "@/lib/auth";
 
 describe("auth api", () => {
   afterEach(() => {
+    window.localStorage.clear();
     vi.unstubAllGlobals();
   });
 
@@ -19,6 +20,7 @@ describe("auth api", () => {
             name: "ゲスト",
             provider: "guest",
             guest: true,
+            guest_token: "guest-token-1",
           },
           first_login: true,
         }),
@@ -37,9 +39,11 @@ describe("auth api", () => {
     );
     expect(response.user?.name).toBe("ゲスト");
     expect(response.first_login).toBe(true);
+    expect(window.localStorage.getItem("lifeSimulatorGuestToken")).toBe("guest-token-1");
   });
 
   it("fetches current user with credentials", async () => {
+    window.localStorage.setItem("lifeSimulatorGuestToken", "guest-token-1");
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -62,11 +66,15 @@ describe("auth api", () => {
       "/api/v1/auth/me",
       expect.objectContaining({
         credentials: "include",
+        headers: expect.objectContaining({
+          "X-Guest-Token": "guest-token-1",
+        }),
       }),
     );
   });
 
   it("logs out with credentials", async () => {
+    window.localStorage.setItem("lifeSimulatorGuestToken", "guest-token-1");
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -83,6 +91,7 @@ describe("auth api", () => {
         credentials: "include",
       }),
     );
+    expect(window.localStorage.getItem("lifeSimulatorGuestToken")).toBeNull();
   });
 
   it("returns unauthenticated response when current user request returns 401", async () => {
