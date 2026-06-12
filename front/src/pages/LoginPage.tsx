@@ -38,7 +38,11 @@ export function LoginPage() {
         height={{ base: 180, md: 260 }}
       />
 
-      {shouldShowLoginForm ? (
+      {isAuthLoading ? (
+        <div className={styles.loggedInActions}>
+          <p className={styles.welcomeMessage}>確認中...</p>
+        </div>
+      ) : shouldShowLoginForm ? (
         <>
           <p className={styles.loginLabel}>ログイン</p>
           <Button type="button" className={styles.googleButton} disabled>
@@ -78,7 +82,7 @@ export function LoginPage() {
         </>
       ) : (
         <div className={styles.loggedInActions}>
-          <p className={styles.welcomeMessage}>{isAuthLoading ? "確認中..." : welcomeMessage}</p>
+          <p className={styles.welcomeMessage}>{welcomeMessage}</p>
           <div className={styles.actions}>
             <Button asChild className={styles.backButton}>
               <Link to="/">戻る</Link>
