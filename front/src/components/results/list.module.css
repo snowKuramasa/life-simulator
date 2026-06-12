@@ -275,17 +275,17 @@
 
 .commuteInput {
   box-sizing: content-box;
-  width: 2.4rem;
-  height: 1rem;
+  width: 3rem;
+  height: 1.25rem;
   padding: 0 0.1rem;
   border: 0;
   border-bottom: 1px solid transparent;
   border-radius: 0;
   background-color: transparent;
   color: #263224;
-  font-size: 0.76rem;
+  font-size: 16px;
   font-weight: 700;
-  line-height: 1rem;
+  line-height: 1.25rem;
   appearance: textfield;
 }
 

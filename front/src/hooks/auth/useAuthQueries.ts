@@ -1,10 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { getGuestToken } from "@/lib/api";
-import { fetchCurrentUser, guestLogin, logout } from "@/lib/auth";
+import { fetchAuthSession, guestLogin, logout } from "@/lib/auth";
 import type { AuthResponse } from "@/types";
 
-export const authQueryKey = ["auth", "me"] as const;
+export const authQueryKey = ["auth", "session"] as const;
 
 const unauthenticatedResponse = {
   authenticated: false,
@@ -12,12 +11,9 @@ const unauthenticatedResponse = {
 } satisfies AuthResponse;
 
 export function useCurrentUserQuery() {
-  const hasGuestToken = Boolean(getGuestToken());
-
   return useQuery({
     queryKey: authQueryKey,
-    queryFn: fetchCurrentUser,
-    enabled: hasGuestToken,
+    queryFn: fetchAuthSession,
     retry: false,
     staleTime: 1000 * 60 * 5,
   });

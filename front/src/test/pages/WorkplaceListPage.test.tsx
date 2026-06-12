@@ -64,7 +64,7 @@ describe("WorkplaceListPage", () => {
       vi.fn((input, init) => {
         const url = String(input);
 
-        if (url === "/api/v1/auth/me") {
+        if (url === "/api/v1/auth/session") {
           return Promise.resolve({
             ok: true,
             json: async () => ({

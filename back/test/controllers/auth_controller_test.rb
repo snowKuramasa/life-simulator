@@ -16,7 +16,6 @@ class AuthControllerTest < ActionDispatch::IntegrationTest
     assert_equal "テストゲスト", response_json.dig("user", "name")
     assert_equal "guest", response_json.dig("user", "provider")
     assert_equal true, response_json.dig("user", "guest")
-    assert_equal user.guest_token, response_json.dig("user", "guest_token")
     assert_equal true, response_json["first_login"]
   end
 
@@ -44,7 +43,18 @@ class AuthControllerTest < ActionDispatch::IntegrationTest
     assert_equal "ゲスト", JSON.parse(response.body).dig("user", "name")
   end
 
-  test "returns current user from the session" do
+  test "returns auth session from the session" do
+    post "/api/v1/auth/guest", as: :json
+    created_user_id = JSON.parse(response.body).dig("user", "id")
+
+    get "/api/v1/auth/session"
+
+    assert_response :success
+    assert_equal true, JSON.parse(response.body)["authenticated"]
+    assert_equal created_user_id, JSON.parse(response.body).dig("user", "id")
+  end
+
+  test "keeps legacy auth me route compatible" do
     post "/api/v1/auth/guest", as: :json
     created_user_id = JSON.parse(response.body).dig("user", "id")
 
@@ -55,18 +65,8 @@ class AuthControllerTest < ActionDispatch::IntegrationTest
     assert_equal created_user_id, JSON.parse(response.body).dig("user", "id")
   end
 
-  test "returns current user from guest token header" do
-    user = User.create_guest!(name: "ヘッダー認証ゲスト")
-
-    get "/api/v1/auth/me", headers: { "X-Guest-Token" => user.guest_token }
-
-    assert_response :success
-    assert_equal true, JSON.parse(response.body)["authenticated"]
-    assert_equal user.id, JSON.parse(response.body).dig("user", "id")
-  end
-
   test "returns unauthorized when no user is signed in" do
-    get "/api/v1/auth/me"
+    get "/api/v1/auth/session"
 
     assert_response :unauthorized
     assert_equal false, JSON.parse(response.body)["authenticated"]
@@ -105,7 +105,7 @@ class AuthControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :no_content
 
-    get "/api/v1/auth/me"
+    get "/api/v1/auth/session"
 
     assert_response :unauthorized
   end

@@ -15,7 +15,8 @@ Rails.application.routes.draw do
       end
       get "health", to: "health#show"
       post "auth/guest", to: "auth#guest"
-      get "auth/me", to: "auth#me"
+      get "auth/session", to: "auth#session_status"
+      get "auth/me", to: "auth#session_status"
       delete "auth/logout", to: "auth#logout"
     end
   end

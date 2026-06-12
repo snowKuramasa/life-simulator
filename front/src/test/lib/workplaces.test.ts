@@ -9,7 +9,6 @@ describe("workplaces api", () => {
   });
 
   it("posts workplace create request with credentials", async () => {
-    window.localStorage.setItem("lifeSimulatorGuestToken", "guest-token-1");
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -38,9 +37,6 @@ describe("workplaces api", () => {
       expect.objectContaining({
         method: "POST",
         credentials: "include",
-        headers: expect.objectContaining({
-          "X-Guest-Token": "guest-token-1",
-        }),
         body: JSON.stringify({
           workplace: {
             name: "候補A",

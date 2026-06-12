@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { fetchCurrentUser, guestLogin, logout } from "@/lib/auth";
+import { fetchAuthSession, guestLogin, logout } from "@/lib/auth";
 
 describe("auth api", () => {
   afterEach(() => {
@@ -20,7 +20,6 @@ describe("auth api", () => {
             name: "ゲスト",
             provider: "guest",
             guest: true,
-            guest_token: "guest-token-1",
           },
           first_login: true,
         }),
@@ -39,11 +38,9 @@ describe("auth api", () => {
     );
     expect(response.user?.name).toBe("ゲスト");
     expect(response.first_login).toBe(true);
-    expect(window.localStorage.getItem("lifeSimulatorGuestToken")).toBe("guest-token-1");
   });
 
-  it("fetches current user with credentials", async () => {
-    window.localStorage.setItem("lifeSimulatorGuestToken", "guest-token-1");
+  it("fetches auth session with credentials", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -60,21 +57,17 @@ describe("auth api", () => {
       }),
     );
 
-    await fetchCurrentUser();
+    await fetchAuthSession();
 
     expect(fetch).toHaveBeenCalledWith(
-      "/api/v1/auth/me",
+      "/api/v1/auth/session",
       expect.objectContaining({
         credentials: "include",
-        headers: expect.objectContaining({
-          "X-Guest-Token": "guest-token-1",
-        }),
       }),
     );
   });
 
   it("logs out with credentials", async () => {
-    window.localStorage.setItem("lifeSimulatorGuestToken", "guest-token-1");
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -91,11 +84,9 @@ describe("auth api", () => {
         credentials: "include",
       }),
     );
-    expect(window.localStorage.getItem("lifeSimulatorGuestToken")).toBeNull();
   });
 
-  it("returns unauthenticated response when current user request returns 401", async () => {
-    window.localStorage.setItem("lifeSimulatorGuestToken", "stale-guest-token");
+  it("returns unauthenticated response when auth session request returns 401", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -104,14 +95,13 @@ describe("auth api", () => {
       }),
     );
 
-    await expect(fetchCurrentUser()).resolves.toEqual({
+    await expect(fetchAuthSession()).resolves.toEqual({
       authenticated: false,
       user: null,
     });
-    expect(window.localStorage.getItem("lifeSimulatorGuestToken")).toBeNull();
   });
 
-  it("throws when current user request fails with an unexpected status", async () => {
+  it("throws when auth session request fails with an unexpected status", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -120,6 +110,6 @@ describe("auth api", () => {
       }),
     );
 
-    await expect(fetchCurrentUser()).rejects.toThrow("Auth request failed with 500");
+    await expect(fetchAuthSession()).rejects.toThrow("Auth session request failed with 500");
   });
 });
