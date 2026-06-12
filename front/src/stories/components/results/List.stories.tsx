@@ -37,7 +37,7 @@ const meta = {
         },
         commute: null,
         monthlySurplus: 0,
-        status: "余裕あり",
+        status: "ぎりぎり",
       },
       {
         id: "2-2",
@@ -62,7 +62,7 @@ const meta = {
           commute_minutes: 60,
         },
         monthlySurplus: -10000,
-        status: "普通",
+        status: "生活費不足",
       },
     ],
     sortKey: "monthlySurplus",

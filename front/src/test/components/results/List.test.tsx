@@ -24,7 +24,7 @@ const results: ResultListItem[] = [
     },
     commute: null,
     monthlySurplus: 0,
-    status: "余裕あり",
+    status: "ぎりぎり",
   },
   {
     id: "2-2",
@@ -49,7 +49,7 @@ const results: ResultListItem[] = [
       commute_minutes: 60,
     },
     monthlySurplus: -10000,
-    status: "普通",
+    status: "生活費不足",
   },
 ];
 
@@ -87,20 +87,25 @@ describe("ResultList", () => {
     expect(screen.getByText("世帯人数")).toBeInTheDocument();
     expect(screen.getByRole("combobox", { name: "世帯人数" })).toHaveTextContent("1人");
     expect(screen.getByText("並び順")).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: "並び順" })).toHaveTextContent("月のゆとりが多い順");
+    expect(screen.getByRole("combobox", { name: "並び順" })).toHaveTextContent("月の収支がよい順");
     expect(screen.getByText("A社")).toBeInTheDocument();
     expect(screen.getByText("〇〇")).toBeInTheDocument();
-    expect(screen.getAllByText("月のゆとり")).toHaveLength(2);
-    expect(screen.getAllByRole("button", { name: /月のゆとりの説明/ })).toHaveLength(2);
-    expect(screen.getAllByText("手取り月収から家賃と標準生活費14万円を引いた目安です。")).toHaveLength(2);
+    expect(screen.getAllByText("月の収支")).toHaveLength(2);
+    expect(screen.getAllByRole("button", { name: /月の収支の説明/ })).toHaveLength(2);
+    expect(
+      screen.getAllByText(
+        "手取り月収から家賃と標準生活費14万円を引いた目安です。マイナスは、その生活費をまかなうには足りない金額です。",
+      ),
+    ).toHaveLength(2);
     expect(screen.getByText("0円")).toBeInTheDocument();
+    expect(screen.getByText("1万円不足")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "A社と〇〇の片道通勤時間を編集" })).toHaveTextContent(
       "片道通勤時間を入力",
     );
-    expect(screen.getByText("余裕あり")).toBeInTheDocument();
+    expect(screen.getByText("ぎりぎり")).toBeInTheDocument();
+    expect(screen.getByText("生活費不足")).toBeInTheDocument();
     expect(screen.getByText("片道60分")).toBeInTheDocument();
     expect(screen.getByText("往復120分")).toBeInTheDocument();
-    expect(screen.getByText("普通")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "勤務先一覧" })).toHaveAttribute("href", "/workplaces");
     expect(screen.getByRole("link", { name: "住居一覧" })).toHaveAttribute("href", "/residences");
   });

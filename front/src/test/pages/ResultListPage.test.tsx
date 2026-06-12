@@ -123,10 +123,10 @@ describe("ResultListPage", () => {
     expect(screen.getByText("片道60分")).toBeInTheDocument();
     expect(screen.getByText("往復120分")).toBeInTheDocument();
     expect(screen.getByText("0円")).toBeInTheDocument();
-    expect(screen.getAllByText("余裕あり")).toHaveLength(1);
-    expect(screen.getByText("普通")).toBeInTheDocument();
-    expect(screen.getAllByText("やや厳しい")).toHaveLength(1);
-    expect(screen.getByText("厳しい")).toBeInTheDocument();
+    expect(screen.getAllByText(/円不足|万円不足/)).toHaveLength(3);
+    expect(screen.queryByText("余裕あり")).not.toBeInTheDocument();
+    expect(screen.getByText("ぎりぎり")).toBeInTheDocument();
+    expect(screen.getAllByText("生活費不足")).toHaveLength(3);
   });
 
   it("sorts results by commute minutes", async () => {
