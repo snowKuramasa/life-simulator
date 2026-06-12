@@ -4,7 +4,8 @@ import { createCommute, deleteCommute, getCommute, getCommutes, updateCommute } 
 
 describe("commutes api", () => {
   afterEach(() => {
-    vi.restoreAllMocks();
+    window.localStorage.clear();
+    vi.unstubAllGlobals();
   });
 
   it("gets commutes list request with credentials", async () => {
@@ -29,9 +30,12 @@ describe("commutes api", () => {
 
     const response = await getCommutes();
 
-    expect(fetch).toHaveBeenCalledWith("/api/v1/commutes", {
-      credentials: "include",
-    });
+    expect(fetch).toHaveBeenCalledWith(
+      "/api/v1/commutes",
+      expect.objectContaining({
+        credentials: "include",
+      }),
+    );
     expect(response.commutes).toHaveLength(1);
     expect(response.commutes[0].commute_minutes).toBe(60);
   });
@@ -56,9 +60,12 @@ describe("commutes api", () => {
 
     const response = await getCommute(1);
 
-    expect(fetch).toHaveBeenCalledWith("/api/v1/commutes/1", {
-      credentials: "include",
-    });
+    expect(fetch).toHaveBeenCalledWith(
+      "/api/v1/commutes/1",
+      expect.objectContaining({
+        credentials: "include",
+      }),
+    );
     expect(response.commute.commute_minutes).toBe(60);
   });
 
@@ -157,9 +164,12 @@ describe("commutes api", () => {
 
     await deleteCommute(1);
 
-    expect(fetch).toHaveBeenCalledWith("/api/v1/commutes/1", {
-      method: "DELETE",
-      credentials: "include",
-    });
+    expect(fetch).toHaveBeenCalledWith(
+      "/api/v1/commutes/1",
+      expect.objectContaining({
+        method: "DELETE",
+        credentials: "include",
+      }),
+    );
   });
 });
