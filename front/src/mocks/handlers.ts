@@ -106,7 +106,7 @@ export const handlers = [
       first_login: firstLogin,
     });
   }),
-  http.get("/api/v1/auth/me", () => {
+  http.get("/api/v1/auth/session", () => {
     if (!currentUser) {
       return HttpResponse.json(
         {

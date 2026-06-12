@@ -88,14 +88,14 @@
 }
 
 .nameInput {
-  height: 1.75rem;
+  height: 2rem;
   margin-top: 0.25rem;
   padding-inline: 0.5rem;
   border-color: #8d9a86;
   border-radius: 5px;
   background-color: #ffffff;
   color: #1c1917;
-  font-size: 0.75rem;
+  font-size: 16px;
   line-height: 1rem;
 }
 

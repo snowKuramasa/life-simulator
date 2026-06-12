@@ -25,14 +25,14 @@ module Api
         }, status: :ok
       end
 
-      # 現在ログイン中のユーザーを返します。
+      # 現在のセッション状態を返します。
       #
       # フロントエンドがページ表示時に「ログイン済みか」を確認するためのAPIです。
       #
-      # @route GET /api/v1/auth/me
+      # @route GET /api/v1/auth/session
       # @return [JSON] ログイン中なら authenticated: true と user 情報
       # @return [JSON] 未ログインなら authenticated: false
-      def me
+      def session_status
         if current_user
           render json: {
             authenticated: true,

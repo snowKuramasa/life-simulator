@@ -1,4 +1,4 @@
-import { buildApiUrl, buildAuthHeaders, clearGuestToken, saveGuestToken } from "@/lib/api";
+import { buildApiUrl, buildAuthHeaders } from "@/lib/api";
 import type { AuthResponse, GuestLoginParams } from "@/types";
 
 async function requestAuth(path: string, init: RequestInit = {}) {
@@ -23,14 +23,11 @@ export async function guestLogin({ name }: GuestLoginParams = {}) {
     body: JSON.stringify({ name }),
   });
 
-  const authResponse = (await response.json()) as AuthResponse;
-  saveGuestToken(authResponse.user?.guest_token);
-
-  return authResponse;
+  return (await response.json()) as AuthResponse;
 }
 
-export async function fetchCurrentUser() {
-  const response = await fetch(buildApiUrl("/api/v1/auth/me"), {
+export async function fetchAuthSession() {
+  const response = await fetch(buildApiUrl("/api/v1/auth/session"), {
     credentials: "include",
     headers: buildAuthHeaders({
       "Content-Type": "application/json",
@@ -38,8 +35,6 @@ export async function fetchCurrentUser() {
   });
 
   if (response.status === 401) {
-    clearGuestToken();
-
     return {
       authenticated: false,
       user: null,
@@ -47,7 +42,7 @@ export async function fetchCurrentUser() {
   }
 
   if (!response.ok) {
-    throw new Error(`Auth request failed with ${response.status}`);
+    throw new Error(`Auth session request failed with ${response.status}`);
   }
 
   return (await response.json()) as AuthResponse;
@@ -57,5 +52,4 @@ export async function logout() {
   await requestAuth("/api/v1/auth/logout", {
     method: "DELETE",
   });
-  clearGuestToken();
 }
