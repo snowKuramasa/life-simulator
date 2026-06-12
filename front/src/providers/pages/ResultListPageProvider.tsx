@@ -24,19 +24,15 @@ type ResultListPageProviderProps = {
 };
 
 function getResultStatus(monthlySurplus: number): ResultStatus {
-  if (monthlySurplus >= 0) {
+  if (monthlySurplus >= 30_000) {
     return "余裕あり";
   }
 
-  if (monthlySurplus >= -30_000) {
-    return "普通";
+  if (monthlySurplus >= 0) {
+    return "ぎりぎり";
   }
 
-  if (monthlySurplus >= -50_000) {
-    return "やや厳しい";
-  }
-
-  return "厳しい";
+  return "生活費不足";
 }
 
 export function ResultListPageProvider({ children }: ResultListPageProviderProps) {

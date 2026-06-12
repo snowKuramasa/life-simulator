@@ -30,7 +30,6 @@ import {
   Sun,
   Umbrella,
   X,
-  CloudRain,
 } from "lucide-react";
 import { type KeyboardEvent, useRef, useState } from "react";
 import { Link } from "react-router";
@@ -61,16 +60,24 @@ function formatMoney(amount: number) {
   return `${amount.toLocaleString()}円`;
 }
 
+function formatMonthlySurplus(amount: number) {
+  if (amount < 0) {
+    return `${formatMoney(Math.abs(amount))}不足`;
+  }
+
+  if (amount > 0) {
+    return `+${formatMoney(amount)}`;
+  }
+
+  return formatMoney(amount);
+}
+
 function StatusIcon({ status }: { status: ResultListItem["status"] }) {
   if (status === "余裕あり") {
     return <Sun className={styles.sunIcon} aria-hidden="true" size={20} />;
   }
 
-  if (status === "やや厳しい") {
-    return <CloudRain className={styles.rainIcon} aria-hidden="true" size={20} />;
-  }
-
-  if (status === "厳しい") {
+  if (status === "生活費不足") {
     return <Umbrella className={styles.umbrellaIcon} aria-hidden="true" size={20} />;
   }
 
@@ -94,14 +101,14 @@ function SaveStatusIcon({ status }: { status: CommuteSaveStatus | undefined }) {
 }
 
 function MonthlySurplusHelp() {
-  const description = `手取り月収から家賃と標準生活費${formatMoney(STANDARD_MONTHLY_LIVING_COST)}を引いた目安です。`;
+  const description = `手取り月収から家賃と標準生活費${formatMoney(STANDARD_MONTHLY_LIVING_COST)}を引いた目安です。マイナスは、その生活費をまかなうには足りない金額です。`;
 
   return (
     <span className={styles.helpWrapper}>
       <button
         type="button"
         className={styles.helpButton}
-        aria-label={`月のゆとりの説明。${description}`}
+        aria-label={`月の収支の説明。${description}`}
       >
         <Info aria-hidden="true" size={13} />
       </button>
@@ -275,7 +282,7 @@ export function ResultList({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="monthlySurplus">月のゆとりが多い順</SelectItem>
+                <SelectItem value="monthlySurplus">月の収支がよい順</SelectItem>
                 <SelectItem value="commuteMinutes">通勤時間が短い順</SelectItem>
               </SelectContent>
             </Select>
@@ -311,10 +318,12 @@ export function ResultList({
               <Coins className={styles.icon} aria-hidden="true" size={20} />
               <p className={styles.monthlySurplusText}>
                 <span className={styles.metricLabel}>
-                  月のゆとり
+                  月の収支
                   <MonthlySurplusHelp />
                 </span>
-                <span className={styles.inlineValue}>{formatMoney(result.monthlySurplus)}</span>
+                <span className={styles.inlineValue}>
+                  {formatMonthlySurplus(result.monthlySurplus)}
+                </span>
               </p>
             </div>
 
