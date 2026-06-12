@@ -121,6 +121,27 @@ class Api::V1::WorkplacesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "品川区", response_json.dig("workplace", "city")
   end
 
+  test "creates a workplace with guest token header" do
+    user = User.create_guest!(name: "勤務先ヘッダー認証テストユーザー")
+
+    assert_difference "Workplace.count", 1 do
+      post "/api/v1/workplaces",
+           params: {
+             workplace: {
+               name: "候補A",
+               salary: 220_000,
+               prefecture: "東京都",
+               city: "品川区"
+             }
+           },
+           headers: { "X-Guest-Token" => user.guest_token },
+           as: :json
+    end
+
+    assert_response :created
+    assert_equal user.id, Workplace.last.user_id
+  end
+
   test "returns unauthorized when no user is signed in" do
     assert_no_difference "Workplace.count" do
       post "/api/v1/workplaces",

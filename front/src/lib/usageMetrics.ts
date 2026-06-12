@@ -1,4 +1,4 @@
-import { buildApiUrl } from "@/lib/api";
+import { buildApiUrl, buildAuthHeaders } from "@/lib/api";
 import type { UsageMetricResponse } from "@/types";
 
 type UsageMetricRequestOptions = Omit<RequestInit, "headers"> & {
@@ -11,10 +11,10 @@ async function requestUsageMetric(path: string, init: UsageMetricRequestOptions 
   const response = await fetch(buildApiUrl(path), {
     credentials: "include",
     ...requestInit,
-    headers: {
+    headers: buildAuthHeaders({
       ...(requestInit.body ? { "Content-Type": "application/json" } : {}),
       ...headers,
-    },
+    }),
   });
 
   if (!response.ok) {
