@@ -4,6 +4,8 @@ import { Image } from "@/components/common/baseUi/Image";
 import { Input } from "@/components/common/baseUi/Input";
 import { Label } from "@/components/common/baseUi/Label";
 import { useLoginPage } from "@/hooks/useLoginPage";
+import { getFieldError, guestLoginFormSchema } from "@/lib/validation";
+import { type FormEvent, useState } from "react";
 import { Link } from "react-router";
 
 import styles from "./LoginPage.module.css";
@@ -11,6 +13,7 @@ import styles from "./LoginPage.module.css";
 // MVP向けのログイン画面です。
 // Googleログインは本リリース予定のため、今はゲストログインだけを有効にしています。
 export function LoginPage() {
+  const [isNameTouched, setIsNameTouched] = useState(false);
   const {
     user,
     isAuthenticated,
@@ -25,6 +28,18 @@ export function LoginPage() {
   } = useLoginPage();
   const shouldShowLoginForm = !isAuthLoading && !isAuthenticated;
   const welcomeMessage = user?.name ? `お帰りなさい ${user.name} さん` : "お帰りなさい ゲスト さん";
+  const nameError = getFieldError(guestLoginFormSchema, { name }, "name");
+  const visibleNameError = isNameTouched ? nameError : null;
+
+  function handleValidatedGuestLogin(event: FormEvent<HTMLFormElement>) {
+    if (nameError) {
+      event.preventDefault();
+      setIsNameTouched(true);
+      return;
+    }
+
+    void handleGuestLogin(event);
+  }
 
   return (
     <section className={styles.hero} aria-labelledby="login-page-title">
@@ -54,7 +69,7 @@ export function LoginPage() {
 
           <p className={styles.separator}>または・・・</p>
 
-          <form className={styles.form} onSubmit={handleGuestLogin}>
+          <form className={styles.form} onSubmit={handleValidatedGuestLogin} noValidate>
             <p className={styles.guestTitle}>ゲストログイン</p>
             <div className={styles.nameField}>
               <Label className={styles.nameLabel} htmlFor="guest-name">
@@ -66,15 +81,26 @@ export function LoginPage() {
                 type="text"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                maxLength={50}
+                onBlur={() => setIsNameTouched(true)}
                 autoComplete="name"
+                aria-invalid={Boolean(visibleNameError)}
+                aria-describedby={visibleNameError ? "guest-name-error" : undefined}
               />
+              {visibleNameError ? (
+                <p id="guest-name-error" className={styles.fieldError}>
+                  {visibleNameError}
+                </p>
+              ) : null}
             </div>
             <div className={styles.actions}>
               <Button asChild className={styles.backButton}>
                 <Link to="/">戻る</Link>
               </Button>
-              <Button type="submit" className={styles.guestButton} disabled={isSubmitting}>
+              <Button
+                type="submit"
+                className={styles.guestButton}
+                disabled={isSubmitting || Boolean(nameError)}
+              >
                 {isSubmitting ? "ログイン中..." : "ゲストで続ける"}
               </Button>
             </div>

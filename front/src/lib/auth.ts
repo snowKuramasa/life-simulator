@@ -1,4 +1,4 @@
-import { buildApiUrl, buildAuthHeaders } from "@/lib/api";
+import { buildApiUrl, buildAuthHeaders, throwApiError } from "@/lib/api";
 import type { AuthResponse, GuestLoginParams } from "@/types";
 
 async function requestAuth(path: string, init: RequestInit = {}) {
@@ -11,7 +11,7 @@ async function requestAuth(path: string, init: RequestInit = {}) {
   });
 
   if (!response.ok) {
-    throw new Error(`Auth request failed with ${response.status}`);
+    await throwApiError(response, `Auth request failed with ${response.status}`);
   }
 
   return response;
@@ -42,7 +42,7 @@ export async function fetchAuthSession() {
   }
 
   if (!response.ok) {
-    throw new Error(`Auth session request failed with ${response.status}`);
+    await throwApiError(response, `Auth session request failed with ${response.status}`);
   }
 
   return (await response.json()) as AuthResponse;

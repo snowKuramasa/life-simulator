@@ -2,6 +2,8 @@ import { type FormEvent, type ReactNode, useState } from "react";
 import { useParams } from "react-router";
 
 import { useResidenceQuery, useUpdateResidenceMutation } from "@/hooks/residences/useResidenceQueries";
+import { getApiErrorMessage } from "@/lib/api";
+import { residenceFormSchema } from "@/lib/validation";
 import { ResidenceEditPageContext } from "@/providers/pages/ResidenceEditPageContext";
 import type { Residence } from "@/types";
 
@@ -33,18 +35,26 @@ function ResidenceEditFormStateProvider({ children, residence }: ResidenceEditFo
     event.preventDefault();
     setMessage(null);
     setErrorMessage(null);
+    const parsedForm = residenceFormSchema.safeParse({ name, rent, prefecture, city });
+
+    if (!parsedForm.success) {
+      setErrorMessage("入力内容を確認してください。");
+      return;
+    }
 
     try {
       await updateResidence.mutateAsync({
         id: residence.id,
-        name,
-        rent: Number(rent),
-        prefecture,
-        city,
+        name: parsedForm.data.name,
+        rent: parsedForm.data.rent,
+        prefecture: parsedForm.data.prefecture,
+        city: parsedForm.data.city,
       });
       setMessage("住居を保存しました。");
-    } catch {
-      setErrorMessage("住居の保存に失敗しました。入力内容を確認してもう一度お試しください。");
+    } catch (error) {
+      setErrorMessage(
+        getApiErrorMessage(error, "住居の保存に失敗しました。入力内容を確認してもう一度お試しください。"),
+      );
     }
   }
 

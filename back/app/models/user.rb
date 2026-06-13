@@ -9,7 +9,7 @@ class User < ApplicationRecord
 
   validates :name, presence: true, length: { maximum: 50 }
   validates :guest_token, presence: true, uniqueness: true
-  validates :provider, presence: true
+  validates :provider, presence: true, inclusion: { in: %w[guest] }
 
   # MVP用のゲストユーザーを作成します。
   #

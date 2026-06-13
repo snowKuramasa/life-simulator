@@ -164,6 +164,30 @@ class Api::V1::WorkplacesControllerTest < ActionDispatch::IntegrationTest
     assert_nil response_json.dig("errors", "city")
   end
 
+  test "rejects out-of-range salary and unknown prefecture" do
+    post "/api/v1/auth/guest", as: :json
+
+    assert_no_difference "Workplace.count" do
+      post "/api/v1/workplaces",
+           params: {
+             workplace: {
+               name: "候補A",
+               salary: Workplace::MAX_SALARY + 1,
+               prefecture: "不正県",
+               city: "品川区"
+             }
+           },
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+
+    response_json = JSON.parse(response.body)
+    assert_includes response_json.dig("errors", "salary"),
+                    "Salary must be less than or equal to #{Workplace::MAX_SALARY}"
+    assert_includes response_json.dig("errors", "prefecture"), "Prefecture is not included in the list"
+  end
+
   test "creates a workplace without city" do
     post "/api/v1/auth/guest", params: { name: "勤務先市区町村任意テストユーザー" }, as: :json
 

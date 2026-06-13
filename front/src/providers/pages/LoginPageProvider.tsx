@@ -2,6 +2,8 @@ import { type FormEvent, type ReactNode, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { useAuth } from "@/hooks/useAuth";
+import { getApiErrorMessage } from "@/lib/api";
+import { guestLoginFormSchema } from "@/lib/validation";
 import { LoginPageContext } from "@/providers/pages/LoginPageContext";
 
 type LoginPageProviderProps = {
@@ -20,13 +22,21 @@ export function LoginPageProvider({ children }: LoginPageProviderProps) {
     event.preventDefault();
     setMessage(null);
     setErrorMessage(null);
+    const parsedForm = guestLoginFormSchema.safeParse({ name });
+
+    if (!parsedForm.success) {
+      setErrorMessage("名前は50文字以内で入力してください。");
+      return;
+    }
 
     try {
-      const response = await guestLogin({ name });
+      const response = await guestLogin({ name: parsedForm.data.name });
       setMessage(`こんにちは${response.user?.name ?? "ゲスト"}さん`);
       navigate(response.first_login ? "/workplaces/new?flow=initial" : "/results");
-    } catch {
-      setErrorMessage("ゲストログインに失敗しました。時間をおいてもう一度お試しください。");
+    } catch (error) {
+      setErrorMessage(
+        getApiErrorMessage(error, "ゲストログインに失敗しました。時間をおいてもう一度お試しください。"),
+      );
     }
   }
 

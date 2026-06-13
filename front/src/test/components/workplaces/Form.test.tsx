@@ -96,4 +96,25 @@ describe("WorkplaceForm", () => {
 
     expect(screen.getByText("勤務先は必須です")).toBeInTheDocument();
   });
+
+  it("shows salary maximum error instead of silently clamping the value", () => {
+    renderWorkplaceForm({ salary: "10000001" });
+
+    fireEvent.blur(screen.getByLabelText("給与（手取り）"));
+
+    expect(screen.getByLabelText("給与（手取り）")).toHaveValue("10,000,001");
+    expect(screen.getByText("給与（手取り）は10,000,000円以下で入力してください")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "次へ" })).toBeDisabled();
+  });
+
+  it("shows name and city length errors", () => {
+    renderWorkplaceForm({ name: "あ".repeat(51), city: "い".repeat(51) });
+
+    fireEvent.blur(screen.getByLabelText("勤務先"));
+    fireEvent.blur(screen.getByLabelText("勤務地（市区町村）"));
+
+    expect(screen.getByText("勤務先は50文字以内で入力してください")).toBeInTheDocument();
+    expect(screen.getByText("勤務地（市区町村）は50文字以内で入力してください")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "次へ" })).toBeDisabled();
+  });
 });

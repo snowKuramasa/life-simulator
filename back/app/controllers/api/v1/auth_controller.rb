@@ -66,7 +66,7 @@ module Api
       # @return [String] 空白だけの場合はデフォルト名「ゲスト」
       def guest_name
         name = params[:name].to_s.strip
-        name.presence || "ゲスト"
+        (name.presence || "ゲスト").slice(0, 50)
       end
     end
   end

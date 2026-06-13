@@ -2,6 +2,8 @@ import { type FormEvent, type ReactNode, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 import { useCreateWorkplaceMutation } from "@/hooks/workplaces/useWorkplaceQueries";
+import { getApiErrorMessage } from "@/lib/api";
+import { workplaceFormSchema } from "@/lib/validation";
 import { WorkplaceNewPageContext } from "@/providers/pages/WorkplaceNewPageContext";
 
 type WorkplaceNewPageProviderProps = {
@@ -24,13 +26,19 @@ export function WorkplaceNewPageProvider({ children }: WorkplaceNewPageProviderP
     event.preventDefault();
     setMessage(null);
     setErrorMessage(null);
+    const parsedForm = workplaceFormSchema.safeParse({ name, salary, prefecture, city });
+
+    if (!parsedForm.success) {
+      setErrorMessage("入力内容を確認してください。");
+      return;
+    }
 
     try {
       await createWorkplace.mutateAsync({
-        name,
-        salary: Number(salary),
-        prefecture,
-        city,
+        name: parsedForm.data.name,
+        salary: parsedForm.data.salary,
+        prefecture: parsedForm.data.prefecture,
+        city: parsedForm.data.city,
       });
       if (isInitialFlow) {
         navigate("/residences/new?flow=initial");
@@ -38,8 +46,10 @@ export function WorkplaceNewPageProvider({ children }: WorkplaceNewPageProviderP
       }
 
       navigate("/workplaces");
-    } catch {
-      setErrorMessage("勤務先の保存に失敗しました。入力内容を確認してもう一度お試しください。");
+    } catch (error) {
+      setErrorMessage(
+        getApiErrorMessage(error, "勤務先の保存に失敗しました。入力内容を確認してもう一度お試しください。"),
+      );
     }
   }
 
