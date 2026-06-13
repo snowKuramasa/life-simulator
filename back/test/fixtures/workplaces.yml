@@ -4,12 +4,12 @@ one:
   user: one
   name: MyString
   salary: 1
-  prefecture: MyString
+  prefecture: 東京都
   city: MyString
 
 two:
   user: two
   name: MyString
   salary: 1
-  prefecture: MyString
+  prefecture: 神奈川県
   city: MyString

@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/common/baseUi/Select";
 import { PREFECTURES } from "@/constants/prefectures";
+import { getFieldError, workplaceFormSchema } from "@/lib/validation";
 import { type FormEvent, useState } from "react";
 import { Link } from "react-router";
 
@@ -46,17 +47,7 @@ function normalizeSalary(value: string) {
   return value.replace(/[^\d]/g, "");
 }
 
-type RequiredField = "name" | "salary" | "prefecture";
-
-const REQUIRED_FIELD_LABELS: Record<RequiredField, string> = {
-  name: "勤務先",
-  salary: "給与（手取り）",
-  prefecture: "勤務地（都道府県）",
-};
-
-function getRequiredError(label: string, value: string) {
-  return value.trim() ? null : `${label}は必須です`;
-}
+type WorkplaceField = "name" | "salary" | "prefecture" | "city";
 
 export function WorkplaceForm({
   title,
@@ -78,20 +69,28 @@ export function WorkplaceForm({
   errorMessage,
   handleSubmit,
 }: WorkplaceFormProps) {
-  const [touchedFields, setTouchedFields] = useState<Partial<Record<RequiredField, boolean>>>({});
-  const requiredErrors: Record<RequiredField, string | null> = {
-    name: getRequiredError(REQUIRED_FIELD_LABELS.name, name),
-    salary: getRequiredError(REQUIRED_FIELD_LABELS.salary, salary),
-    prefecture: getRequiredError(REQUIRED_FIELD_LABELS.prefecture, prefecture),
+  const [touchedFields, setTouchedFields] = useState<Partial<Record<WorkplaceField, boolean>>>({});
+  const formValues = {
+    name,
+    salary,
+    prefecture,
+    city,
+  };
+  const fieldErrors: Record<WorkplaceField, string | null> = {
+    name: getFieldError(workplaceFormSchema, formValues, "name"),
+    salary: getFieldError(workplaceFormSchema, formValues, "salary"),
+    prefecture: getFieldError(workplaceFormSchema, formValues, "prefecture"),
+    city: getFieldError(workplaceFormSchema, formValues, "city"),
   };
   const visibleErrors = {
-    name: touchedFields.name ? requiredErrors.name : null,
-    salary: touchedFields.salary ? requiredErrors.salary : null,
-    prefecture: touchedFields.prefecture ? requiredErrors.prefecture : null,
+    name: touchedFields.name ? fieldErrors.name : null,
+    salary: touchedFields.salary ? fieldErrors.salary : null,
+    prefecture: touchedFields.prefecture ? fieldErrors.prefecture : null,
+    city: touchedFields.city ? fieldErrors.city : null,
   };
-  const isFormValid = Object.values(requiredErrors).every((error) => error === null);
+  const isFormValid = workplaceFormSchema.safeParse(formValues).success;
 
-  function markTouched(field: RequiredField) {
+  function markTouched(field: WorkplaceField) {
     setTouchedFields((fields) => ({ ...fields, [field]: true }));
   }
 
@@ -100,6 +99,7 @@ export function WorkplaceForm({
       name: true,
       salary: true,
       prefecture: true,
+      city: true,
     });
   }
 
@@ -142,7 +142,6 @@ export function WorkplaceForm({
             value={name}
             onChange={(event) => setName(event.target.value)}
             onBlur={() => markTouched("name")}
-            maxLength={50}
             aria-required="true"
             aria-invalid={Boolean(visibleErrors.name)}
             aria-describedby={visibleErrors.name ? `${formId}-name-error` : undefined}
@@ -225,8 +224,15 @@ export function WorkplaceForm({
             type="text"
             value={city}
             onChange={(event) => setCity(event.target.value)}
-            maxLength={50}
+            onBlur={() => markTouched("city")}
+            aria-invalid={Boolean(visibleErrors.city)}
+            aria-describedby={visibleErrors.city ? `${formId}-city-error` : undefined}
           />
+          {visibleErrors.city ? (
+            <p id={`${formId}-city-error`} className={styles.fieldError}>
+              {visibleErrors.city}
+            </p>
+          ) : null}
         </div>
       </form>
 

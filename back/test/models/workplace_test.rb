@@ -48,4 +48,30 @@ class WorkplaceTest < ActiveSupport::TestCase
     assert_not workplace.valid?
     assert_includes workplace.errors[:salary], "must be greater than or equal to 0"
   end
+
+  test "requires salary within maximum" do
+    workplace = Workplace.new(
+      user: users(:one),
+      name: "候補A",
+      salary: Workplace::MAX_SALARY + 1,
+      prefecture: "東京都",
+      city: "品川区"
+    )
+
+    assert_not workplace.valid?
+    assert_includes workplace.errors[:salary], "must be less than or equal to #{Workplace::MAX_SALARY}"
+  end
+
+  test "requires prefecture from prefecture list" do
+    workplace = Workplace.new(
+      user: users(:one),
+      name: "候補A",
+      salary: 220_000,
+      prefecture: "不正県",
+      city: "品川区"
+    )
+
+    assert_not workplace.valid?
+    assert_includes workplace.errors[:prefecture], "is not included in the list"
+  end
 end

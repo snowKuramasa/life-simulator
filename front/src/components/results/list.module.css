@@ -294,10 +294,22 @@
   box-shadow: none;
 }
 
+.commuteInput[aria-invalid="true"] {
+  border-bottom-color: #b91c1c;
+}
+
 .commuteInput::-webkit-inner-spin-button,
 .commuteInput::-webkit-outer-spin-button {
   margin: 0;
   appearance: none;
+}
+
+.commuteFieldError {
+  margin: 0.16rem 0 0;
+  color: #b91c1c;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 0.9rem;
 }
 
 .minutesUnit {

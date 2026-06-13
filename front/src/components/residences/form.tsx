@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/common/baseUi/Select";
 import { PREFECTURES } from "@/constants/prefectures";
+import { getFieldError, residenceFormSchema } from "@/lib/validation";
 import { type FormEvent, useState } from "react";
 import { Link } from "react-router";
 
@@ -46,17 +47,7 @@ function normalizeRent(value: string) {
   return value.replace(/[^\d]/g, "");
 }
 
-type RequiredField = "name" | "rent" | "prefecture";
-
-const REQUIRED_FIELD_LABELS: Record<RequiredField, string> = {
-  name: "住居名",
-  rent: "家賃",
-  prefecture: "場所（都道府県）",
-};
-
-function getRequiredError(label: string, value: string) {
-  return value.trim() ? null : `${label}は必須です`;
-}
+type ResidenceField = "name" | "rent" | "prefecture" | "city";
 
 export function ResidenceForm({
   title,
@@ -78,20 +69,28 @@ export function ResidenceForm({
   errorMessage,
   handleSubmit,
 }: ResidenceFormProps) {
-  const [touchedFields, setTouchedFields] = useState<Partial<Record<RequiredField, boolean>>>({});
-  const requiredErrors: Record<RequiredField, string | null> = {
-    name: getRequiredError(REQUIRED_FIELD_LABELS.name, name),
-    rent: getRequiredError(REQUIRED_FIELD_LABELS.rent, rent),
-    prefecture: getRequiredError(REQUIRED_FIELD_LABELS.prefecture, prefecture),
+  const [touchedFields, setTouchedFields] = useState<Partial<Record<ResidenceField, boolean>>>({});
+  const formValues = {
+    name,
+    rent,
+    prefecture,
+    city,
+  };
+  const fieldErrors: Record<ResidenceField, string | null> = {
+    name: getFieldError(residenceFormSchema, formValues, "name"),
+    rent: getFieldError(residenceFormSchema, formValues, "rent"),
+    prefecture: getFieldError(residenceFormSchema, formValues, "prefecture"),
+    city: getFieldError(residenceFormSchema, formValues, "city"),
   };
   const visibleErrors = {
-    name: touchedFields.name ? requiredErrors.name : null,
-    rent: touchedFields.rent ? requiredErrors.rent : null,
-    prefecture: touchedFields.prefecture ? requiredErrors.prefecture : null,
+    name: touchedFields.name ? fieldErrors.name : null,
+    rent: touchedFields.rent ? fieldErrors.rent : null,
+    prefecture: touchedFields.prefecture ? fieldErrors.prefecture : null,
+    city: touchedFields.city ? fieldErrors.city : null,
   };
-  const isFormValid = Object.values(requiredErrors).every((error) => error === null);
+  const isFormValid = residenceFormSchema.safeParse(formValues).success;
 
-  function markTouched(field: RequiredField) {
+  function markTouched(field: ResidenceField) {
     setTouchedFields((fields) => ({ ...fields, [field]: true }));
   }
 
@@ -100,6 +99,7 @@ export function ResidenceForm({
       name: true,
       rent: true,
       prefecture: true,
+      city: true,
     });
   }
 
@@ -142,7 +142,6 @@ export function ResidenceForm({
             value={name}
             onChange={(event) => setName(event.target.value)}
             onBlur={() => markTouched("name")}
-            maxLength={50}
             aria-required="true"
             aria-invalid={Boolean(visibleErrors.name)}
             aria-describedby={visibleErrors.name ? `${formId}-name-error` : undefined}
@@ -225,8 +224,15 @@ export function ResidenceForm({
             type="text"
             value={city}
             onChange={(event) => setCity(event.target.value)}
-            maxLength={50}
+            onBlur={() => markTouched("city")}
+            aria-invalid={Boolean(visibleErrors.city)}
+            aria-describedby={visibleErrors.city ? `${formId}-city-error` : undefined}
           />
+          {visibleErrors.city ? (
+            <p id={`${formId}-city-error`} className={styles.fieldError}>
+              {visibleErrors.city}
+            </p>
+          ) : null}
         </div>
       </form>
 

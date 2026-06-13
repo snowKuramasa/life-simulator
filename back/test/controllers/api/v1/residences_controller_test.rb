@@ -164,6 +164,30 @@ class Api::V1::ResidencesControllerTest < ActionDispatch::IntegrationTest
     assert_nil response_json.dig("errors", "city")
   end
 
+  test "rejects out-of-range rent and unknown prefecture" do
+    post "/api/v1/auth/guest", as: :json
+
+    assert_no_difference "Residence.count" do
+      post "/api/v1/residences",
+           params: {
+             residence: {
+               name: "候補A",
+               rent: Residence::MAX_RENT + 1,
+               prefecture: "不正県",
+               city: "品川区"
+             }
+           },
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+
+    response_json = JSON.parse(response.body)
+    assert_includes response_json.dig("errors", "rent"),
+                    "Rent must be less than or equal to #{Residence::MAX_RENT}"
+    assert_includes response_json.dig("errors", "prefecture"), "Prefecture is not included in the list"
+  end
+
   test "creates a residence without city" do
     post "/api/v1/auth/guest", params: { name: "住居市区町村任意テストユーザー" }, as: :json
 

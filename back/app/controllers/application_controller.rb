@@ -3,6 +3,8 @@ class ApplicationController < ActionController::API
   # session cookie を使う認証処理で cookies/session を扱えるようにします。
   include ActionController::Cookies
 
+  rescue_from ActionController::ParameterMissing, with: :render_bad_request
+
   private
 
   # session に保存した user_id から、現在ログイン中のユーザーを取得します。
@@ -27,5 +29,9 @@ class ApplicationController < ActionController::API
 
   def increment_recalculation_metric
     current_user&.usage_metric!&.increment_recalculation_count!
+  end
+
+  def render_bad_request(exception)
+    render json: { error: exception.message }, status: :bad_request
   end
 end

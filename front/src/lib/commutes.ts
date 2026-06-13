@@ -1,4 +1,4 @@
-import { buildApiUrl, buildAuthHeaders } from "@/lib/api";
+import { buildApiUrl, buildAuthHeaders, throwApiError } from "@/lib/api";
 import type {
   CommuteResponse,
   CommutesResponse,
@@ -13,7 +13,7 @@ export async function getCommutes() {
   });
 
   if (!response.ok) {
-    throw new Error(`Commute request failed with ${response.status}`);
+    await throwApiError(response, `Commute request failed with ${response.status}`);
   }
 
   return (await response.json()) as CommutesResponse;
@@ -26,7 +26,7 @@ export async function getCommute(id: number) {
   });
 
   if (!response.ok) {
-    throw new Error(`Commute request failed with ${response.status}`);
+    await throwApiError(response, `Commute request failed with ${response.status}`);
   }
 
   return (await response.json()) as CommuteResponse;
@@ -43,7 +43,7 @@ export async function createCommute(params: CreateCommuteParams) {
   });
 
   if (!response.ok) {
-    throw new Error(`Commute request failed with ${response.status}`);
+    await throwApiError(response, `Commute request failed with ${response.status}`);
   }
 
   return (await response.json()) as CommuteResponse;
@@ -60,7 +60,7 @@ export async function updateCommute({ id, ...params }: UpdateCommuteParams) {
   });
 
   if (!response.ok) {
-    throw new Error(`Commute request failed with ${response.status}`);
+    await throwApiError(response, `Commute request failed with ${response.status}`);
   }
 
   return (await response.json()) as CommuteResponse;
@@ -74,6 +74,6 @@ export async function deleteCommute(id: number) {
   });
 
   if (!response.ok) {
-    throw new Error(`Commute request failed with ${response.status}`);
+    await throwApiError(response, `Commute request failed with ${response.status}`);
   }
 }

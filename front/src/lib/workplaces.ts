@@ -1,4 +1,4 @@
-import { buildApiUrl, buildAuthHeaders } from "@/lib/api";
+import { buildApiUrl, buildAuthHeaders, throwApiError } from "@/lib/api";
 import type {
   CreateWorkplaceParams,
   UpdateWorkplaceParams,
@@ -13,7 +13,7 @@ export async function getWorkplaces() {
   });
 
   if (!response.ok) {
-    throw new Error(`Workplace request failed with ${response.status}`);
+    await throwApiError(response, `Workplace request failed with ${response.status}`);
   }
 
   return (await response.json()) as WorkplacesResponse;
@@ -26,7 +26,7 @@ export async function getWorkplace(id: number) {
   });
 
   if (!response.ok) {
-    throw new Error(`Workplace request failed with ${response.status}`);
+    await throwApiError(response, `Workplace request failed with ${response.status}`);
   }
 
   return (await response.json()) as WorkplaceResponse;
@@ -43,7 +43,7 @@ export async function createWorkplace(params: CreateWorkplaceParams) {
   });
 
   if (!response.ok) {
-    throw new Error(`Workplace request failed with ${response.status}`);
+    await throwApiError(response, `Workplace request failed with ${response.status}`);
   }
 
   return (await response.json()) as WorkplaceResponse;
@@ -60,7 +60,7 @@ export async function updateWorkplace({ id, ...params }: UpdateWorkplaceParams) 
   });
 
   if (!response.ok) {
-    throw new Error(`Workplace request failed with ${response.status}`);
+    await throwApiError(response, `Workplace request failed with ${response.status}`);
   }
 
   return (await response.json()) as WorkplaceResponse;
@@ -74,6 +74,6 @@ export async function deleteWorkplace(id: number) {
   });
 
   if (!response.ok) {
-    throw new Error(`Workplace request failed with ${response.status}`);
+    await throwApiError(response, `Workplace request failed with ${response.status}`);
   }
 }

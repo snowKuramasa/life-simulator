@@ -3,6 +3,8 @@ import { type FormEvent, type ReactNode, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 import { useCreateResidenceMutation } from "@/hooks/residences/useResidenceQueries";
+import { getApiErrorMessage } from "@/lib/api";
+import { residenceFormSchema } from "@/lib/validation";
 import { ResidenceNewPageContext } from "@/providers/pages/ResidenceNewPageContext";
 
 type ResidenceNewPageProviderProps = {
@@ -26,13 +28,19 @@ export function ResidenceNewPageProvider({ children }: ResidenceNewPageProviderP
     event.preventDefault();
     setMessage(null);
     setErrorMessage(null);
+    const parsedForm = residenceFormSchema.safeParse({ name, rent, prefecture, city });
+
+    if (!parsedForm.success) {
+      setErrorMessage("入力内容を確認してください。");
+      return;
+    }
 
     try {
       await createResidence.mutateAsync({
-        name,
-        rent: Number(rent),
-        prefecture,
-        city,
+        name: parsedForm.data.name,
+        rent: parsedForm.data.rent,
+        prefecture: parsedForm.data.prefecture,
+        city: parsedForm.data.city,
       });
       await queryClient.invalidateQueries({ queryKey: ["residences"] });
       if (isInitialFlow) {
@@ -41,8 +49,10 @@ export function ResidenceNewPageProvider({ children }: ResidenceNewPageProviderP
       }
 
       navigate("/residences");
-    } catch {
-      setErrorMessage("住居の保存に失敗しました。入力内容を確認してもう一度お試しください。");
+    } catch (error) {
+      setErrorMessage(
+        getApiErrorMessage(error, "住居の保存に失敗しました。入力内容を確認してもう一度お試しください。"),
+      );
     }
   }
 

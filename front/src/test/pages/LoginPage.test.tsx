@@ -247,4 +247,16 @@ describe("LoginPage", () => {
       await screen.findByText("ゲストログインに失敗しました。時間をおいてもう一度お試しください。"),
     ).toBeInTheDocument();
   });
+
+  it("shows guest name length error", async () => {
+    renderLoginPage();
+
+    fireEvent.change(await screen.findByLabelText("名前"), {
+      target: { value: "あ".repeat(51) },
+    });
+    fireEvent.blur(screen.getByLabelText("名前"));
+
+    expect(screen.getByText("名前は50文字以内で入力してください")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "ゲストで続ける" })).toBeDisabled();
+  });
 });

@@ -228,6 +228,41 @@ class Api::V1::CommutesControllerTest < ActionDispatch::IntegrationTest
                     "Commute minutes must be greater than or equal to 0"
   end
 
+  test "rejects commute minutes over maximum" do
+    post "/api/v1/auth/guest", params: { name: "通勤時間上限テストユーザー" }, as: :json
+    user_id = JSON.parse(response.body).dig("user", "id")
+    workplace = Workplace.create!(
+      user_id:,
+      name: "候補A",
+      salary: 220_000,
+      prefecture: "東京都",
+      city: "品川区"
+    )
+    residence = Residence.create!(
+      user_id:,
+      name: "住居A",
+      rent: 80_000,
+      prefecture: "東京都",
+      city: "杉並区"
+    )
+
+    assert_no_difference "Commute.count" do
+      post "/api/v1/commutes",
+           params: {
+             commute: {
+               workplace_id: workplace.id,
+               residence_id: residence.id,
+               commute_minutes: Commute::MAX_COMMUTE_MINUTES + 1
+             }
+           },
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes JSON.parse(response.body).dig("errors", "commute_minutes"),
+                    "Commute minutes must be less than or equal to #{Commute::MAX_COMMUTE_MINUTES}"
+  end
+
   test "returns validation errors when creating a duplicate commute combination" do
     post "/api/v1/auth/guest", params: { name: "通勤時間重複テストユーザー" }, as: :json
     user_id = JSON.parse(response.body).dig("user", "id")

@@ -96,4 +96,25 @@ describe("ResidenceForm", () => {
 
     expect(screen.getByText("住居名は必須です")).toBeInTheDocument();
   });
+
+  it("shows rent maximum error instead of silently clamping the value", () => {
+    renderResidenceForm({ rent: "1000001" });
+
+    fireEvent.blur(screen.getByLabelText("家賃"));
+
+    expect(screen.getByLabelText("家賃")).toHaveValue("1,000,001");
+    expect(screen.getByText("家賃は1,000,000円以下で入力してください")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "結果を見る" })).toBeDisabled();
+  });
+
+  it("shows name and city length errors", () => {
+    renderResidenceForm({ name: "あ".repeat(51), city: "い".repeat(51) });
+
+    fireEvent.blur(screen.getByLabelText("住居名"));
+    fireEvent.blur(screen.getByLabelText("場所（市区町村）"));
+
+    expect(screen.getByText("住居名は50文字以内で入力してください")).toBeInTheDocument();
+    expect(screen.getByText("場所（市区町村）は50文字以内で入力してください")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "結果を見る" })).toBeDisabled();
+  });
 });

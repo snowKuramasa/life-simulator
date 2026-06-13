@@ -2,6 +2,8 @@ import { type FormEvent, type ReactNode, useState } from "react";
 import { useParams } from "react-router";
 
 import { useUpdateWorkplaceMutation, useWorkplaceQuery } from "@/hooks/workplaces/useWorkplaceQueries";
+import { getApiErrorMessage } from "@/lib/api";
+import { workplaceFormSchema } from "@/lib/validation";
 import { WorkplaceEditPageContext } from "@/providers/pages/WorkplaceEditPageContext";
 import type { Workplace } from "@/types";
 
@@ -33,18 +35,26 @@ function WorkplaceEditFormStateProvider({ children, workplace }: WorkplaceEditFo
     event.preventDefault();
     setMessage(null);
     setErrorMessage(null);
+    const parsedForm = workplaceFormSchema.safeParse({ name, salary, prefecture, city });
+
+    if (!parsedForm.success) {
+      setErrorMessage("入力内容を確認してください。");
+      return;
+    }
 
     try {
       await updateWorkplace.mutateAsync({
         id: workplace.id,
-        name,
-        salary: Number(salary),
-        prefecture,
-        city,
+        name: parsedForm.data.name,
+        salary: parsedForm.data.salary,
+        prefecture: parsedForm.data.prefecture,
+        city: parsedForm.data.city,
       });
       setMessage("勤務先を保存しました。");
-    } catch {
-      setErrorMessage("勤務先の保存に失敗しました。入力内容を確認してもう一度お試しください。");
+    } catch (error) {
+      setErrorMessage(
+        getApiErrorMessage(error, "勤務先の保存に失敗しました。入力内容を確認してもう一度お試しください。"),
+      );
     }
   }
 

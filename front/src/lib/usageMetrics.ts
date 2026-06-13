@@ -1,4 +1,4 @@
-import { buildApiUrl, buildAuthHeaders } from "@/lib/api";
+import { buildApiUrl, buildAuthHeaders, throwApiError } from "@/lib/api";
 import type { UsageMetricResponse } from "@/types";
 
 type UsageMetricRequestOptions = Omit<RequestInit, "headers"> & {
@@ -18,7 +18,7 @@ async function requestUsageMetric(path: string, init: UsageMetricRequestOptions 
   });
 
   if (!response.ok) {
-    throw new Error(`Usage metric request failed with ${response.status}`);
+    await throwApiError(response, `Usage metric request failed with ${response.status}`);
   }
 
   return (await response.json()) as UsageMetricResponse;
