@@ -43,6 +43,13 @@ class AuthControllerTest < ActionDispatch::IntegrationTest
     assert_equal "ゲスト", JSON.parse(response.body).dig("user", "name")
   end
 
+  test "truncates long guest name" do
+    post "/api/v1/auth/guest", params: { name: "あ" * 51 }, as: :json
+
+    assert_response :success
+    assert_equal 50, JSON.parse(response.body).dig("user", "name").length
+  end
+
   test "returns auth session from the session" do
     post "/api/v1/auth/guest", as: :json
     created_user_id = JSON.parse(response.body).dig("user", "id")

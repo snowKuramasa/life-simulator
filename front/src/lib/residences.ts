@@ -1,4 +1,4 @@
-import { buildApiUrl, buildAuthHeaders } from "@/lib/api";
+import { buildApiUrl, buildAuthHeaders, throwApiError } from "@/lib/api";
 import type {
   CreateResidenceParams,
   ResidenceResponse,
@@ -13,7 +13,7 @@ export async function getResidences() {
   });
 
   if (!response.ok) {
-    throw new Error(`Residence request failed with ${response.status}`);
+    await throwApiError(response, `Residence request failed with ${response.status}`);
   }
 
   return (await response.json()) as ResidencesResponse;
@@ -26,7 +26,7 @@ export async function getResidence(id: number) {
   });
 
   if (!response.ok) {
-    throw new Error(`Residence request failed with ${response.status}`);
+    await throwApiError(response, `Residence request failed with ${response.status}`);
   }
 
   return (await response.json()) as ResidenceResponse;
@@ -43,7 +43,7 @@ export async function createResidence(params: CreateResidenceParams) {
   });
 
   if (!response.ok) {
-    throw new Error(`Residence request failed with ${response.status}`);
+    await throwApiError(response, `Residence request failed with ${response.status}`);
   }
 
   return (await response.json()) as ResidenceResponse;
@@ -60,7 +60,7 @@ export async function updateResidence({ id, ...params }: UpdateResidenceParams) 
   });
 
   if (!response.ok) {
-    throw new Error(`Residence request failed with ${response.status}`);
+    await throwApiError(response, `Residence request failed with ${response.status}`);
   }
 
   return (await response.json()) as ResidenceResponse;
@@ -74,6 +74,6 @@ export async function deleteResidence(id: number) {
   });
 
   if (!response.ok) {
-    throw new Error(`Residence request failed with ${response.status}`);
+    await throwApiError(response, `Residence request failed with ${response.status}`);
   }
 }

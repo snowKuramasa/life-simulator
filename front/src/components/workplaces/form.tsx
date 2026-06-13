@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/common/baseUi/Select";
 import { PREFECTURES } from "@/constants/prefectures";
+import { MAX_CITY_LENGTH, MAX_NAME_LENGTH, MAX_SALARY } from "@/constants/validation";
 import { type FormEvent, useState } from "react";
 import { Link } from "react-router";
 
@@ -43,7 +44,19 @@ function formatSalary(value: string) {
 }
 
 function normalizeSalary(value: string) {
-  return value.replace(/[^\d]/g, "");
+  const digits = value.replace(/[^\d]/g, "");
+
+  if (!digits) {
+    return "";
+  }
+
+  const amount = Number(digits);
+
+  if (!Number.isSafeInteger(amount) || amount > MAX_SALARY) {
+    return String(MAX_SALARY);
+  }
+
+  return digits;
 }
 
 type RequiredField = "name" | "salary" | "prefecture";
@@ -56,6 +69,18 @@ const REQUIRED_FIELD_LABELS: Record<RequiredField, string> = {
 
 function getRequiredError(label: string, value: string) {
   return value.trim() ? null : `${label}は必須です`;
+}
+
+function getSalaryError(value: string) {
+  const requiredError = getRequiredError(REQUIRED_FIELD_LABELS.salary, value);
+
+  if (requiredError) {
+    return requiredError;
+  }
+
+  return Number(value) <= MAX_SALARY
+    ? null
+    : `給与（手取り）は${MAX_SALARY.toLocaleString()}円以下で入力してください`;
 }
 
 export function WorkplaceForm({
@@ -81,7 +106,7 @@ export function WorkplaceForm({
   const [touchedFields, setTouchedFields] = useState<Partial<Record<RequiredField, boolean>>>({});
   const requiredErrors: Record<RequiredField, string | null> = {
     name: getRequiredError(REQUIRED_FIELD_LABELS.name, name),
-    salary: getRequiredError(REQUIRED_FIELD_LABELS.salary, salary),
+    salary: getSalaryError(salary),
     prefecture: getRequiredError(REQUIRED_FIELD_LABELS.prefecture, prefecture),
   };
   const visibleErrors = {
@@ -142,7 +167,7 @@ export function WorkplaceForm({
             value={name}
             onChange={(event) => setName(event.target.value)}
             onBlur={() => markTouched("name")}
-            maxLength={50}
+            maxLength={MAX_NAME_LENGTH}
             aria-required="true"
             aria-invalid={Boolean(visibleErrors.name)}
             aria-describedby={visibleErrors.name ? `${formId}-name-error` : undefined}
@@ -169,6 +194,7 @@ export function WorkplaceForm({
               onChange={(event) => setSalary(normalizeSalary(event.target.value))}
               onBlur={() => markTouched("salary")}
               inputMode="numeric"
+              maxLength={MAX_SALARY.toLocaleString().length}
               aria-required="true"
               aria-invalid={Boolean(visibleErrors.salary)}
               aria-describedby={visibleErrors.salary ? `${formId}-salary-error` : undefined}
@@ -225,7 +251,7 @@ export function WorkplaceForm({
             type="text"
             value={city}
             onChange={(event) => setCity(event.target.value)}
-            maxLength={50}
+            maxLength={MAX_CITY_LENGTH}
           />
         </div>
       </form>

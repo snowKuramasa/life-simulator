@@ -17,4 +17,11 @@ class UserTest < ActiveSupport::TestCase
     assert_not user.valid?
     assert_includes user.errors[:name], "can't be blank"
   end
+
+  test "requires supported provider" do
+    user = User.new(name: "ゲスト", provider: "unknown")
+
+    assert_not user.valid?
+    assert_includes user.errors[:provider], "is not included in the list"
+  end
 end

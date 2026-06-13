@@ -48,4 +48,30 @@ class ResidenceTest < ActiveSupport::TestCase
     assert_not residence.valid?
     assert_includes residence.errors[:rent], "must be greater than or equal to 0"
   end
+
+  test "requires rent within maximum" do
+    residence = Residence.new(
+      user: users(:one),
+      name: "候補A",
+      rent: Residence::MAX_RENT + 1,
+      prefecture: "東京都",
+      city: "品川区"
+    )
+
+    assert_not residence.valid?
+    assert_includes residence.errors[:rent], "must be less than or equal to #{Residence::MAX_RENT}"
+  end
+
+  test "requires prefecture from prefecture list" do
+    residence = Residence.new(
+      user: users(:one),
+      name: "候補A",
+      rent: 80_000,
+      prefecture: "不正県",
+      city: "品川区"
+    )
+
+    assert_not residence.valid?
+    assert_includes residence.errors[:prefecture], "is not included in the list"
+  end
 end

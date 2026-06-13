@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/common/baseUi/Select";
 import { STANDARD_MONTHLY_LIVING_COST } from "@/constants/livingCosts";
+import { MAX_COMMUTE_MINUTES } from "@/constants/validation";
 import { cn } from "@/lib/utils";
 import type {
   CommuteSaveStatus,
@@ -119,6 +120,22 @@ function MonthlySurplusHelp() {
   );
 }
 
+function normalizeCommuteMinutes(value: string) {
+  const digits = value.replace(/[^\d]/g, "");
+
+  if (!digits) {
+    return "";
+  }
+
+  const minutes = Number(digits);
+
+  if (!Number.isSafeInteger(minutes) || minutes > MAX_COMMUTE_MINUTES) {
+    return String(MAX_COMMUTE_MINUTES);
+  }
+
+  return digits;
+}
+
 type CommuteMinutesFieldProps = {
   result: ResultListItem;
   status: CommuteSaveStatus | undefined;
@@ -128,6 +145,7 @@ type CommuteMinutesFieldProps = {
 function CommuteMinutesField({ result, status, saveCommuteMinutes }: CommuteMinutesFieldProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [commuteMinutes, setCommuteMinutes] = useState("");
+  const [validationMessage, setValidationMessage] = useState<string | null>(null);
   const isCommittingRef = useRef(false);
   const isSaving = status === "saving";
   const currentMinutes = result.commute?.commute_minutes ?? null;
@@ -135,12 +153,14 @@ function CommuteMinutesField({ result, status, saveCommuteMinutes }: CommuteMinu
 
   function startEditing() {
     setCommuteMinutes(currentMinutes === null ? "" : String(currentMinutes));
+    setValidationMessage(null);
     setIsEditing(true);
   }
 
   function cancelEditing() {
     setIsEditing(false);
     setCommuteMinutes("");
+    setValidationMessage(null);
   }
 
   async function commitEditing() {
@@ -151,7 +171,12 @@ function CommuteMinutesField({ result, status, saveCommuteMinutes }: CommuteMinu
     const nextMinutes = Number(commuteMinutes);
 
     if (commuteMinutes.trim() === "" || !Number.isInteger(nextMinutes) || nextMinutes < 0) {
-      cancelEditing();
+      setValidationMessage("通勤時間を0分以上で入力してください。");
+      return;
+    }
+
+    if (nextMinutes > MAX_COMMUTE_MINUTES) {
+      setValidationMessage(`通勤時間は${MAX_COMMUTE_MINUTES}分以下で入力してください。`);
       return;
     }
 
@@ -166,7 +191,10 @@ function CommuteMinutesField({ result, status, saveCommuteMinutes }: CommuteMinu
 
     if (saved) {
       cancelEditing();
+      return;
     }
+
+    setValidationMessage("保存に失敗しました。もう一度お試しください。");
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
@@ -184,23 +212,37 @@ function CommuteMinutesField({ result, status, saveCommuteMinutes }: CommuteMinu
 
   if (isEditing) {
     return (
-      <div className={styles.commuteEditField}>
-        <span className={styles.commuteInputLabel}>片道</span>
-        <Input
-          className={styles.commuteInput}
-          type="number"
-          min={0}
-          step={1}
-          value={commuteMinutes}
-          disabled={isSaving}
-          aria-label={`${result.workplace.name}と${result.residence.name}の片道通勤時間`}
-          onChange={(event) => setCommuteMinutes(event.target.value)}
-          onBlur={() => void commitEditing()}
-          onKeyDown={handleKeyDown}
-          autoFocus
-        />
-        <span className={styles.minutesUnit}>分</span>
-        <SaveStatusIcon status={status} />
+      <div>
+        <div className={styles.commuteEditField}>
+          <span className={styles.commuteInputLabel}>片道</span>
+          <Input
+            className={styles.commuteInput}
+            type="number"
+            inputMode="numeric"
+            min={0}
+            max={MAX_COMMUTE_MINUTES}
+            step={1}
+            value={commuteMinutes}
+            disabled={isSaving}
+            aria-label={`${result.workplace.name}と${result.residence.name}の片道通勤時間`}
+            aria-invalid={Boolean(validationMessage)}
+            aria-describedby={validationMessage ? `${result.id}-commute-error` : undefined}
+            onChange={(event) => {
+              setValidationMessage(null);
+              setCommuteMinutes(normalizeCommuteMinutes(event.target.value));
+            }}
+            onBlur={() => void commitEditing()}
+            onKeyDown={handleKeyDown}
+            autoFocus
+          />
+          <span className={styles.minutesUnit}>分</span>
+          <SaveStatusIcon status={status} />
+        </div>
+        {validationMessage ? (
+          <p id={`${result.id}-commute-error`} className={styles.commuteFieldError}>
+            {validationMessage}
+          </p>
+        ) : null}
       </div>
     );
   }

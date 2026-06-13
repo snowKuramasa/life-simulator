@@ -3,6 +3,7 @@ import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
 import { Input } from "@/components/common/baseUi/Input";
 import { Label } from "@/components/common/baseUi/Label";
+import { MAX_NAME_LENGTH } from "@/constants/validation";
 import { useLoginPage } from "@/hooks/useLoginPage";
 import { Link } from "react-router";
 
@@ -66,7 +67,7 @@ export function LoginPage() {
                 type="text"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                maxLength={50}
+                maxLength={MAX_NAME_LENGTH}
                 autoComplete="name"
               />
             </div>

@@ -1,9 +1,17 @@
 class Commute < ApplicationRecord
+  MAX_COMMUTE_MINUTES = 360
+
   belongs_to :user
   belongs_to :workplace
   belongs_to :residence
 
-  validates :commute_minutes, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :commute_minutes,
+            presence: true,
+            numericality: {
+              only_integer: true,
+              greater_than_or_equal_to: 0,
+              less_than_or_equal_to: MAX_COMMUTE_MINUTES
+            }
   validates :workplace_id, uniqueness: { scope: %i[user_id residence_id] }
   validate :workplace_belongs_to_user
   validate :residence_belongs_to_user

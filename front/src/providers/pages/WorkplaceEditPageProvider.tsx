@@ -2,6 +2,7 @@ import { type FormEvent, type ReactNode, useState } from "react";
 import { useParams } from "react-router";
 
 import { useUpdateWorkplaceMutation, useWorkplaceQuery } from "@/hooks/workplaces/useWorkplaceQueries";
+import { getApiErrorMessage } from "@/lib/api";
 import { WorkplaceEditPageContext } from "@/providers/pages/WorkplaceEditPageContext";
 import type { Workplace } from "@/types";
 
@@ -37,14 +38,16 @@ function WorkplaceEditFormStateProvider({ children, workplace }: WorkplaceEditFo
     try {
       await updateWorkplace.mutateAsync({
         id: workplace.id,
-        name,
+        name: name.trim(),
         salary: Number(salary),
         prefecture,
-        city,
+        city: city.trim(),
       });
       setMessage("勤務先を保存しました。");
-    } catch {
-      setErrorMessage("勤務先の保存に失敗しました。入力内容を確認してもう一度お試しください。");
+    } catch (error) {
+      setErrorMessage(
+        getApiErrorMessage(error, "勤務先の保存に失敗しました。入力内容を確認してもう一度お試しください。"),
+      );
     }
   }
 

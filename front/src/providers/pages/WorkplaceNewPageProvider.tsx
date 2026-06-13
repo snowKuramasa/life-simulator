@@ -2,6 +2,7 @@ import { type FormEvent, type ReactNode, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 import { useCreateWorkplaceMutation } from "@/hooks/workplaces/useWorkplaceQueries";
+import { getApiErrorMessage } from "@/lib/api";
 import { WorkplaceNewPageContext } from "@/providers/pages/WorkplaceNewPageContext";
 
 type WorkplaceNewPageProviderProps = {
@@ -27,10 +28,10 @@ export function WorkplaceNewPageProvider({ children }: WorkplaceNewPageProviderP
 
     try {
       await createWorkplace.mutateAsync({
-        name,
+        name: name.trim(),
         salary: Number(salary),
         prefecture,
-        city,
+        city: city.trim(),
       });
       if (isInitialFlow) {
         navigate("/residences/new?flow=initial");
@@ -38,8 +39,10 @@ export function WorkplaceNewPageProvider({ children }: WorkplaceNewPageProviderP
       }
 
       navigate("/workplaces");
-    } catch {
-      setErrorMessage("勤務先の保存に失敗しました。入力内容を確認してもう一度お試しください。");
+    } catch (error) {
+      setErrorMessage(
+        getApiErrorMessage(error, "勤務先の保存に失敗しました。入力内容を確認してもう一度お試しください。"),
+      );
     }
   }
 

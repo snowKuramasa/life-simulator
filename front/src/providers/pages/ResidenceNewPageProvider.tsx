@@ -3,6 +3,7 @@ import { type FormEvent, type ReactNode, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 import { useCreateResidenceMutation } from "@/hooks/residences/useResidenceQueries";
+import { getApiErrorMessage } from "@/lib/api";
 import { ResidenceNewPageContext } from "@/providers/pages/ResidenceNewPageContext";
 
 type ResidenceNewPageProviderProps = {
@@ -29,10 +30,10 @@ export function ResidenceNewPageProvider({ children }: ResidenceNewPageProviderP
 
     try {
       await createResidence.mutateAsync({
-        name,
+        name: name.trim(),
         rent: Number(rent),
         prefecture,
-        city,
+        city: city.trim(),
       });
       await queryClient.invalidateQueries({ queryKey: ["residences"] });
       if (isInitialFlow) {
@@ -41,8 +42,10 @@ export function ResidenceNewPageProvider({ children }: ResidenceNewPageProviderP
       }
 
       navigate("/residences");
-    } catch {
-      setErrorMessage("住居の保存に失敗しました。入力内容を確認してもう一度お試しください。");
+    } catch (error) {
+      setErrorMessage(
+        getApiErrorMessage(error, "住居の保存に失敗しました。入力内容を確認してもう一度お試しください。"),
+      );
     }
   }
 
