@@ -12,6 +12,7 @@ import {
 import { STANDARD_MONTHLY_LIVING_COST } from "@/constants/livingCosts";
 import { MAX_COMMUTE_MINUTES } from "@/constants/validation";
 import { cn } from "@/lib/utils";
+import { commuteMinutesSchema, getSchemaError } from "@/lib/validation";
 import type {
   CommuteSaveStatus,
   HouseholdSize,
@@ -121,19 +122,7 @@ function MonthlySurplusHelp() {
 }
 
 function normalizeCommuteMinutes(value: string) {
-  const digits = value.replace(/[^\d]/g, "");
-
-  if (!digits) {
-    return "";
-  }
-
-  const minutes = Number(digits);
-
-  if (!Number.isSafeInteger(minutes) || minutes > MAX_COMMUTE_MINUTES) {
-    return String(MAX_COMMUTE_MINUTES);
-  }
-
-  return digits;
+  return value.replace(/[^\d]/g, "");
 }
 
 type CommuteMinutesFieldProps = {
@@ -168,17 +157,14 @@ function CommuteMinutesField({ result, status, saveCommuteMinutes }: CommuteMinu
       return;
     }
 
-    const nextMinutes = Number(commuteMinutes);
+    const parsedMinutes = commuteMinutesSchema.safeParse(commuteMinutes);
 
-    if (commuteMinutes.trim() === "" || !Number.isInteger(nextMinutes) || nextMinutes < 0) {
-      setValidationMessage("通勤時間を0分以上で入力してください。");
+    if (!parsedMinutes.success) {
+      setValidationMessage(getSchemaError(commuteMinutesSchema, commuteMinutes));
       return;
     }
 
-    if (nextMinutes > MAX_COMMUTE_MINUTES) {
-      setValidationMessage(`通勤時間は${MAX_COMMUTE_MINUTES}分以下で入力してください。`);
-      return;
-    }
+    const nextMinutes = parsedMinutes.data;
 
     if (currentMinutes === nextMinutes) {
       cancelEditing();

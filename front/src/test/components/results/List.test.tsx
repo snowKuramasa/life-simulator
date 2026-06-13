@@ -125,6 +125,21 @@ describe("ResultList", () => {
     });
   });
 
+  it("shows commute maximum error instead of silently clamping the value", async () => {
+    const saveCommuteMinutes = vi.fn(async () => true);
+    renderResultList({ saveCommuteMinutes });
+
+    fireEvent.click(screen.getByRole("button", { name: "A社と〇〇の片道通勤時間を編集" }));
+    const input = screen.getByRole("spinbutton", { name: "A社と〇〇の片道通勤時間" });
+
+    fireEvent.change(input, { target: { value: "361" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(await screen.findByText("通勤時間は360分以下で入力してください")).toBeInTheDocument();
+    expect(input).toHaveValue(361);
+    expect(saveCommuteMinutes).not.toHaveBeenCalled();
+  });
+
   it("shows commute save status icons", () => {
     renderResultList({ commuteSaveStatuses: { "1-1": "success" } });
 

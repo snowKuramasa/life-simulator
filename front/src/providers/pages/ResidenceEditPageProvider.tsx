@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 
 import { useResidenceQuery, useUpdateResidenceMutation } from "@/hooks/residences/useResidenceQueries";
 import { getApiErrorMessage } from "@/lib/api";
+import { residenceFormSchema } from "@/lib/validation";
 import { ResidenceEditPageContext } from "@/providers/pages/ResidenceEditPageContext";
 import type { Residence } from "@/types";
 
@@ -34,14 +35,20 @@ function ResidenceEditFormStateProvider({ children, residence }: ResidenceEditFo
     event.preventDefault();
     setMessage(null);
     setErrorMessage(null);
+    const parsedForm = residenceFormSchema.safeParse({ name, rent, prefecture, city });
+
+    if (!parsedForm.success) {
+      setErrorMessage("入力内容を確認してください。");
+      return;
+    }
 
     try {
       await updateResidence.mutateAsync({
         id: residence.id,
-        name: name.trim(),
-        rent: Number(rent),
-        prefecture,
-        city: city.trim(),
+        name: parsedForm.data.name,
+        rent: parsedForm.data.rent,
+        prefecture: parsedForm.data.prefecture,
+        city: parsedForm.data.city,
       });
       setMessage("住居を保存しました。");
     } catch (error) {

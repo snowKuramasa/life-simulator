@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 
 import { useUpdateWorkplaceMutation, useWorkplaceQuery } from "@/hooks/workplaces/useWorkplaceQueries";
 import { getApiErrorMessage } from "@/lib/api";
+import { workplaceFormSchema } from "@/lib/validation";
 import { WorkplaceEditPageContext } from "@/providers/pages/WorkplaceEditPageContext";
 import type { Workplace } from "@/types";
 
@@ -34,14 +35,20 @@ function WorkplaceEditFormStateProvider({ children, workplace }: WorkplaceEditFo
     event.preventDefault();
     setMessage(null);
     setErrorMessage(null);
+    const parsedForm = workplaceFormSchema.safeParse({ name, salary, prefecture, city });
+
+    if (!parsedForm.success) {
+      setErrorMessage("入力内容を確認してください。");
+      return;
+    }
 
     try {
       await updateWorkplace.mutateAsync({
         id: workplace.id,
-        name: name.trim(),
-        salary: Number(salary),
-        prefecture,
-        city: city.trim(),
+        name: parsedForm.data.name,
+        salary: parsedForm.data.salary,
+        prefecture: parsedForm.data.prefecture,
+        city: parsedForm.data.city,
       });
       setMessage("勤務先を保存しました。");
     } catch (error) {

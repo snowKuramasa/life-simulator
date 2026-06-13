@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router";
 
 import { useCreateWorkplaceMutation } from "@/hooks/workplaces/useWorkplaceQueries";
 import { getApiErrorMessage } from "@/lib/api";
+import { workplaceFormSchema } from "@/lib/validation";
 import { WorkplaceNewPageContext } from "@/providers/pages/WorkplaceNewPageContext";
 
 type WorkplaceNewPageProviderProps = {
@@ -25,13 +26,19 @@ export function WorkplaceNewPageProvider({ children }: WorkplaceNewPageProviderP
     event.preventDefault();
     setMessage(null);
     setErrorMessage(null);
+    const parsedForm = workplaceFormSchema.safeParse({ name, salary, prefecture, city });
+
+    if (!parsedForm.success) {
+      setErrorMessage("入力内容を確認してください。");
+      return;
+    }
 
     try {
       await createWorkplace.mutateAsync({
-        name: name.trim(),
-        salary: Number(salary),
-        prefecture,
-        city: city.trim(),
+        name: parsedForm.data.name,
+        salary: parsedForm.data.salary,
+        prefecture: parsedForm.data.prefecture,
+        city: parsedForm.data.city,
       });
       if (isInitialFlow) {
         navigate("/residences/new?flow=initial");
