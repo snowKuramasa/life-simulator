@@ -11,7 +11,7 @@
   ブラウザは相対パスで Vite にアクセスし、Vite が Rails に proxy する
 
 - 本番 / stg 環境
-  ブラウザは `VITE_API_BASE_URL` を使って、Render 上の back URL を直接呼ぶ
+  ブラウザは相対パスで front の Render Static Site にアクセスし、Render の rewrite が Rails に proxy する
 
 ---
 
@@ -97,7 +97,7 @@ Vite が内部的に Rails へ中継する形にしています。
 ブラウザ
   ↓  front の Render URL
 front (Static Site)
-  ↓  VITE_API_BASE_URL/api/v1/health
+  ↓  /api/v1/health を rewrite
 back (Render Web Service)
   ↓
 Neon
@@ -108,9 +108,10 @@ Neon
 ```text
 1. ブラウザで front の Render URL を開く
 2. TopPage が /api/v1/health を呼びたい
-3. buildApiUrl が VITE_API_BASE_URL を使って完全 URL を作る
-4. ブラウザが Render 上の back URL へ直接アクセスする
-5. Rails が Neon に接続してレスポンスを返す
+3. buildApiUrl は VITE_API_BASE_URL が無いため /api/v1/health の相対パスを返す
+4. ブラウザは front の Render URL に対して /api/v1/health を送る
+5. front Static Site の /api/* rewrite が back Render URL へ中継する
+6. Rails が Neon に接続してレスポンスを返す
 ```
 
 ### 図
@@ -125,8 +126,7 @@ Neon
 │ Render Static Site          │
 │ front-prod / front-stg      │
 └─────┬───────────────────────┘
-      │ fetch to
-      │ VITE_API_BASE_URL + /api/v1/health
+      │ rewrite /api/*
       ▼
 ┌─────────────────────────────┐
 │ Render Web Service          │
@@ -160,7 +160,7 @@ stg
   `development` 用の front / back 設定
 
 - [front/src/lib/api.ts](/Users/masafumi/study_runteq/卒業制作/life-simulator/front/src/lib/api.ts)
-  `VITE_API_BASE_URL` があると絶対 URL を返す
+  `VITE_API_BASE_URL` が無いと相対パスを返す
 
 ---
 
@@ -172,11 +172,11 @@ stg
 
 ```text
 VITE_API_BASE_URL がある
-  -> 本番 / stg
+  -> 例外的に API の絶対 URL を直接使う
   -> https://.../api/v1/health のような完全 URL を作る
 
 VITE_API_BASE_URL がない
-  -> 開発環境
+  -> 開発環境 / Render 本番 / stg
   -> /api/v1/health のような相対パスを返す
 ```
 
@@ -194,7 +194,7 @@ VITE_API_BASE_URL あり                VITE_API_BASE_URL なし
 https://back-xxx.onrender.com/...          /api/v1/health
          │                                   │
          ▼                                   ▼
-  本番 / stg で直接アクセス              Vite proxy が中継
+      API を直接呼ぶ              Vite proxy / Render rewrite が中継
 ```
 
 ---
@@ -211,13 +211,15 @@ https://back-xxx.onrender.com/...          /api/v1/health
 ### Render 本番で確認したいとき
 
 - `front-prod` の URL を開く
-- Network タブで API 呼び出し先が `back-prod` になっているか見る
+- Network タブで API 呼び出し先が `front-prod` の `/api/...` になっているか見る
+- Cookie が `front-prod` 側に保存され、保存 API にも送られているか見る
 - `back-prod` の `/api/v1/health` を直接叩く
 
 ### Render stg で確認したいとき
 
 - `front-stg` の URL を開く
-- Network タブで API 呼び出し先が `back-stg` になっているか見る
+- Network タブで API 呼び出し先が `front-stg` の `/api/...` になっているか見る
+- Cookie が `front-stg` 側に保存され、保存 API にも送られているか見る
 - `back-stg` の `/api/v1/health` を直接叩く
 
 ---
@@ -231,12 +233,12 @@ https://back-xxx.onrender.com/...          /api/v1/health
   Browser -> Vite -> Rails -> DB
 
 本番 / stg:
-  Browser -> Front Static Site -> Back Render Service -> Neon
+  Browser -> Front Static Site (/api/* rewrite) -> Back Render Service -> Neon
 ```
 
 この形にしている理由は、
 
 - 開発環境では Docker 内の `back` という名前をブラウザが使えない
-- 本番 / stg では front から back の公開 URL を直接呼ぶほうが自然
+- 本番 / stg では API も front と同じ origin の `/api/...` に見せることで、session cookie が third-party 扱いされにくくなる
 
 という違いがあるためです。
