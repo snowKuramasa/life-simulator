@@ -6,9 +6,20 @@ import { Label } from "@/components/common/baseUi/Label";
 import { useLoginPage } from "@/hooks/useLoginPage";
 import { getFieldError, guestLoginFormSchema } from "@/lib/validation";
 import { type FormEvent, useState } from "react";
+import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router";
 
 import styles from "./LoginPage.module.css";
+
+const guestLoginNoteLines = [
+  "※ゲストデータはCookieで管理されます。",
+  "下記操作時は同じデータを扱うことができません。",
+  "・Cookie削除",
+  "・別ブラウザ利用",
+  "・シークレットウィンドウ終了",
+  "また、最終利用日から30日以上利用がない場合、",
+  "データは削除されることがあります。",
+];
 
 // MVP向けのログイン画面です。
 // Googleログインは本リリース予定のため、今はゲストログインだけを有効にしています。
@@ -61,9 +72,7 @@ export function LoginPage() {
         <>
           <p className={styles.loginLabel}>ログイン</p>
           <Button type="button" className={styles.googleButton} disabled>
-            <span className={styles.googleIcon} aria-hidden="true">
-              G
-            </span>
+            <FcGoogle className={styles.googleIcon} aria-hidden="true" />
             Googleでログイン（準備中）
           </Button>
 
@@ -125,7 +134,11 @@ export function LoginPage() {
 
       {shouldShowLoginForm ? (
         <p className={styles.note}>
-          ※あとからログインできますがブラウザを変更またはCookieを削除した場合データが消えてしまいます。
+          {guestLoginNoteLines.map((line) => (
+            <span key={line} className={styles.noteLine}>
+              {line}
+            </span>
+          ))}
         </p>
       ) : null}
     </section>

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Trash2 } from "lucide-react";
+import { PiTrash } from "react-icons/pi";
 
 import { DeleteConfirmDialog } from "@/components/common/DeleteConfirmDialog";
 import { Button } from "@/components/common/baseUi/Button";
@@ -20,7 +20,7 @@ const meta = {
         {...args}
         trigger={
           <Button type="button" variant="ghost" size="icon" aria-label="A社を削除">
-            <Trash2 aria-hidden="true" className="text-[#f97316]" />
+            <PiTrash aria-hidden="true" className="text-[#f97316]" />
           </Button>
         }
       />

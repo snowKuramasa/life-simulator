@@ -77,13 +77,21 @@ npm run dev:mock
   `VITE_API_BASE_URL` を使わず、相対パスの `/api/...` を Vite proxy が Rails へ中継します。
 
 - 本番環境
-  Render の `life-simulator-front-prod` に設定した `VITE_API_BASE_URL` を使います。
+  `VITE_API_BASE_URL` を使わず、相対パスの `/api/...` を Render Static Site の rewrite が
+  `life-simulator-back-prod` へ中継します。
 
 - ステージング環境
-  Render の `life-simulator-front-stg` に設定した `VITE_API_BASE_URL` を使います。
+  `VITE_API_BASE_URL` を使わず、相対パスの `/api/...` を Render Static Site の rewrite が
+  `life-simulator-back-stg` へ中継します。
 
 開発環境ではブラウザが `http://back:3000` を直接解決できないため、
 docker compose では front コンテナ側の Vite サーバーが `back` へ中継する形にしています。
+本番 / ステージングでもブラウザからは front と同じ origin の `/api/...` に見せることで、
+session cookie が third-party 扱いされにくくなります。
+
+Render の front サービスに `VITE_API_BASE_URL` が残っている場合は、
+back Render URL を直接呼び続けてしまうため削除してください。
+Vite の環境変数は build 時に埋め込まれるため、削除後は front を再デプロイします。
 
 ## 補足
 

@@ -18,6 +18,7 @@ import { ResultListPageProvider } from "@/providers/pages/ResultListPageProvider
 import { WorkplaceEditPageProvider } from "@/providers/pages/WorkplaceEditPageProvider";
 import { WorkplaceListPageProvider } from "@/providers/pages/WorkplaceListPageProvider";
 import { WorkplaceNewPageProvider } from "@/providers/pages/WorkplaceNewPageProvider";
+import { ProtectedRoute } from "@/routes/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -37,60 +38,65 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "results",
-        element: (
-          <ResultListPageProvider>
-            <ResultListPage />
-          </ResultListPageProvider>
-        ),
-      },
-      {
-        path: "residences/new",
-        element: (
-          <ResidenceNewPageProvider>
-            <ResidenceNewPage />
-          </ResidenceNewPageProvider>
-        ),
-      },
-      {
-        path: "residences",
-        element: (
-          <ResidenceListPageProvider>
-            <ResidenceListPage />
-          </ResidenceListPageProvider>
-        ),
-      },
-      {
-        path: "residences/:id/edit",
-        element: (
-          <ResidenceEditPageProvider>
-            <ResidenceEditPage />
-          </ResidenceEditPageProvider>
-        ),
-      },
-      {
-        path: "workplaces/new",
-        element: (
-          <WorkplaceNewPageProvider>
-            <WorkplaceNewPage />
-          </WorkplaceNewPageProvider>
-        ),
-      },
-      {
-        path: "workplaces",
-        element: (
-          <WorkplaceListPageProvider>
-            <WorkplaceListPage />
-          </WorkplaceListPageProvider>
-        ),
-      },
-      {
-        path: "workplaces/:id/edit",
-        element: (
-          <WorkplaceEditPageProvider>
-            <WorkplaceEditPage />
-          </WorkplaceEditPageProvider>
-        ),
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "results",
+            element: (
+              <ResultListPageProvider>
+                <ResultListPage />
+              </ResultListPageProvider>
+            ),
+          },
+          {
+            path: "residences/new",
+            element: (
+              <ResidenceNewPageProvider>
+                <ResidenceNewPage />
+              </ResidenceNewPageProvider>
+            ),
+          },
+          {
+            path: "residences",
+            element: (
+              <ResidenceListPageProvider>
+                <ResidenceListPage />
+              </ResidenceListPageProvider>
+            ),
+          },
+          {
+            path: "residences/:id/edit",
+            element: (
+              <ResidenceEditPageProvider>
+                <ResidenceEditPage />
+              </ResidenceEditPageProvider>
+            ),
+          },
+          {
+            path: "workplaces/new",
+            element: (
+              <WorkplaceNewPageProvider>
+                <WorkplaceNewPage />
+              </WorkplaceNewPageProvider>
+            ),
+          },
+          {
+            path: "workplaces",
+            element: (
+              <WorkplaceListPageProvider>
+                <WorkplaceListPage />
+              </WorkplaceListPageProvider>
+            ),
+          },
+          {
+            path: "workplaces/:id/edit",
+            element: (
+              <WorkplaceEditPageProvider>
+                <WorkplaceEditPage />
+              </WorkplaceEditPageProvider>
+            ),
+          },
+        ],
       },
     ],
   },
