@@ -30,9 +30,10 @@ Render では次の順番で進めるのが分かりやすいです。
 
 1. `main` 用 Blueprint で本番環境を作る
 2. `development` 用 Blueprint でステージング環境を作る
-3. それぞれの front が、同じ環境の back を見るように `VITE_API_BASE_URL` を設定する
+3. それぞれの front に `/api/*` rewrite を設定し、同じ環境の back へ中継する
 
-フロントは最終的にバックエンドの本番 URL を参照するため、
+フロントは最終的に `/api/...` の相対パスで API を呼びます。
+Render Static Site の rewrite がバックエンドの公開 URL へ中継するため、
 先にバックエンドの公開 URL を確定させるのが進めやすいです。
 
 ## 今回追加したファイル
@@ -147,8 +148,35 @@ production の adapter を `async` にしています。
   Render が公開する静的ファイルの場所
 
 - `routes`
-  `react-router` のようなクライアントルーティングでも画面遷移できるよう、
-  `/*` を `/index.html` に rewrite している
+  `/api/*` を同じ環境の back Render URL へ rewrite し、
+  それ以外の `/*` を React Router 用に `/index.html` へ rewrite している
+
+本番:
+
+```yaml
+routes:
+  - type: rewrite
+    source: /api/*
+    destination: https://life-simulator-back-prod.onrender.com/api/*
+  - type: rewrite
+    source: /*
+    destination: /index.html
+```
+
+ステージング:
+
+```yaml
+routes:
+  - type: rewrite
+    source: /api/*
+    destination: https://life-simulator-back-stg.onrender.com/api/*
+  - type: rewrite
+    source: /*
+    destination: /index.html
+```
+
+`/api/*` を必ず `/*` より上に置きます。
+逆にすると API リクエストも `/index.html` に rewrite されます。
 
 ## Render 側で設定する環境変数
 
@@ -171,20 +199,16 @@ production の adapter を `async` にしています。
 
 ### フロント
 
-- `VITE_API_BASE_URL`
-  同じ環境のバックエンド Render URL を設定する
+同一 origin の `/api/*` rewrite を使うため、通常はフロント側に
+`VITE_API_BASE_URL` を設定しません。
 
-本番の例:
+すでに Render Dashboard の front サービスに `VITE_API_BASE_URL` を設定している場合は、
+本番 / ステージングの両方で削除します。
+Vite の環境変数は build 時に埋め込まれるため、削除後は front を再デプロイします。
 
-```text
-https://life-simulator-back-prod.onrender.com
-```
-
-ステージングの例:
-
-```text
-https://life-simulator-back-stg.onrender.com
-```
+`VITE_API_BASE_URL` が残っていると、フロントが back Render URL を直接呼び続けるため、
+Cookie が front origin ではなく back origin 扱いになり、シークレットウィンドウなどで
+session cookie が送られない問題が残ります。
 
 ## デプロイ時の注意
 
@@ -200,18 +224,19 @@ migration を build 時に行う形でもよいと案内されています。
 
 Rails credentials を使っているため、これを入れないと production 起動できません。
 
-### 3. フロントの API 接続先は本番 URL にする
+### 3. フロントの API 接続先は相対パスにする
 
-ローカル開発時の `http://localhost:3000` のままだと、
-Render に上げたフロントから本番 API を呼べません。
+Render では front Static Site の `/api/*` rewrite で back へ中継します。
+そのため、フロントは `VITE_API_BASE_URL` を使わず `/api/...` の相対パスで API を呼びます。
 
-そのため、フロント側で API 呼び出しを実装するときは
-`import.meta.env.VITE_API_BASE_URL` を参照する形に寄せるのが基本です。
+`front/src/lib/api.ts` は `VITE_API_BASE_URL` が無いと相対パスを返します。
+Render の front サービスに `VITE_API_BASE_URL` を設定しないことで、
+開発環境は Vite proxy、本番 / ステージングは Render rewrite に乗ります。
 
 また、branch ごとに環境を分ける場合は、次のように対応関係を固定します。
 
-- `front-prod` → `back-prod`
-- `front-stg` → `back-stg`
+- `front-prod` の `/api/*` → `back-prod`
+- `front-stg` の `/api/*` → `back-stg`
 
 `development` のフロントが本番 API を見ないように注意します。
 
@@ -263,8 +288,12 @@ Render では Blueprint のカスタムファイルパスも指定できるた�
 
 1. Render に本番用 Blueprint として `render.yaml` を読み込ませる
 2. Neon で本番用 / ステージング用の branch と connection string を用意する
-3. `RAILS_MASTER_KEY`、本番用 `DATABASE_URL`、本番用 `VITE_API_BASE_URL` を設定する
-4. 本番 back / front のデプロイ成功を確認する
-5. Render にステージング用 Blueprint として `render.staging.yaml` を読み込ませる
-6. `RAILS_MASTER_KEY`、ステージング用 `DATABASE_URL`、ステージング用 `VITE_API_BASE_URL` を設定する
-7. ステージング back / front のデプロイ成功を確認する
+3. `RAILS_MASTER_KEY`、本番用 `DATABASE_URL` を設定する
+4. 本番 front に `VITE_API_BASE_URL` が残っている場合は削除する
+5. 本番 back / front のデプロイ成功を確認する
+6. Network タブで本番 API 呼び出し先が `front-prod` の `/api/...` になっているか確認する
+7. Render にステージング用 Blueprint として `render.staging.yaml` を読み込ませる
+8. `RAILS_MASTER_KEY`、ステージング用 `DATABASE_URL` を設定する
+9. ステージング front に `VITE_API_BASE_URL` が残っている場合は削除する
+10. ステージング back / front のデプロイ成功を確認する
+11. Network タブでステージング API 呼び出し先が `front-stg` の `/api/...` になっているか確認する

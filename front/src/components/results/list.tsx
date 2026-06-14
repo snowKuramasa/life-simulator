@@ -20,19 +20,19 @@ import type {
   ResultSortKey,
 } from "@/providers/pages/ResultListPageContext";
 import {
-  Building2,
-  Check,
-  Cloud,
-  Clock,
-  Coins,
-  Home,
-  Info,
-  LoaderCircle,
-  Pencil,
-  Sun,
-  Umbrella,
-  X,
-} from "lucide-react";
+  PiBuildingOffice,
+  PiCheck,
+  PiClock,
+  PiCloud,
+  PiCoins,
+  PiHouse,
+  PiInfo,
+  PiPencilSimple,
+  PiSpinnerGap,
+  PiSun,
+  PiUmbrella,
+  PiX,
+} from "react-icons/pi";
 import { type KeyboardEvent, useRef, useState } from "react";
 import { Link } from "react-router";
 
@@ -76,27 +76,27 @@ function formatMonthlySurplus(amount: number) {
 
 function StatusIcon({ status }: { status: ResultListItem["status"] }) {
   if (status === "余裕あり") {
-    return <Sun className={styles.sunIcon} aria-hidden="true" size={20} />;
+    return <PiSun className={styles.sunIcon} aria-hidden="true" size={20} />;
   }
 
   if (status === "生活費不足") {
-    return <Umbrella className={styles.umbrellaIcon} aria-hidden="true" size={20} />;
+    return <PiUmbrella className={styles.umbrellaIcon} aria-hidden="true" size={20} />;
   }
 
-  return <Cloud className={styles.cloudIcon} aria-hidden="true" size={20} />;
+  return <PiCloud className={styles.cloudIcon} aria-hidden="true" size={20} />;
 }
 
 function SaveStatusIcon({ status }: { status: CommuteSaveStatus | undefined }) {
   if (status === "saving") {
-    return <LoaderCircle className={styles.savingIcon} aria-label="保存中" size={17} />;
+    return <PiSpinnerGap className={styles.savingIcon} aria-label="保存中" size={17} />;
   }
 
   if (status === "success") {
-    return <Check className={styles.successIcon} aria-label="保存しました" size={17} />;
+    return <PiCheck className={styles.successIcon} aria-label="保存しました" size={17} />;
   }
 
   if (status === "error") {
-    return <X className={styles.errorIcon} aria-label="保存に失敗しました" size={17} />;
+    return <PiX className={styles.errorIcon} aria-label="保存に失敗しました" size={17} />;
   }
 
   return null;
@@ -112,7 +112,7 @@ function MonthlySurplusHelp() {
         className={styles.helpButton}
         aria-label={`月の収支の説明。${description}`}
       >
-        <Info aria-hidden="true" size={13} />
+        <PiInfo aria-hidden="true" size={13} />
       </button>
       <span className={styles.tooltip} role="tooltip">
         {description}
@@ -249,7 +249,7 @@ function CommuteMinutesField({ result, status, saveCommuteMinutes }: CommuteMinu
           <span className={styles.roundTripMinutes}>往復{roundTripMinutes}分</span>
         </span>
       )}
-      <Pencil className={styles.editIcon} aria-hidden="true" size={15} />
+      <PiPencilSimple className={styles.editIcon} aria-hidden="true" size={15} />
       <SaveStatusIcon status={status} />
     </button>
   );
@@ -333,17 +333,17 @@ export function ResultList({
         {results.map((result) => (
           <article key={result.id} className={styles.card}>
             <div className={styles.titleRow}>
-              <Building2 aria-hidden="true" size={19} />
+              <PiBuildingOffice aria-hidden="true" size={19} />
               <p className={styles.titleText}>
                 <span>{result.workplace.name}</span>
                 <span>×</span>
-                <Home aria-hidden="true" size={18} />
+                <PiHouse aria-hidden="true" size={18} />
                 <span>{result.residence.name}</span>
               </p>
             </div>
 
             <div className={styles.infoRow}>
-              <Coins className={styles.icon} aria-hidden="true" size={20} />
+              <PiCoins className={styles.icon} aria-hidden="true" size={20} />
               <p className={styles.monthlySurplusText}>
                 <span className={styles.metricLabel}>
                   月の収支
@@ -356,7 +356,7 @@ export function ResultList({
             </div>
 
             <div className={styles.infoRow}>
-              <Clock className={styles.icon} aria-hidden="true" size={20} />
+              <PiClock className={styles.icon} aria-hidden="true" size={20} />
               <CommuteMinutesField
                 result={result}
                 status={commuteSaveStatuses[result.id]}

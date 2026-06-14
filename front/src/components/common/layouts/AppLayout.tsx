@@ -1,4 +1,4 @@
-import { LogOut } from "lucide-react";
+import { PiSignOut } from "react-icons/pi";
 import { Outlet, useLocation, useNavigate } from "react-router";
 
 import { Button } from "@/components/common/baseUi/Button";
@@ -37,7 +37,7 @@ export function AppLayout() {
                   className={styles.logoutButton}
                   aria-label="ログアウト"
                 >
-                  <LogOut aria-hidden="true" size={16} />
+                  <PiSignOut aria-hidden="true" size={16} />
                   <span className={styles.logoutLabel}>ログアウト</span>
                 </Button>
               }

@@ -80,6 +80,14 @@ describe("LoginPage", () => {
     expect(await screen.findByRole("button", { name: "Googleでログイン（準備中）" })).toBeDisabled();
     expect(screen.getByRole("link", { name: "戻る" })).toHaveAttribute("href", "/");
     expect(screen.getByRole("button", { name: "ゲストで続ける" })).toBeInTheDocument();
+    expect(screen.getByText("※ゲストデータはCookieで管理されます。")).toBeInTheDocument();
+    expect(
+      screen.getByText("下記操作時は同じデータを扱うことができません。"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("・Cookie削除")).toBeInTheDocument();
+    expect(screen.getByText("・別ブラウザ利用")).toBeInTheDocument();
+    expect(screen.getByText("・シークレットウィンドウ終了")).toBeInTheDocument();
+    expect(screen.getByText("データは削除されることがあります。")).toBeInTheDocument();
   });
 
   it("does not show the guest continue action while checking authentication", () => {
