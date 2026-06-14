@@ -4,7 +4,7 @@ import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
 import { cn } from "@/lib/utils";
 import type { Residence } from "@/types";
-import { Home, MapPin, Pencil, Plus, ReceiptText, Trash2 } from "lucide-react";
+import { PiHouse, PiMapPin, PiPencilSimple, PiPlus, PiReceipt, PiTrash } from "react-icons/pi";
 import { Link } from "react-router";
 
 import styles from "./list.module.css";
@@ -71,13 +71,13 @@ export function ResidenceList({
                   aria-label={`${residence.name}を削除`}
                   disabled={deletingId === residence.id}
                 >
-                  <Trash2 aria-hidden="true" size={18} strokeWidth={2.1} />
+                  <PiTrash aria-hidden="true" size={18} />
                 </button>
               }
             />
 
             <div className={styles.row}>
-              <Home className={styles.icon} aria-hidden="true" size={19} />
+              <PiHouse className={styles.icon} aria-hidden="true" size={19} />
               <div>
                 <p className={styles.label}>住居名</p>
                 <p className={styles.value}>{residence.name}</p>
@@ -85,7 +85,7 @@ export function ResidenceList({
             </div>
 
             <div className={styles.row}>
-              <ReceiptText className={styles.icon} aria-hidden="true" size={19} />
+              <PiReceipt className={styles.icon} aria-hidden="true" size={19} />
               <div>
                 <p className={styles.label}>家賃</p>
                 <p className={styles.value}>{formatRent(residence.rent)}</p>
@@ -93,7 +93,7 @@ export function ResidenceList({
             </div>
 
             <div className={styles.row}>
-              <MapPin className={styles.icon} aria-hidden="true" size={19} />
+              <PiMapPin className={styles.icon} aria-hidden="true" size={19} />
               <div>
                 <p className={styles.label}>場所</p>
                 <p className={styles.value}>
@@ -108,7 +108,7 @@ export function ResidenceList({
               className={styles.editLink}
               aria-label={`${residence.name}を編集`}
             >
-              <Pencil aria-hidden="true" size={19} strokeWidth={2} />
+              <PiPencilSimple aria-hidden="true" size={19} />
             </Link>
 
           </article>
@@ -124,7 +124,7 @@ export function ResidenceList({
         </Button>
         <Button asChild className={styles.addButton}>
           <Link to="/residences/new">
-            <Plus aria-hidden="true" size={15} />
+            <PiPlus aria-hidden="true" size={15} />
             住居追加
           </Link>
         </Button>

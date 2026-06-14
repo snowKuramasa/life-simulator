@@ -4,7 +4,7 @@ import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
 import { cn } from "@/lib/utils";
 import type { Workplace } from "@/types";
-import { Building2, Coins, MapPin, Pencil, Plus, Trash2 } from "lucide-react";
+import { PiBuildingOffice, PiCoins, PiMapPin, PiPencilSimple, PiPlus, PiTrash } from "react-icons/pi";
 import { Link } from "react-router";
 
 import styles from "./list.module.css";
@@ -71,13 +71,13 @@ export function WorkplaceList({
                   aria-label={`${workplace.name}を削除`}
                   disabled={deletingId === workplace.id}
                 >
-                  <Trash2 aria-hidden="true" size={18} strokeWidth={2.1} />
+                  <PiTrash aria-hidden="true" size={18} />
                 </button>
               }
             />
 
             <div className={styles.row}>
-              <Building2 className={styles.icon} aria-hidden="true" size={19} />
+              <PiBuildingOffice className={styles.icon} aria-hidden="true" size={19} />
               <div>
                 <p className={styles.label}>勤務先名</p>
                 <p className={styles.value}>{workplace.name}</p>
@@ -85,7 +85,7 @@ export function WorkplaceList({
             </div>
 
             <div className={styles.row}>
-              <Coins className={styles.icon} aria-hidden="true" size={19} />
+              <PiCoins className={styles.icon} aria-hidden="true" size={19} />
               <div>
                 <p className={styles.label}>給与（手取り）</p>
                 <p className={styles.value}>{formatSalary(workplace.salary)}</p>
@@ -93,7 +93,7 @@ export function WorkplaceList({
             </div>
 
             <div className={styles.row}>
-              <MapPin className={styles.icon} aria-hidden="true" size={19} />
+              <PiMapPin className={styles.icon} aria-hidden="true" size={19} />
               <div>
                 <p className={styles.label}>勤務地</p>
                 <p className={styles.value}>
@@ -108,7 +108,7 @@ export function WorkplaceList({
               className={styles.editLink}
               aria-label={`${workplace.name}を編集`}
             >
-              <Pencil aria-hidden="true" size={19} strokeWidth={2} />
+              <PiPencilSimple aria-hidden="true" size={19} />
             </Link>
 
           </article>
@@ -124,7 +124,7 @@ export function WorkplaceList({
         </Button>
         <Button asChild className={styles.addButton}>
           <Link to="/workplaces/new">
-            <Plus aria-hidden="true" size={15} />
+            <PiPlus aria-hidden="true" size={15} />
             勤務先追加
           </Link>
         </Button>
