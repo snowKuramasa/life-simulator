@@ -25,7 +25,7 @@ services:
         value: info
 
   - type: web
-    name: life-simulator-front-stg
+    name: stg-mitooshi
     runtime: static
     branch: development
     rootDir: front
