@@ -24,8 +24,10 @@ services:
       - key: RAILS_LOG_LEVEL
         value: info
 
+  # このフロントサービスは Render Dashboard で手動管理しています。
+  # この定義は設定の記録用であり、Blueprint では自動同期していません。
   - type: web
-    name: life-simulator-front-stg
+    name: stg-mitooshi
     runtime: static
     branch: development
     rootDir: front
