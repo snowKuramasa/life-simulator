@@ -1,4 +1,4 @@
-import startImage from "@/assets/welcome.png";
+import startImage from "@/assets/welcome_transparent.png";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
 import { Link } from "react-router";

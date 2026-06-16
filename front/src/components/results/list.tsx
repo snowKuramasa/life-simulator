@@ -1,4 +1,4 @@
-import resultImage from "@/assets/results.png";
+import resultImage from "@/assets/results_transparent.png";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
 import { Input } from "@/components/common/baseUi/Input";

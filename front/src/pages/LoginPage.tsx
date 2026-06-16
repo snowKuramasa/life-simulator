@@ -1,4 +1,4 @@
-import loginImage from "@/assets/login.png";
+import loginImage from "@/assets/login_transparent.png";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
 import { Input } from "@/components/common/baseUi/Input";

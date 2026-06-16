@@ -1,4 +1,4 @@
-import workplaceImage from "@/assets/workplaces.png";
+import workplaceImage from "@/assets/workplaces_transparent.png";
 import { RequiredBadge } from "@/components/common/RequiredBadge";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";

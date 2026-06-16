@@ -1,4 +1,4 @@
-import residenceImage from "@/assets/residences.png";
+import residenceImage from "@/assets/residences_transparent.png";
 import { DeleteConfirmDialog } from "@/components/common/DeleteConfirmDialog";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";

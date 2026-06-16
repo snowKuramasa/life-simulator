@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import startImage from "@/assets/welcome.png";
+import startImage from "@/assets/welcome_transparent.png";
 import { Image } from "@/components/common/baseUi/Image";
 
 describe("Image", () => {

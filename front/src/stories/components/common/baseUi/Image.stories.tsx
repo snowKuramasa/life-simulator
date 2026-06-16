@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import startImage from "@/assets/welcome.png";
+import startImage from "@/assets/welcome_transparent.png";
 import { Image } from "@/components/common/baseUi/Image";
 
 const meta = {
