@@ -1,4 +1,4 @@
-import resultImage from "@/assets/2.png";
+import resultImage from "@/assets/results.png";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
 import { Input } from "@/components/common/baseUi/Input";
@@ -318,7 +318,7 @@ export function ResultList({
         </div>
         <Image
           src={resultImage}
-          alt="赤い自動販売機の横に立っている人のイラスト"
+          alt="タブレットで生活条件を比較する人のイラスト"
           width={{ base: 96, md: 150 }}
           height={{ base: 96, md: 150 }}
         />

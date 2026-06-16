@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import startImage from "@/assets/90.png";
+import startImage from "@/assets/welcome.png";
 import { Image } from "@/components/common/baseUi/Image";
 
 const meta = {
@@ -9,7 +9,7 @@ const meta = {
   tags: ["autodocs"],
   args: {
     src: startImage,
-    alt: "食卓で過ごす人と犬のイラスト",
+    alt: "飲み物を持って窓辺で過ごす人のイラスト",
     width: 250,
     height: 250,
   },

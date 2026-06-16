@@ -47,7 +47,9 @@ describe("ResidenceList", () => {
     renderResidenceList();
 
     expect(screen.getByRole("heading", { name: "住居一覧画面" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "ソファに座っている人のイラスト" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: "ソファで住宅資料を見る人のイラスト" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("〇〇")).toBeInTheDocument();
     expect(screen.getByText("6万円")).toBeInTheDocument();
     expect(screen.getByText("東京都杉並区")).toBeInTheDocument();

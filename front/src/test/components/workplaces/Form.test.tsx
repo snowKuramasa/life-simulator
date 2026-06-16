@@ -46,7 +46,7 @@ describe("WorkplaceForm", () => {
     renderWorkplaceForm();
 
     expect(screen.getByRole("heading", { name: "勤務先新規作成画面" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "駅の改札に立っている人のイラスト" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "自動改札を通る人のイラスト" })).toBeInTheDocument();
     expect(screen.getByText("ステップ1/2")).toBeInTheDocument();
     expect(screen.getByLabelText("勤務先")).toHaveValue("A社");
     expect(screen.getByLabelText("給与（手取り）")).toHaveValue("220,000");

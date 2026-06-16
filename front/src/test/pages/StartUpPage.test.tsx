@@ -16,6 +16,8 @@ describe("StartUpPage", () => {
     expect(screen.getByText("mitooshi")).toBeInTheDocument();
     expect(screen.getByText("住まいとお金から、暮らしを考える")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "はじめる" })).toHaveAttribute("href", "/login");
-    expect(screen.getByRole("img", { name: "食卓で過ごす人と犬のイラスト" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: "飲み物を持って窓辺で過ごす人のイラスト" }),
+    ).toBeInTheDocument();
   });
 });
