@@ -1,4 +1,4 @@
-import residenceImage from "@/assets/12.png";
+import residenceImage from "@/assets/residences_transparent.png";
 import { DeleteConfirmDialog } from "@/components/common/DeleteConfirmDialog";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
@@ -46,7 +46,7 @@ export function ResidenceList({
         <div aria-hidden="true" />
         <Image
           src={residenceImage}
-          alt="ソファに座っている人のイラスト"
+          alt="ソファで住宅資料を見る人のイラスト"
           width={{ base: 96, md: 150 }}
           height={{ base: 96, md: 150 }}
         />

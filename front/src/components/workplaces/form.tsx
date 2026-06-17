@@ -1,4 +1,4 @@
-import workplaceImage from "@/assets/113.png";
+import workplaceImage from "@/assets/workplaces_transparent.png";
 import { RequiredBadge } from "@/components/common/RequiredBadge";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
@@ -120,7 +120,7 @@ export function WorkplaceForm({
       </h1>
       <Image
         src={workplaceImage}
-        alt="駅の改札に立っている人のイラスト"
+        alt="自動改札を通る人のイラスト"
         width={{ base: 170, md: 250 }}
         height={{ base: 170, md: 250 }}
       />

@@ -76,7 +76,9 @@ describe("LoginPage", () => {
     renderLoginPage();
 
     expect(screen.getByRole("heading", { name: "ログイン画面" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "座って猫を抱いている人のイラスト" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: "スマートフォンを見ながらくつろぐ人のイラスト" }),
+    ).toBeInTheDocument();
     expect(await screen.findByRole("button", { name: "Googleでログイン（準備中）" })).toBeDisabled();
     expect(screen.getByRole("link", { name: "戻る" })).toHaveAttribute("href", "/");
     expect(screen.getByRole("button", { name: "ゲストで続ける" })).toBeInTheDocument();

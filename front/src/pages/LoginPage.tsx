@@ -1,4 +1,4 @@
-import loginImage from "@/assets/4.png";
+import loginImage from "@/assets/login_transparent.png";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
 import { Input } from "@/components/common/baseUi/Input";
@@ -59,7 +59,7 @@ export function LoginPage() {
       </h1>
       <Image
         src={loginImage}
-        alt="座って猫を抱いている人のイラスト"
+        alt="スマートフォンを見ながらくつろぐ人のイラスト"
         width={{ base: 180, md: 260 }}
         height={{ base: 180, md: 260 }}
       />

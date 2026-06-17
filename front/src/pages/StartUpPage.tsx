@@ -1,4 +1,4 @@
-import startImage from "@/assets/90.png";
+import startImage from "@/assets/welcome_transparent.png";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
 import { Link } from "react-router";
@@ -15,7 +15,7 @@ export function StartUpPage() {
       <Image
         className={styles.heroImage}
         src={startImage}
-        alt="食卓で過ごす人と犬のイラスト"
+        alt="飲み物を持って窓辺で過ごす人のイラスト"
         width={{ base: 250, md: 410 }}
         height={{ base: 250, md: 410 }}
       />
