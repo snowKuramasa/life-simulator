@@ -75,7 +75,9 @@ describe("ResidenceNewPage", () => {
     renderResidenceNewPage();
 
     expect(screen.getByRole("heading", { name: "住居新規作成画面" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "ソファに座っている人のイラスト" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: "ソファで住宅資料を見る人のイラスト" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("ステップ2/2")).toBeInTheDocument();
     expect(screen.getByRole("combobox", { name: "場所（都道府県）" })).toBeInTheDocument();
     expect(screen.getByText("円")).toBeInTheDocument();

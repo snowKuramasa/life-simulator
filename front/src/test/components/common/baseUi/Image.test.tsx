@@ -1,14 +1,14 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import startImage from "@/assets/90.png";
+import startImage from "@/assets/welcome_transparent.png";
 import { Image } from "@/components/common/baseUi/Image";
 
 describe("Image", () => {
   it("renders an image with src and alt text", () => {
-    render(<Image src={startImage} alt="食卓で過ごす人と犬のイラスト" />);
+    render(<Image src={startImage} alt="飲み物を持って窓辺で過ごす人のイラスト" />);
 
-    const image = screen.getByRole("img", { name: "食卓で過ごす人と犬のイラスト" });
+    const image = screen.getByRole("img", { name: "飲み物を持って窓辺で過ごす人のイラスト" });
 
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute("src", startImage);

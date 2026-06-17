@@ -1,4 +1,4 @@
-import residenceImage from "@/assets/12.png";
+import residenceImage from "@/assets/residences_transparent.png";
 import { RequiredBadge } from "@/components/common/RequiredBadge";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
@@ -120,7 +120,7 @@ export function ResidenceForm({
       </h1>
       <Image
         src={residenceImage}
-        alt="ソファに座っている人のイラスト"
+        alt="ソファで住宅資料を見る人のイラスト"
         width={{ base: 170, md: 250 }}
         height={{ base: 170, md: 250 }}
       />

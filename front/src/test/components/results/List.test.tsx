@@ -83,7 +83,9 @@ describe("ResultList", () => {
     renderResultList();
 
     expect(screen.getByRole("heading", { name: "結果一覧画面" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "赤い自動販売機の横に立っている人のイラスト" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: "タブレットで生活条件を比較する人のイラスト" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("世帯人数")).toBeInTheDocument();
     expect(screen.getByRole("combobox", { name: "世帯人数" })).toHaveTextContent("1人");
     expect(screen.getByText("並び順")).toBeInTheDocument();

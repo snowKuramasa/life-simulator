@@ -1,4 +1,4 @@
-import workplaceImage from "@/assets/113.png";
+import workplaceImage from "@/assets/workplaces_transparent.png";
 import { DeleteConfirmDialog } from "@/components/common/DeleteConfirmDialog";
 import { Button } from "@/components/common/baseUi/Button";
 import { Image } from "@/components/common/baseUi/Image";
@@ -46,7 +46,7 @@ export function WorkplaceList({
         <div aria-hidden="true" />
         <Image
           src={workplaceImage}
-          alt="駅の改札に立っている人のイラスト"
+          alt="自動改札を通る人のイラスト"
           width={{ base: 96, md: 150 }}
           height={{ base: 96, md: 150 }}
         />
