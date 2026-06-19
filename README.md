@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./front/src/assets/mitooshi-logo.svg" alt="mitooshi" width="240">
+  <img src="docs/image/mitooshi_logo_white_bg.svg" alt="mitooshi" width="240">
 
   <p><strong>住まいとお金から、暮らしを考える</strong></p>
 </div>
@@ -11,6 +11,12 @@
 就職・転職や引っ越しでは、給与、家賃、勤務地、通勤時間など、いくつもの条件を同時に考える必要があります。しかし、求人サイトや不動産サイト、地図アプリに情報が分かれているため、「この組み合わせを選ぶと、実際の暮らしはどうなるのか」をイメージするのは簡単ではありません。
 
 mitooshiでは、登録した勤務先と住居からすべての組み合わせを作り、月の収支や通勤時間を一覧で表示します。条件を一つずつ眺めるのではなく、暮らし全体のバランスを見ながら、納得できる選択肢を探せることを目指しています。
+
+<p><strong>紹介画像</strong></p>
+<div align="center">
+  <img src="docs/image/life-simulator_produce_2.png" alt="mitooshi" width="500">
+
+</div>
 
 ## 開発の背景
 
@@ -46,14 +52,14 @@ mitooshiでは、登録した勤務先と住居からすべての組み合わせ
 
 ## 技術構成
 
-| 分類 | 使用技術 |
-| --- | --- |
-| フロントエンド | React 19 / TypeScript / Vite / React Router / TanStack Query |
-| UI・バリデーション | shadcn/ui / CSS Modules / Zod / React Icons |
-| バックエンド | Ruby 3.3 / Ruby on Rails 8（APIモード） |
-| データベース | PostgreSQL 16 / Neon |
-| テスト・品質管理 | Vitest / Testing Library / Storybook / Minitest / RuboCop / Brakeman |
-| 開発・運用 | Docker Compose / Render / GitHub Actions |
+| 分類               | 使用技術                                                             |
+| ------------------ | -------------------------------------------------------------------- |
+| フロントエンド     | React 19 / TypeScript / Vite / React Router / TanStack Query         |
+| UI・バリデーション | shadcn/ui / CSS Modules / Zod / React Icons                          |
+| バックエンド       | Ruby 3.3 / Ruby on Rails 8（APIモード）                              |
+| データベース       | PostgreSQL 16 / Neon                                                 |
+| テスト・品質管理   | Vitest / Testing Library / Storybook / Minitest / RuboCop / Brakeman |
+| 開発・運用         | Docker Compose / Render / GitHub Actions                             |
 
 ## システム構成
 
